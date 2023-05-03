@@ -21,6 +21,7 @@ export default [
             dest: 'build-chrome',
             rename: 'manifest.json'
           },
+          { src: 'assets/*.png', dest: 'build-chrome' },
         ],
       }),
     ],
@@ -43,6 +44,7 @@ export default [
             dest: 'build-firefox',
             rename: 'manifest.json'
           },
+          { src: 'assets/*.png', dest: 'build-firefox' }
         ],
       }),
     ],
