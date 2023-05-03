@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "PrUn Palette",
+  "version": "0.1",
+
+  "description": "Adds a command palette to Prosperous Universe",
+
+  "content_scripts": [
+    {
+      "matches": ["https://apex.prosperousuniverse.com/*"],
+      "js": ["index.js"],
+      "css": ["index.css"]
+    }
+  ]
+}
