@@ -18,7 +18,7 @@ export const paletteListener = new EventEmitter<EventMap>()
 interface PaletteProps {
   fuzzNextArg: (path: string[], current: string) => string | null
   getTopMatches: (path: string[], current: string) => PaletteCommand[]
-  execute: (path: string[], input: string) => void
+  execute: (path: string[], input: string) => Promise<unknown> | void
   close: () => void
 }
 export default function palette({ fuzzNextArg, getTopMatches, execute, close }: PaletteProps) {
@@ -69,8 +69,8 @@ export default function palette({ fuzzNextArg, getTopMatches, execute, close }: 
     updateTopMatches()
   }
 
-  const onPaletteInputSubmit = () => {
-    execute(path, current.trim())
+  const onPaletteInputSubmit = async () => {
+    await execute(path, current.trim())
     path.length = 0
     current = ''
     bestMatch = undefined

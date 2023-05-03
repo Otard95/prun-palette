@@ -25,7 +25,7 @@ export interface PaletteCommand {
   name: string
   description: string
   signature: CommandSignature
-  command: (...variables: any[]) => void
+  command: (...variables: any[]) => Promise<unknown> | void
 }
 
 export default class Palette {
@@ -173,7 +173,7 @@ export default class Palette {
     return bestMatch[0]
   }
 
-  public executeSignature(partialSig: CommandSignature, input: string) {
+  public async executeSignature(partialSig: CommandSignature, input: string) {
     // If no input, find exact match on signature
     // TODO: Try fuzzy matching on signature, in case the input is a partial
     // match on the signature and not a variable
@@ -195,6 +195,6 @@ export default class Palette {
 
     // Get values of variables in signature
     const variables = indexes.map((i) => partialSig[i])
-    match.command(...variables)
+    await match.command(...variables)
   }
 }
