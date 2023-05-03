@@ -7,7 +7,8 @@
     "watch": "rollup -c -w",
     "test": "tsc --noEmit && jest",
     "jest:watch": "jest --watchAll",
-    "ext": "cd build-firefox && web-ext run --firefox=/opt/firefox/firefox --firefox-profile=Personal"
+    "ext": "cd build-firefox && web-ext run --firefox=/opt/firefox/firefox",
+    "ext:lint": "cd build-firefox && web-ext lint"
   },
   "author": "",
   "license": "MIT",
