@@ -81,11 +81,6 @@ export default class DocumentObserver {
         const nodeMatches = element.matches(selector)
         const nodeHadMatchingChildren = element.querySelector(selector)
         const match = nodeMatches || !!nodeHadMatchingChildren
-        console.debug(`[PrUn Palette/DocumentObserver](waitFor) match '${selector}'`, match, {
-          nodeMatches,
-          nodeHadMatchingChildren,
-          element,
-        })
         return match
       },
       callback: (element) => deferred.resolve(element),
