@@ -2,6 +2,7 @@ import Deferred from './utils/deferred'
 import DocumentObserver from './document-observer'
 import { changeValue } from './utils/input'
 import { memoize } from './utils/memoize'
+import ApexInventory from './utils/apex/inventory'
 
 interface Screen {
   name: string
@@ -130,5 +131,17 @@ export default class Apex {
     input.form?.requestSubmit()
 
     return buffer
+  }
+
+  public async openBaseInventory(planetName: string) {
+    return new ApexInventory(this).openBaseInventory(planetName)
+  }
+
+  public async openShipCargo(shipName: string) {
+    return new ApexInventory(this).openShipCargo(shipName)
+  }
+
+  public async openWarehouse(systemName: string) {
+    return new ApexInventory(this).openWarehouse(systemName)
   }
 }
