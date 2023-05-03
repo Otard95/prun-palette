@@ -6,10 +6,14 @@ import { fuzzStrings } from './utils/fuzz'
 import { memoize } from './utils/memoize'
 
 export enum PaletteCommandVariables {
+  SystemName = '{system-name}',
   PlanetName = '{planet-name}',
   PlanedId = '{planet-id}',
   Screen = '{screen}',
   Command = '{command}',
+  ContractId = '{contract-id}',
+  InventoryId = '{inventory-id}',
+  ShipName = '{ship-name}',
 }
 type CommandSignature = (string | PaletteCommandVariables)[]
 
