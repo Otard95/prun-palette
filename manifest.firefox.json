@@ -17,5 +17,12 @@
       "js": ["index.js"],
       "css": ["index.css"]
     }
-  ]
+  ],
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "prun-palette@prun-palette",
+      "strict_min_version": "60.0"
+    }
+  }
 }
