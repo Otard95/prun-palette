@@ -7,6 +7,7 @@ import { memoize } from './utils/memoize'
 
 export enum PaletteCommandVariables {
   SystemName = '{system-name}',
+  SystemId = '{system-id}',
   PlanetName = '{planet-name}',
   PlanedId = '{planet-id}',
   Screen = '{screen}',
@@ -142,17 +143,25 @@ export default class Palette {
     ].filter((command): command is PaletteCommand => !!command)
   }
 
+  private isFuzzable(sigPart: string | PaletteCommandVariables): boolean {
+    const fuzzableVariables = [
+      PaletteCommandVariables.SystemName,
+      PaletteCommandVariables.SystemId,
+      PaletteCommandVariables.PlanetName,
+      PaletteCommandVariables.PlanedId,
+      PaletteCommandVariables.Screen,
+    ]
+    return !isPaletteCommandVariable(sigPart) || fuzzableVariables.includes(sigPart)
+  }
+
   public fuzzyNextArg(partialSig: CommandSignature, input: string): string | null {
     if (input.length === 0) return null
 
     const partialMatches = this.getCommandsStartingWithSig(partialSig)
       .filter(
         (command) => {
-          if (
-            isPaletteCommandVariable(command.signature[partialSig.length])
-            && command.signature[partialSig.length] !== PaletteCommandVariables.Screen
-          ) return false
           return command.signature.length > partialSig.length
+            && this.isFuzzable(command.signature[partialSig.length])
         }
       )
     if (partialMatches.length === 0) return null
@@ -160,8 +169,20 @@ export default class Palette {
     const nextArgs = partialMatches.map((command) => {
       const nextArg = command.signature[partialSig.length]
       if (!isPaletteCommandVariable(nextArg)) return nextArg
-      if (nextArg === PaletteCommandVariables.Screen) return this.apex.screens.map(s => s.name.toLowerCase())
-      return []
+      switch (nextArg) {
+        case PaletteCommandVariables.Screen:
+          return this.apex.Screens.map(s => s.name.toLowerCase())
+        case PaletteCommandVariables.SystemName:
+          return this.apex.Systems.map(s => s.name.toLowerCase())
+        case PaletteCommandVariables.SystemId:
+          return this.apex.Systems.map(s => s.id.toLowerCase())
+        case PaletteCommandVariables.PlanetName:
+          return this.apex.Planets.map(p => p.name.toLowerCase())
+        case PaletteCommandVariables.PlanedId:
+          return this.apex.Planets.map(p => p.id.toLowerCase())
+        default:
+          return []
+      }
     }).flat()
 
     const scoredCommands = matchArrays(nextArgs, fuzzStrings(input, nextArgs))
