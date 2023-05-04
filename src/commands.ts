@@ -99,7 +99,7 @@ export default function attachCommands(palette: Palette, apex: Apex) {
   palette.addCommand({
     name: 'Screen',
     description: 'Open a screen',
-    command: (screen: string) => apex.screens
+    command: (screen: string) => apex.Screens
       .find((s) => s.name.toLowerCase() === screen.toLowerCase())
       ?.open(),
     signature: ['screen', PaletteCommandVariables.Screen],

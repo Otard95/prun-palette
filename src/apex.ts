@@ -86,7 +86,7 @@ export default class Apex {
   }
 
   @memoize(100)
-  public get screens(): Screen[] {
+  public get Screens(): Screen[] {
     const screenList = document
       .querySelector('#TOUR_TARGET_SCREEN_CONTROLS')
       ?.querySelector('ul')
