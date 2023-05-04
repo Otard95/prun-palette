@@ -1,6 +1,7 @@
 import typescript from '@rollup/plugin-typescript'
 import copy from 'rollup-plugin-copy'
 import sass from 'rollup-plugin-sass'
+import license from 'rollup-plugin-license'
 
 export default [
   {
@@ -24,6 +25,13 @@ export default [
           { src: 'assets/*.png', dest: 'build-chrome' },
         ],
       }),
+      license({
+        banner: {
+          content: {
+            file: 'LICENSE',
+          },
+        },
+      }),
     ],
   },
   {
@@ -46,6 +54,13 @@ export default [
           },
           { src: 'assets/*.png', dest: 'build-firefox' }
         ],
+      }),
+      license({
+        banner: {
+          content: {
+            file: 'LICENSE',
+          },
+        },
       }),
     ],
   },

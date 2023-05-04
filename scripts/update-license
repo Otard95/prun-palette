@@ -1,0 +1,48 @@
+#!/usr/bin/env zx
+
+$.verbose = false
+
+const pkg = JSON.parse((await $`cat package.json`).stdout || 'null')
+const licenseTmpl = (await $`cat LICENSE`).stdout || ''
+
+if (!pkg || !licenseTmpl) {
+  console.log('Error: failed to read package.json or LICENSE')
+  exit(1)
+}
+
+const license = licenseTmpl
+  .replace('<%= pkg.description %>', pkg.description)
+  .replace('<%= moment().format(\'YYYY\') %>', new Date().getFullYear())
+
+const licenseLines = license.split('\n').length
+
+const files = (await $`find src -name *.ts -type f`).stdout
+  .split('\n')
+  .filter(Boolean)
+
+for (const file of files) {
+  console.log(file)
+  let contents = (await $`cat ${file}`).stdout
+  if (contents.startsWith('/*') && contents.includes('Copyright')) {
+    contents = contents.split('\n').slice(licenseLines + 2).join('\n')
+  }
+  contents = [
+    '/*',
+    license,
+    '*/',
+    contents
+  ].join('\n')
+  await $`echo ${contents} > ${file}`
+}
+
+console.log(files.stdout)
+
+// $LICENSE=$(cat LICENSE)
+// $LICENSE=$(echo $LICENSE | sed 's/\<\%\= pkg.description  \%\>/TMP_DESC/g' | sed "s/TMP_DESC/$DESCRIPTION/g")
+//
+// echo $LICENSE
+// exit 0
+//
+// for f in $(find src -name *.ts -type f); do
+//   echo $f
+// done

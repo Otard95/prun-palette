@@ -1,6 +1,5 @@
-/*
-    PrUn Palette - A command pallet for Prosperous Universe
-    Copyright (C) 2023  Stian Myklebostad
+    PrUn Palette - <%= pkg.description %>
+    Copyright (C) <%= moment().format('YYYY') %>  Stian Myklebostad
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -14,21 +13,3 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-*/
-import { fuzzStrings } from '../fuzz';
-
-describe('fuzzStrings', () => {
-  const subject = 'abc'
-
-  it(
-    'should return a score for each option that contains all characters in the subject in the same order', 
-    () => {
-      const options = ['abc', 'def', 'ab', 'a', '']
-      const expected = [3, undefined, undefined, undefined, undefined]
-      expect(fuzzStrings(subject, options)).toEqual(expected)
-    }
-  )
-})
-
-

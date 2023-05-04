@@ -11,15 +11,16 @@
     "ext:lint": "cd build-firefox && web-ext lint"
   },
   "author": "",
-  "license": "MIT",
+  "license": "GPL-3.0-or-later",
   "devDependencies": {
     "@rollup/plugin-typescript": "11.1.0",
     "@types/jest": "29.5.1",
     "jest": "29.5.0",
     "rollup": "3.21.0",
     "rollup-plugin-copy": "3.4.0",
+    "rollup-plugin-license": "3.0.1",
     "rollup-plugin-sass": "1.12.19",
-    "tslib": "2.5.0",
-    "ts-jest": "29.1.0"
+    "ts-jest": "29.1.0",
+    "tslib": "2.5.0"
   }
 }
