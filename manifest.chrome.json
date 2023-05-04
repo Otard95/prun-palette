@@ -17,5 +17,9 @@
       "js": ["index.js"],
       "css": ["index.css"]
     }
+  ],
+
+  "host_permissions": [
+    "*://rest.fnar.net/*"
   ]
 }
