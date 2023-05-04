@@ -3,7 +3,7 @@
 $.verbose = false
 
 const pkg = JSON.parse((await $`cat package.json`).stdout || 'null')
-const licenseTmpl = (await $`cat LICENSE`).stdout || ''
+const licenseTmpl = (await $`cat LICENSE_TEMPLATE`).stdout || ''
 
 if (!pkg || !licenseTmpl) {
   console.log('Error: failed to read package.json or LICENSE')
@@ -32,7 +32,7 @@ for (const file of files) {
     '*/',
     contents
   ].join('\n')
-  await $`echo ${contents} > ${file}`
+  await $`echo -n ${contents} > ${file}`
 }
 
 console.log(files.stdout)

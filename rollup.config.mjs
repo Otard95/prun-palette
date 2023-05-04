@@ -28,7 +28,7 @@ export default [
       license({
         banner: {
           content: {
-            file: 'LICENSE',
+            file: 'LICENSE_TEMPLATE',
           },
         },
       }),
@@ -58,7 +58,7 @@ export default [
       license({
         banner: {
           content: {
-            file: 'LICENSE',
+            file: 'LICENSE_TEMPLATE',
           },
         },
       }),
