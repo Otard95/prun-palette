@@ -147,8 +147,10 @@ export default class Palette {
     const partialCommands = partialMatches.filter(
       (command) => command !== exactMatch
         && !matchesWithVariables.includes(command)
+        && this.isFuzzable(command.signature[partialSig.length])
     )
-    const nextArgs = partialCommands.map((command) => command.signature[partialSig.length])
+    const nextArgs = partialCommands
+      .map((command) => command.signature[partialSig.length])
 
     const scoredCommands = matchArrays(partialCommands, fuzzStrings(input, nextArgs))
       .filter((match): match is [PaletteCommand, number] => match[1] !== undefined)
@@ -167,9 +169,11 @@ export default class Palette {
       PaletteCommandVariables.SystemId,
       PaletteCommandVariables.PlanetName,
       PaletteCommandVariables.PlanedId,
-      PaletteCommandVariables.Screen,
+      PaletteCommandVariables.Screen
     ]
-    return !isPaletteCommandVariable(sigPart) || fuzzableVariables.includes(sigPart)
+    return typeof sigPart === 'string' && (
+      !isPaletteCommandVariable(sigPart) || fuzzableVariables.includes(sigPart)
+    )
   }
 
   public fuzzyNextArg(partialSig: CommandSignature, input: string): string | null {
