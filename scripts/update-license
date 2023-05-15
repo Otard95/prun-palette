@@ -2,11 +2,23 @@
 
 $.verbose = false
 
+const args = process.argv.slice(2)
+const program = args.shift()
+const isDryRun = args.includes('--dry-run')
+
+const positionalArgs = args.filter(arg => !arg.startsWith('-'))
+if (positionalArgs.length !== 1) {
+  console.log('Usage: update-license [--dry-run] <in-directory>')
+  exit(1)
+}
+
+const directory = positionalArgs[0]
+
 const pkg = JSON.parse((await $`cat package.json`).stdout || 'null')
 const licenseTmpl = (await $`cat LICENSE_TEMPLATE`).stdout || ''
 
 if (!pkg || !licenseTmpl) {
-  console.log('Error: failed to read package.json or LICENSE')
+  console.log('Error: failed to read package.json or LICENSE_TEMPLATE')
   exit(1)
 }
 
@@ -16,23 +28,49 @@ const license = licenseTmpl
 
 const licenseLines = license.split('\n').length
 
-const files = (await $`find src -name *.ts -type f`).stdout
+const findArgs = [
+  '-not',
+  '-path',
+  '**/node_modules/**',
+  '-and',
+  '(',
+  '-name',
+  '*.ts',
+  '-or',
+  '-name',
+  '*.tsx',
+  '-or',
+  '-name',
+  '*.css',
+  ')',
+  '-type',
+  'f'
+]
+const files = (await $`find ${directory} ${findArgs}`).stdout
   .split('\n')
   .filter(Boolean)
 
+if (isDryRun) {
+  console.log(files)
+}
+
 for (const file of files) {
   console.log(file)
+
   let contents = (await $`cat ${file}`).stdout
   if (contents.startsWith('/*') && contents.includes('Copyright')) {
     contents = contents.split('\n').slice(licenseLines + 2).join('\n')
   }
+
   contents = [
     '/*',
     license,
     '*/',
     contents
   ].join('\n')
-  await $`echo -n ${contents} > ${file}`
+
+  if (!isDryRun)
+    await $`echo -n ${contents} > ${file}`
 }
 
 console.log(files.stdout)
