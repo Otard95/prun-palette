@@ -1,0 +1,57 @@
+name: CI-CD
+
+on:
+  push:
+    branches:
+      - main
+
+# Sets permissions of the GITHUB_TOKEN to allow semantic release
+permissions:
+  contents: write # to be able to publish a GitHub release
+  issues: write # to be able to comment on released issues
+  pull-requests: write # to be able to comment on released pull requests
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - run: npm i -g pnpm
+
+      - name: Install
+        run: pnpm install
+
+      - name: Test
+        run: pnpm test
+
+  version:
+    runs-on: ubuntu-latest
+    needs: [test]
+    permissions:
+      contents: write # to be able to publish a GitHub release
+      issues: write # to be able to comment on released issues
+      pull-requests: write # to be able to comment on released pull requests
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - run: npm i -g pnpm
+
+      - name: Install
+        run: pnpm install
+
+      - name: Release
+        run: npx semantic-release --dry-run
