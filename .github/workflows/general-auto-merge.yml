@@ -1,0 +1,27 @@
+name: Automated Merge (master into dev)
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  automatic-merge:
+    if: "!contains(github.event.head_commit.message, '[promote dev to master]')"
+    name: Automatic merge back to dev
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Configure @schibstedsmb-bot
+        run: |
+          git config --global user.name '@schibstedsmb-bot'
+          git config --global user.email 'schibstedsmb-bot@users.noreply.github.com'
+          git remote set-url origin https://x-access-token:${{ secrets.GH_REPO_PAT }}@github.com/${{ github.repository }}
+      - name: Merge with dev
+        run: |
+          git checkout dev
+          git pull
+          git merge --no-ff master -m "chore: Automatic merge of master into dev [skip ci]"
+          git push

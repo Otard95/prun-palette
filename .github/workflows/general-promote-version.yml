@@ -1,0 +1,23 @@
+name: Promote Version (merge dev to master)
+on: [workflow_dispatch]
+
+jobs:
+  promote-version:
+    name: Promote dev to master
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Configure @schibstedsmb-bot
+        run: |
+          git config --global user.name '@schibstedsmb-bot'
+          git config --global user.email 'schibstedsmb-bot@users.noreply.github.com'
+          git remote set-url origin https://x-access-token:${{ secrets.GH_REPO_PAT }}@github.com/${{ github.repository }}
+      - name: Promote version (merge dev to master)
+        run: |
+          git checkout master
+          git pull
+          git merge --no-ff dev -m "chore: Promote version [promote dev to master]"
+          git push
