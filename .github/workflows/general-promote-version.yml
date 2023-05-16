@@ -1,0 +1,27 @@
+name: Promote Version (merge dev to main)
+on: [workflow_dispatch]
+
+# Sets permissions of the GITHUB_TOKEN to allow push
+permissions:
+  contents: write # to be able to publish a GitHub release
+
+jobs:
+  promote-version:
+    name: Promote dev to main
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Configure @schibstedsmb-bot
+        run: |
+          git config --global user.name '@schibstedsmb-bot'
+          git config --global user.email 'schibstedsmb-bot@users.noreply.github.com'
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+      - name: Promote version (merge dev to main)
+        run: |
+          git checkout main
+          git pull
+          git merge --no-ff dev -m "chore: Promote version [promote dev to main]"
+          git push

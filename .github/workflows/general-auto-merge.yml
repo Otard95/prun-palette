@@ -1,0 +1,31 @@
+name: Automated Merge (main into dev)
+on:
+  push:
+    branches:
+      - main
+
+# Sets permissions of the GITHUB_TOKEN to allow push
+permissions:
+  contents: write # to be able to publish a GitHub release
+
+jobs:
+  automatic-merge:
+    if: "!contains(github.event.head_commit.message, '[promote dev to main]')"
+    name: Automatic merge back to dev
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Configure @schibstedsmb-bot
+        run: |
+          git config --global user.name '@schibstedsmb-bot'
+          git config --global user.email 'schibstedsmb-bot@users.noreply.github.com'
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+      - name: Merge with dev
+        run: |
+          git checkout dev
+          git pull
+          git merge --no-ff main -m "chore: Automatic merge of main into dev [skip ci]"
+          git push
