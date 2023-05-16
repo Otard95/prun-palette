@@ -86,7 +86,7 @@ jobs:
         run: |
           (cd build-chrome && zip chrome-extension.zip ./*)
           (cd build-firefox && zip firefox-extension.zip ./*)
-          ./scripts/zip-sources src
+          ./scripts/zip-source src
 
       - name: Tree
         run: |
