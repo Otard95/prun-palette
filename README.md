@@ -6,11 +6,11 @@ which allows players to manage their game actions via a few keystrokes.
 
 ## Table of Contents
 
-    [Installation](#installation)
-    [Development](#development)
-    [Building](#building)
-    [Contributing](#contributing)
-    [License](#license)
+[Installation](#installation)
+[Development](#development)
+[Building](#building)
+[Contributing](#contributing)
+[License](#license)
 
 ## Installation
 
@@ -19,14 +19,14 @@ Firefox extension stores.
 
 ## Development
 
-This project uses `pnpm`
+This project uses `pnpm`.
 To run PrUn Palette in a development environment, follow these steps:
 
-    Clone the repository: `git clone git@github.com:Otard95/prun-palette.git`
-    Navigate into the project directory: `cd prun-palette`
-    Install the dependencies: `pnpm install`
-    Build and watch for changes: pnpm watch
-    Add `./build-<browser>` as an extension, this varies based on the browser.
+ - Clone the repository: `git clone git@github.com:Otard95/prun-palette.git`
+ - Navigate into the project directory: `cd prun-palette`
+ - Install the dependencies: `pnpm install`
+ - Build and watch for changes: pnpm watch
+ - Add `./build-<browser>` as an extension, this varies based on the browser.
 
 ## Building
 
