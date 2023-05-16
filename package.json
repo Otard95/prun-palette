@@ -4,6 +4,7 @@
   "description": "A command pallet for Prosperous Universe",
   "scripts": {
     "build": "rollup -c",
+    "build:prod": "ENV=production rollup -c",
     "watch": "rollup -c -w",
     "test": "tsc --noEmit && jest",
     "jest:watch": "jest --watchAll",
@@ -20,6 +21,7 @@
     "rollup-plugin-copy": "3.4.0",
     "rollup-plugin-license": "3.0.1",
     "rollup-plugin-sass": "1.12.19",
+    "rollup-plugin-uglify": "6.0.4",
     "ts-jest": "29.1.0",
     "tslib": "2.5.0"
   }

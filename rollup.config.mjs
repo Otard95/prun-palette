@@ -2,6 +2,43 @@ import typescript from '@rollup/plugin-typescript'
 import copy from 'rollup-plugin-copy'
 import sass from 'rollup-plugin-sass'
 import license from 'rollup-plugin-license'
+import { uglify as uglifyPlug } from 'rollup-plugin-uglify'
+
+const plugins = ({
+  browser,
+  uglify,
+}) => ([
+  typescript(),
+  sass({
+    output: `build-${browser}/index.css`,
+  }),
+  ...(uglify && [uglifyPlug()]),
+  copy({
+    targets: [
+      {
+        src: `manifest.${browser}.json`,
+        dest: `build-${browser}`,
+        rename: 'manifest.json'
+      },
+      { src: 'assets/*.png', dest: `build-${browser}` },
+    ],
+  }),
+  license({
+    banner: {
+      content: {
+        file: 'LICENSE_TEMPLATE',
+      },
+    },
+  }),
+])
+
+const production = process.env.ENV === 'production'
+
+if (production) {
+  console.log('Building for production')
+} else {
+  console.log('Building for development')
+}
 
 export default [
   {
@@ -10,29 +47,7 @@ export default [
       file: 'build-chrome/index.js',
       format: 'iife',
     },
-    plugins: [
-      typescript(),
-      sass({
-        output: 'build-chrome/index.css',
-      }),
-      copy({
-        targets: [
-          {
-            src: 'manifest.chrome.json',
-            dest: 'build-chrome',
-            rename: 'manifest.json'
-          },
-          { src: 'assets/*.png', dest: 'build-chrome' },
-        ],
-      }),
-      license({
-        banner: {
-          content: {
-            file: 'LICENSE_TEMPLATE',
-          },
-        },
-      }),
-    ],
+    plugins: plugins({ browser: 'chrome', uglify: production }),
   },
   {
     input: 'src/index.ts',
@@ -40,28 +55,6 @@ export default [
       file: 'build-firefox/index.js',
       format: 'iife',
     },
-    plugins: [
-      typescript(),
-      sass({
-        output: 'build-firefox/index.css',
-      }),
-      copy({
-        targets: [
-          {
-            src: 'manifest.firefox.json',
-            dest: 'build-firefox',
-            rename: 'manifest.json'
-          },
-          { src: 'assets/*.png', dest: 'build-firefox' }
-        ],
-      }),
-      license({
-        banner: {
-          content: {
-            file: 'LICENSE_TEMPLATE',
-          },
-        },
-      }),
-    ],
+    plugins: plugins({ browser: 'firefox', uglify: production }),
   },
 ]
