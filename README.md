@@ -6,10 +6,10 @@ which allows players to manage their game actions via a few keystrokes.
 
 ## Table of Contents
 
-[Installation](#installation)
-[Development](#development)
-[Building](#building)
-[Contributing](#contributing)
+[Installation](#installation)  
+[Development](#development)  
+[Building](#building)  
+[Contributing](#contributing)  
 [License](#license)
 
 ## Installation
