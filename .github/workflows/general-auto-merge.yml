@@ -1,12 +1,12 @@
-name: Automated Merge (master into dev)
+name: Automated Merge (main into dev)
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   automatic-merge:
-    if: "!contains(github.event.head_commit.message, '[promote dev to master]')"
+    if: "!contains(github.event.head_commit.message, '[promote dev to main]')"
     name: Automatic merge back to dev
     runs-on: ubuntu-latest
     steps:
@@ -23,5 +23,5 @@ jobs:
         run: |
           git checkout dev
           git pull
-          git merge --no-ff master -m "chore: Automatic merge of master into dev [skip ci]"
+          git merge --no-ff main -m "chore: Automatic merge of main into dev [skip ci]"
           git push
