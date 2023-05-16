@@ -3,18 +3,20 @@
 # This script is used to zip the source code of the project.
 
 sources=(
-  "src"
   "assets"
-  "typings"
+  "COPYING"
+  "jest.config.js"
+  "LICENSE_TEMPLATE"
+  "manifest.chrome.json"
+  "manifest.firefox.json"
   "package.json"
   "pnpm-lock.yaml"
-  "tsconfig.json"
-  "jest.config.js"
-  "manifest.firefox.json"
-  "rollup.config.js"
   "README.md"
-  "COPYING"
-  "LICENSE_TEMPLATE"
+  "rollup.config.mjs"
+  "scripts"
+  "src"
+  "tsconfig.json"
+  "typings"
 )
 
 zip -r sources.zip ${sources[@]}
