@@ -1,5 +1,5 @@
 {
-  "manifest_version": 3,
+  "manifest_version": 2,
   "name": "PrUn Palette",
   "version": "0.0.1",
 
@@ -19,8 +19,8 @@
     }
   ],
 
-  "host_permissions": [
-    "*://rest.fnar.net/*"
+  "permissions": [
+    "webRequest"
   ],
 
   "browser_specific_settings": {
