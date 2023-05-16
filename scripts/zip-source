@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# This script is used to zip the source code of the project.
+
+sources=(
+  "src"
+  "assets"
+  "typings"
+  "package.json"
+  "pnpm-lock.yaml"
+  "tsconfig.json"
+  "jest.config.js"
+  "manifest.firefox.json"
+  "rollup.config.js"
+  "README.md"
+  "COPYING"
+  "LICENSE_TEMPLATE"
+)
+
+zip -r sources.zip ${sources[@]}
