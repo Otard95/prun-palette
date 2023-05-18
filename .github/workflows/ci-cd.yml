@@ -102,11 +102,8 @@ jobs:
             --chrome-client-id "${{ secrets.CHROME_CLIENT_ID }}" \
             --chrome-client-secret "${{ secrets.CHROME_CLIENT_SECRET }}" \
             --chrome-refresh-token "${{ secrets.CHROME_REFRESH_TOKEN }}" \
-            --chrome-publish-target "default" \
-            --chrome-skip-submit-review \
             --firefox-zip "build-firefox/firefox-extension.zip" \
             --firefox-sources-zip "sources.zip" \
             --firefox-extension-id "prun-palette@prun-palette" \
             --firefox-jwt-issuer "${{ secrets.FIREFOX_JWT_ISSUER }}" \
-            --firefox-jwt-secret "${{ secrets.FIREFOX_JWT_SECRET }}" \
-            --firefox-channel "listed" \
+            --firefox-jwt-secret "${{ secrets.FIREFOX_JWT_SECRET }}"
