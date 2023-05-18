@@ -32,7 +32,7 @@ export interface System {
 export type FIO = GConstructor<{
   get Planets(): Planet[]
   get Systems(): System[]
-} & Apex>
+}>
 
 export function FIO<TBase extends GConstructor<Apex>>(Base: TBase) {
   return class FIO extends Base {
@@ -59,4 +59,3 @@ export function FIO<TBase extends GConstructor<Apex>>(Base: TBase) {
     }
   }
 }
-
