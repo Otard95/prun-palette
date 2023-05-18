@@ -14,7 +14,6 @@
   "author": "",
   "license": "GPL-3.0-or-later",
   "devDependencies": {
-    "@rollup/plugin-typescript": "11.1.0",
     "@semantic-release/changelog": "6.0.3",
     "@semantic-release/commit-analyzer": "9.0.2",
     "@semantic-release/exec": "6.0.3",
@@ -29,9 +28,11 @@
     "rollup-plugin-copy": "3.4.0",
     "rollup-plugin-license": "3.0.1",
     "rollup-plugin-sass": "1.12.19",
+    "rollup-plugin-typescript2": "0.34.1",
     "rollup-plugin-uglify": "6.0.4",
     "semantic-release": "21.0.2",
     "ts-jest": "29.1.0",
-    "tslib": "2.5.0"
+    "tslib": "2.5.0",
+    "typescript": "5.0.4"
   }
 }
