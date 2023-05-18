@@ -1,3 +1,10 @@
+## [0.1.2](https://github.com/Otard95/prun-palette/compare/v0.1.1...v0.1.2) (2023-05-18)
+
+
+### Bug Fixes
+
+* Release should update versions of manifests and commit them. ([b004a7b](https://github.com/Otard95/prun-palette/commit/b004a7bf9483ecc681bea5b95b321a0908763ab2))
+
 # [0.1.0](https://github.com/Otard95/prun-palette/compare/v0.0.1...v0.1.0) (2023-05-18)
 
 
