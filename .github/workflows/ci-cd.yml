@@ -36,6 +36,9 @@ jobs:
   version:
     runs-on: ubuntu-latest
     needs: [test]
+    outputs:
+      new-release-published: ${{ steps.release.outputs.new-release-published }}
+      git-tag: ${{ steps.release.outputs.git-tag }}
     permissions:
       contents: write # to be able to publish a GitHub release
       issues: write # to be able to comment on released issues
@@ -56,17 +59,20 @@ jobs:
         run: pnpm install
 
       - name: Release
-        run: npx semantic-release
+        id: release
+        uses: codfish/semantic-release-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build-and-publish:
     runs-on: ubuntu-latest
     needs: [test, version]
+    if: ${{ needs.version.outputs.new-release-published == 'true' }}
     steps:
       - uses: actions/checkout@v3
         with:
-          fetch-depth: 0
+          ref: ${{ needs.version.outputs.git-tag }}
+
       - uses: pnpm/action-setup@v2
         with:
           version: 8
