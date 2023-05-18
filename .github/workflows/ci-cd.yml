@@ -95,7 +95,7 @@ jobs:
 
       - name: Publish
         run: |
-          npx publish-browser-extension \
+          npx publish-browser-extension@1.3.0 \
             --dry-run \
             --chrome-zip "build-chrome/chrome-extension.zip" \
             --chrome-extension-id "lfnnlbomdeeijpmgigmkkdemhpjelikg" \
@@ -106,4 +106,4 @@ jobs:
             --firefox-sources-zip "sources.zip" \
             --firefox-extension-id "prun-palette@prun-palette" \
             --firefox-jwt-issuer "${{ secrets.FIREFOX_JWT_ISSUER }}" \
-            --firefox-jwt-secret "${{ secrets.FIREFOX_JWT_SECRET }}"
+            --firefox-jwt-secret "${{ secrets.FIREFOX_JWT_SECRET }}" \
