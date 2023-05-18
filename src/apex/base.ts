@@ -20,7 +20,6 @@ import Deferred from '../utils/deferred'
 import DocumentObserver from '../document-observer'
 import { changeValue } from '../utils/input'
 import { memoize } from '../utils/memoize'
-import { fetchFIOPlanets, fetchFIOSystems } from '../fio'
 
 interface Screen {
   name: string
@@ -28,20 +27,10 @@ interface Screen {
   delete: () => void
   copy: () => void
 }
-interface Planet {
-  id: string
-  name: string
-}
-interface System {
-  id: string
-  name: string
-}
 
 export default class Apex {
   private readyPromise: Promise<void>
   private observer: DocumentObserver
-  private planets: Planet[] = []
-  private systems: System[] = []
 
   private static _requiredSelectors = [
     '.Frame__main___Psr0SIB',
@@ -72,9 +61,6 @@ export default class Apex {
       },
       once: true
     })
-
-    fetchFIOPlanets().then((planets) => planets && (this.planets = planets))
-    fetchFIOSystems().then((systems) => systems && (this.systems = systems))
   }
 
   public get ready(): Promise<void> {
@@ -93,14 +79,6 @@ export default class Apex {
   //     ?.querySelector('ul')
   //     ?? null
   // }
-
-  public get Planets(): Planet[] {
-    return this.planets
-  }
-
-  public get Systems(): System[] {
-    return this.systems
-  }
 
   @memoize(100)
   public get Screens(): Screen[] {
