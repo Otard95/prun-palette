@@ -21,7 +21,7 @@ import Apex from "./base";
 import { GConstructor } from 'mixin'
 
 type ApexEvents = {
-  'new-buffer': [buffer: Element, command: string | undefined]
+  'new-buffer': [buffer: Element, command?: string]
 }
 
 export type Events = GConstructor<{

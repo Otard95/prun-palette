@@ -23,7 +23,10 @@ export function Buffer<TBase extends GConstructor<Apex> & Events>(Base: TBase) {
 
       buffer.classList.add('prun-palette-taken')
 
-      if (!command) { return buffer }
+      if (!command) {
+        this.events.emit('new-buffer', buffer)
+        return buffer
+      }
 
       const input = buffer.querySelector('input')
 
@@ -33,6 +36,8 @@ export function Buffer<TBase extends GConstructor<Apex> & Events>(Base: TBase) {
 
       changeValue(input, command)
       input.form?.requestSubmit()
+
+      this.events.emit('new-buffer', buffer, command)
 
       return buffer
     }
