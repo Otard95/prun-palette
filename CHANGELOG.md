@@ -1,3 +1,10 @@
+## [0.1.3](https://github.com/Otard95/prun-palette/compare/v0.1.2...v0.1.3) (2023-05-18)
+
+
+### Bug Fixes
+
+* On publish checkout to new release tag ([b90f7f3](https://github.com/Otard95/prun-palette/commit/b90f7f3a4eecfbb2b7172145afb3387fe58eafa7))
+
 ## [0.1.2](https://github.com/Otard95/prun-palette/compare/v0.1.1...v0.1.2) (2023-05-18)
 
 
