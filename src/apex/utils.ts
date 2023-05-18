@@ -19,16 +19,55 @@
 import Apex from "./base";
 import { GConstructor } from 'mixin'
 
+export type TableMatch = Array<string | RegExp | undefined>
+
+type NodeListOrArray<T extends Element> = NodeListOf<T> | T[]
+
 export type Util = GConstructor<{
+  findMatchingRows: (rows: NodeListOrArray<HTMLTableRowElement>, match: TableMatch) => Element[]
+  findMatchingRow: (rows: NodeListOrArray<HTMLTableRowElement>, match: TableMatch) => Element | null
+  findElementWithContent: (parent: Element, content: string | RegExp) => Element | null
   closeBuffer: (buffer: Element) => void
 } & Apex>
 
 export function Util<TBase extends GConstructor<Apex>>(Base: TBase) {
   return class Util extends Base {
-    protected findElementWithContent(parent: Element, content: string): Element | null {
+    private resolveToArray(elements: NodeListOrArray<Element>): Element[] {
+      return Array.isArray(elements) ? elements : Array.from(elements)
+    }
+
+    public findMatchingRows(rows: NodeListOrArray<HTMLTableRowElement>, match: TableMatch): Element[] {
+      return this.resolveToArray(rows).filter((row) => {
+        return match.every((match, i) => {
+          if (!match) return true
+          if (typeof match === 'string') {
+            return row.querySelector(`td:nth-child(${i + 1})`)?.textContent?.trim() === match
+          }
+          if (match instanceof RegExp) {
+            const col = row.querySelector(`td:nth-child(${i + 1})`)?.textContent?.trim()
+            if (!col) return false
+            return match.test(col)
+          }
+          return false
+        })
+      })
+    }
+
+    public findMatchingRow(rows: NodeListOrArray<HTMLTableRowElement>, match: TableMatch): Element | null {
+      const matchingRows = this.findMatchingRows(rows, match)
+      if (matchingRows.length === 0) return null
+      return matchingRows[0]
+    }
+
+    public findElementWithContent(parent: Element, content: string | RegExp): Element | null {
       const elements = Array.from(parent.querySelectorAll('*'))
       return elements.find((element) => {
-        return element.textContent?.trim() === content
+        if (typeof content === 'string') {
+          return element.textContent?.trim() === content
+        }
+        const text = element.textContent?.trim()
+        if (!text) return false
+        return content.test(text)
       }) ?? null
     }
 

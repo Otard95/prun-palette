@@ -20,8 +20,6 @@ import { GConstructor } from "mixin"
 import { Buffer } from "./buffer"
 import { Util } from "./utils"
 
-type InventoryMatch = [type: string | RegExp, location?: string | RegExp, name?: string | RegExp]
-
 export type Inventory = GConstructor<{
   openBaseInventory(planetName: string): Promise<void>
   openShipCargo(shipName: string): Promise<void>
@@ -33,7 +31,7 @@ export function Inventory<TBase extends Util & Buffer>(Base: TBase) {
     private async openInventoriesBuffer(): Promise<
       {
         inventoryBuffer: Element | null,
-        inventoryRows: Element[]
+        inventoryRows: HTMLTableRowElement[]
       }
       | null
     > {
@@ -61,44 +59,11 @@ export function Inventory<TBase extends Util & Buffer>(Base: TBase) {
       return true
     }
 
-    private findInventoryRowMatching(rows: Element[], match: InventoryMatch): Element | null {
-      return rows.find((row) => {
-        const inventoryType = row.querySelector('td:nth-child(1)')?.textContent?.trim()
-        if (!inventoryType) return false
-
-        const inventoryLocation = row.querySelector('td:nth-child(2)')?.textContent?.trim()
-
-        const inventoryName = row.querySelector('td:nth-child(3)')?.textContent?.trim()
-
-        const [typeMatch, locationMatch, nameMatch] = match
-
-        if (typeof typeMatch === 'string') {
-          if (inventoryType !== typeMatch) return false
-        } else {
-          if (!typeMatch.test(inventoryType)) return false
-        }
-
-        if (typeof locationMatch === 'string') {
-          if (inventoryLocation !== locationMatch) return false
-        } else if (locationMatch instanceof RegExp) {
-          if (!inventoryLocation || !locationMatch.test(inventoryLocation)) return false
-        }
-
-        if (typeof nameMatch === 'string') {
-          if (inventoryName !== nameMatch) return false
-        } else if (nameMatch instanceof RegExp) {
-          if (!inventoryName || !nameMatch.test(inventoryName)) return false
-        }
-
-        return true
-      }) ?? null
-    }
-
     public async openBaseInventory(planetName: string) {
       const { inventoryBuffer, inventoryRows } = (await this.openInventoriesBuffer()) || {}
       if (!inventoryBuffer || !inventoryRows) return
 
-      const planetRow = this.findInventoryRowMatching(inventoryRows, [
+      const planetRow = this.findMatchingRow(inventoryRows, [
         'Base storage',
         new RegExp(planetName, 'i'),
       ])
@@ -117,7 +82,7 @@ export function Inventory<TBase extends Util & Buffer>(Base: TBase) {
       const { inventoryBuffer, inventoryRows } = (await this.openInventoriesBuffer()) || {}
       if (!inventoryBuffer || !inventoryRows) return
 
-      const shipRow = this.findInventoryRowMatching(inventoryRows, [
+      const shipRow = this.findMatchingRow(inventoryRows, [
         'Cargo hold',
         undefined,
         new RegExp(shipName, 'i'),
@@ -137,7 +102,7 @@ export function Inventory<TBase extends Util & Buffer>(Base: TBase) {
       const { inventoryBuffer, inventoryRows } = (await this.openInventoriesBuffer()) || {}
       if (!inventoryBuffer || !inventoryRows) return
 
-      const warehouseRow = this.findInventoryRowMatching(inventoryRows, [
+      const warehouseRow = this.findMatchingRow(inventoryRows, [
         'Warehouse unit',
         new RegExp(systemName, 'i'),
       ])
