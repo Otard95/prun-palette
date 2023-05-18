@@ -20,7 +20,7 @@
   ],
 
   "permissions": [
-    "webRequest"
+    "*://rest.fnar.net/*"
   ],
 
   "browser_specific_settings": {
