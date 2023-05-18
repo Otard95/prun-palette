@@ -1,4 +1,4 @@
-import typescript from '@rollup/plugin-typescript'
+import typescript from 'rollup-plugin-typescript2'
 import copy from 'rollup-plugin-copy'
 import sass from 'rollup-plugin-sass'
 import license from 'rollup-plugin-license'
@@ -12,7 +12,7 @@ const plugins = ({
   sass({
     output: `build-${browser}/index.css`,
   }),
-  ...(uglify && [uglifyPlug()]),
+  ...(uglify ? [uglifyPlug()] : []),
   copy({
     targets: [
       {

@@ -16,24 +16,27 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
-import Apex from "../../apex";
+import Apex from "./base";
+import { GConstructor } from 'mixin'
 
-export default abstract class ApexUtils {
-  constructor(protected apex: Apex) {}
+export type Util = GConstructor<{
+  closeBuffer: (buffer: Element) => void
+} & Apex>
 
-  private findElementWithContent(parent: Element, content: string): Element | null {
-    const elements = Array.from(parent.querySelectorAll('*'))
-    return elements.find((element) => {
-      return element.textContent?.trim() === content
-    }) ?? null
-  }
+export function Util<TBase extends GConstructor<Apex>>(Base: TBase) {
+  return class Util extends Base {
+    protected findElementWithContent(parent: Element, content: string): Element | null {
+      const elements = Array.from(parent.querySelectorAll('*'))
+      return elements.find((element) => {
+        return element.textContent?.trim() === content
+      }) ?? null
+    }
 
-  public closeBuffer(buffer: Element) {
-    const closeButton = this.findElementWithContent(buffer, 'x')
-    if (!closeButton || !(closeButton instanceof HTMLElement)) return
+    public closeBuffer(buffer: Element) {
+      const closeButton = this.findElementWithContent(buffer, 'x')
+      if (!closeButton || !(closeButton instanceof HTMLElement)) return
 
-    closeButton.click()
+      closeButton.click()
+    }
   }
 }
-
-

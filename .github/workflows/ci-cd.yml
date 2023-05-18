@@ -88,11 +88,6 @@ jobs:
           (cd build-firefox && zip firefox-extension.zip ./*)
           ./scripts/zip-source src
 
-      - name: Tree
-        run: |
-          ls -la
-          ls -laR build*
-
       - name: Publish
         run: |
           pnpm publish-extension \

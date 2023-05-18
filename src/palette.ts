@@ -45,6 +45,7 @@ export interface PaletteCommand {
   description: string
   signature: CommandSignature
   command: (...variables: any[]) => Promise<unknown> | void
+  external?: boolean
 }
 
 export default class Palette {
