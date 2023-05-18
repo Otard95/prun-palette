@@ -71,7 +71,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          fetch-depth: 0
+          ref: ${{ needs.version.outputs.git-tag }}
+
       - uses: pnpm/action-setup@v2
         with:
           version: 8
