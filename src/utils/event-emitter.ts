@@ -16,7 +16,10 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
-type ListenerFn<T extends Array<any>> = (...args: T) => void
+
+import { PromiseOrValue } from "utility-types"
+
+type ListenerFn<T extends Array<any>> = (...args: T) => PromiseOrValue<void>
 interface Listener<T extends Array<any>> {
   fn: ListenerFn<T>
   once?: boolean

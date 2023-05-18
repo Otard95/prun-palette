@@ -101,7 +101,13 @@ export default class DocumentObserver {
         const match = nodeMatches || !!nodeHadMatchingChildren
         return match
       },
-      callback: (element) => deferred.resolve(element),
+      callback: (element) => {
+        const matchingElement = element.matches(selector) ? element : element.querySelector(selector)
+        if (!matchingElement) {
+          throw new Error(`Element matching selector '${selector}' was removed before it could be returned`)
+        }
+        deferred.resolve(matchingElement)
+      },
       once: true,
     }
 

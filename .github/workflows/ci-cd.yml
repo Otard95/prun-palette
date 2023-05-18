@@ -57,7 +57,7 @@ jobs:
         run: pnpm install
 
       - name: Release
-        run: npx semantic-release --dry-run
+        run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -91,7 +91,6 @@ jobs:
       - name: Publish
         run: |
           pnpm publish-extension \
-            --dry-run \
             --chrome-zip "build-chrome/chrome-extension.zip" \
             --chrome-extension-id "lfnnlbomdeeijpmgigmkkdemhpjelikg" \
             --chrome-client-id "${{ secrets.CHROME_CLIENT_ID }}" \

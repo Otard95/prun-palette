@@ -170,7 +170,8 @@ export default class Palette {
       PaletteCommandVariables.SystemId,
       PaletteCommandVariables.PlanetName,
       PaletteCommandVariables.PlanedId,
-      PaletteCommandVariables.Screen
+      PaletteCommandVariables.Screen,
+      PaletteCommandVariables.ShipName
     ]
     return typeof sigPart === 'string' && (
       !isPaletteCommandVariable(sigPart) || fuzzableVariables.includes(sigPart)
@@ -203,6 +204,12 @@ export default class Palette {
           return this.apex.Planets.map(p => p.name.toLowerCase())
         case PaletteCommandVariables.PlanedId:
           return this.apex.Planets.map(p => p.id.toLowerCase())
+        case PaletteCommandVariables.ShipName:
+          return this.apex.Ships.map<string>(s => {
+            if (s.name) return s.name.toLowerCase()
+            if (s.transponder) return s.transponder.toLowerCase()
+            throw new Error('Ship has no name or transponder')
+          })
         default:
           return []
       }
