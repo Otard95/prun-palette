@@ -1,3 +1,10 @@
+## [0.1.4](https://github.com/Otard95/prun-palette/compare/v0.1.3...v0.1.4) (2023-05-19)
+
+
+### Bug Fixes
+
+* Try not submitting chrome for review ([890a597](https://github.com/Otard95/prun-palette/commit/890a597131b2ac847c226755fed03531815262c6))
+
 ## [0.1.3](https://github.com/Otard95/prun-palette/compare/v0.1.2...v0.1.3) (2023-05-18)
 
 
