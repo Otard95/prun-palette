@@ -2,6 +2,9 @@
   "name": "prun-palette",
   "version": "0.0.1",
   "description": "A command pallet for Prosperous Universe",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "build": "rollup -c",
     "build:prod": "ENV=production rollup -c",
