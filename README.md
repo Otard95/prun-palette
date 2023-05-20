@@ -6,27 +6,32 @@ which allows players to manage their game actions via a few keystrokes.
 
 ## Table of Contents
 
-[Installation](#installation)  
-[Development](#development)  
-[Building](#building)  
-[Contributing](#contributing)  
-[License](#license)
+ - [Installation](#installation)
+ - [Development](#development)
+ - [Building](#building)
+ - [Contributing](#contributing)
+ - [License](#license)
 
 ## Installation
 
-To install PrUn Palette for personal use, you can download it from the Chrome or
-Firefox extension stores.
+To install PrUn Palette for personal use, you can download it from the
+[Chrome](https://chrome.google.com/webstore/detail/prun-palette/lfnnlbomdeeijpmgigmkkdemhpjelikg)
+or [Firefox](https://addons.mozilla.org/en-US/firefox/addon/prun-palette/)
+extension stores. You may also want to checkout the
+[website](https://otard95.github.io/prun-palette-site/).
 
 ## Development
 
 This project uses `pnpm`.
 To run PrUn Palette in a development environment, follow these steps:
 
- - Clone the repository: `git clone git@github.com:Otard95/prun-palette.git`
+ - Clone the repository, your fork or download the source code.
  - Navigate into the project directory: `cd prun-palette`
  - Install the dependencies: `pnpm install`
- - Build and watch for changes: pnpm watch
+ - Build and watch for changes: `pnpm watch` - Or just build: `pnpm build`
  - Add `./build-<browser>` as an extension, this varies based on the browser.
+
+ > See [Contribution Guide](./CONTRIBUTION_GUIDE.md) for more details.
 
 ## Building
 
