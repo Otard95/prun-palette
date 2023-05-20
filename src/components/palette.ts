@@ -61,7 +61,7 @@ export default function palette({ fuzzNextArg, getTopMatches, execute, close }: 
   }
 
   const onPaletteInputChange = (value: string) => {
-    current = value.trimLeft()
+    current = value
     bestMatch = fuzzNextArg(path, current) || undefined
     topMatches = getTopMatches(path, current)
     updatePaletteInput()
@@ -69,8 +69,8 @@ export default function palette({ fuzzNextArg, getTopMatches, execute, close }: 
   }
 
   const onPaletteInputComplete = () => {
-    if (!bestMatch) return
-    path.push(bestMatch)
+    if (!bestMatch && !current) return
+    path.push(bestMatch || current)
     current = ''
     bestMatch = undefined
     topMatches = getTopMatches(path, current)
