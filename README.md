@@ -37,9 +37,9 @@ This will create a build directory with the compiled extension.
 
 ## Contributing
 
-Contributions to PrUn Palette are always welcome. If you have a feature
-suggestion, bug report, or want to contribute to the code, please feel free to
-open an issue or submit a pull request.
+PrUn Palette thrives on the valuable contributions from our community. Whether it's a bug report, feature suggestion, or a code contribution, they all help make PrUn Palette better.
+
+For detailed guidelines on how to contribute, please refer to our [Contribution Guide](./CONTRIBUTION_GUIDE.md). We can't wait to see your ideas and work!
 
 ## License
 
