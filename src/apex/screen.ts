@@ -27,7 +27,7 @@ export interface ScreenItem {
 }
 
 export type Screen = GConstructor<{
-  closeBuffer: (buffer: Element) => void
+  get Screens(): ScreenItem[]
 }>
 
 export function Screen<TBase extends GConstructor<Apex>>(Base: TBase) {
