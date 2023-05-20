@@ -4,6 +4,8 @@ PrUn Palette is a browser extension designed to enhance the gameplay experience
 of Prosperous Universe. It offers a versatile and customizable command palette,
 which allows players to manage their game actions via a few keystrokes.
 
+![Screenshot](./extension-assets/store-screenshot.png)
+
 ## Table of Contents
 
  - [Installation](#installation)
