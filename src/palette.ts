@@ -33,6 +33,7 @@ export enum PaletteCommandVariables {
   ContractId = '{contract-id}',
   InventoryId = '{inventory-id}',
   ShipName = '{ship-name}',
+  Location = '{location}'
 }
 type CommandSignature = (string | PaletteCommandVariables)[]
 
@@ -171,7 +172,8 @@ export default class Palette {
       PaletteCommandVariables.PlanetName,
       PaletteCommandVariables.PlanedId,
       PaletteCommandVariables.Screen,
-      PaletteCommandVariables.ShipName
+      PaletteCommandVariables.ShipName,
+      PaletteCommandVariables.Location
     ]
     return typeof sigPart === 'string' && (
       !isPaletteCommandVariable(sigPart) || fuzzableVariables.includes(sigPart)
@@ -210,6 +212,12 @@ export default class Palette {
             if (s.transponder) return s.transponder.toLowerCase()
             throw new Error('Ship has no name or transponder')
           })
+        case PaletteCommandVariables.Location:
+          return [
+            ...this.apex.Stations.map(s => s.location),
+            ...this.apex.Planets.map(p => p.name.toLowerCase()),
+            ...this.apex.Systems.map(s => s.name.toLowerCase())
+          ]
         default:
           return []
       }

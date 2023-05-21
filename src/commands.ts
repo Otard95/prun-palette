@@ -107,7 +107,7 @@ export default function attachCommands(palette: Palette, apex: Apex) {
     name: 'Warehouse',
     description: 'Open a warehouse inventory',
     command: (systemName: string) => apex.openWarehouse(systemName),
-    signature: ['inventory', 'warehouse', PaletteCommandVariables.SystemName],
+    signature: ['inventory', 'warehouse', PaletteCommandVariables.Location],
   })
 
   // ######################
