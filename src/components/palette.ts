@@ -69,7 +69,7 @@ export default function palette({ fuzzNextArg, getTopMatches, execute, close }: 
   }
 
   const onPaletteInputComplete = () => {
-    if (!bestMatch && !current) return
+    if (!bestMatch && !current || topMatches.length === 0) return
     path.push(bestMatch || current)
     current = ''
     bestMatch = undefined
