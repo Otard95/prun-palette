@@ -1,3 +1,21 @@
+# [0.2.0](https://github.com/Otard95/prun-palette/compare/v0.1.4...v0.2.0) (2023-05-21)
+
+
+### Bug Fixes
+
+* Allow tab complete to use current intput ([3066e99](https://github.com/Otard95/prun-palette/commit/3066e99e3fbf0359267830ce8c53e2e3ac1f1a57))
+* Disallow completion when no commands match ([bd4e3dc](https://github.com/Otard95/prun-palette/commit/bd4e3dc080bceda94503beb0679bcf6723df9296))
+* Screen type ([948e351](https://github.com/Otard95/prun-palette/commit/948e351462291150210f7918cc38a49c8925d68c))
+* Use location arg for inventory warehouse command ([13d4d8f](https://github.com/Otard95/prun-palette/commit/13d4d8ff4aab67feaa592b0b89d983b254fb5bce))
+* Use regexp utils to match string with special chars ([6f499d5](https://github.com/Otard95/prun-palette/commit/6f499d5536e061632862504ceff2f4e9d2010f20))
+
+
+### Features
+
+* Add regexp utils ([95b807d](https://github.com/Otard95/prun-palette/commit/95b807dd83e1c536ae1f35b48d7fb31d6512351b))
+* **apex:** Add stations ([453aed4](https://github.com/Otard95/prun-palette/commit/453aed4c675ebaa20b1e0dd58c1c3b0a05d69fc6))
+* Enable location fuzzing ([c45a97b](https://github.com/Otard95/prun-palette/commit/c45a97bb033a5493251d24c2761e4480e6fc38cc))
+
 ## [0.1.4](https://github.com/Otard95/prun-palette/compare/v0.1.3...v0.1.4) (2023-05-19)
 
 
