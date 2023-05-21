@@ -19,6 +19,7 @@
 import { GConstructor } from "mixin"
 import { Buffer } from "./buffer"
 import { Util } from "./utils"
+import { regexpIncludesString } from "../utils/regexp"
 
 export type Inventory = GConstructor<{
   openBaseInventory(planetName: string): Promise<void>
@@ -65,7 +66,7 @@ export function Inventory<TBase extends Util & Buffer>(Base: TBase) {
 
       const planetRow = this.findMatchingRow(inventoryRows, [
         'Base storage',
-        new RegExp(planetName, 'i'),
+        regexpIncludesString(planetName, 'i'),
       ])
 
       if (!planetRow) {
@@ -85,7 +86,7 @@ export function Inventory<TBase extends Util & Buffer>(Base: TBase) {
       const shipRow = this.findMatchingRow(inventoryRows, [
         'Cargo hold',
         undefined,
-        new RegExp(shipName, 'i'),
+        regexpIncludesString(shipName, 'i'),
       ])
 
       if (!shipRow) {
@@ -104,7 +105,7 @@ export function Inventory<TBase extends Util & Buffer>(Base: TBase) {
 
       const warehouseRow = this.findMatchingRow(inventoryRows, [
         'Warehouse unit',
-        new RegExp(systemName, 'i'),
+        regexpIncludesString(systemName, 'i'),
       ])
 
       if (!warehouseRow) {
