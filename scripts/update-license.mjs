@@ -8,21 +8,21 @@ const isDryRun = args.includes('--dry-run')
 
 const positionalArgs = args.filter(arg => !arg.startsWith('-'))
 if (positionalArgs.length !== 1) {
-  console.log('Usage: update-license [--dry-run] <in-directory>')
+  console.log(`Usage: ${program} [--dry-run] <in-directory>`)
   exit(1)
 }
 
 const directory = positionalArgs[0]
 
 const pkg = JSON.parse((await $`cat package.json`).stdout || 'null')
-const licenseTmpl = (await $`cat LICENSE_TEMPLATE`).stdout || ''
+const licenseTemplate = (await $`cat LICENSE_TEMPLATE`).stdout || ''
 
-if (!pkg || !licenseTmpl) {
+if (!pkg || !licenseTemplate) {
   console.log('Error: failed to read package.json or LICENSE_TEMPLATE')
   exit(1)
 }
 
-const license = licenseTmpl
+const license = licenseTemplate
   .replace('<%= pkg.description %>', pkg.description)
   .replace('<%= moment().format(\'YYYY\') %>', new Date().getFullYear())
 
@@ -49,10 +49,6 @@ const findArgs = [
 const files = (await $`find ${directory} ${findArgs}`).stdout
   .split('\n')
   .filter(Boolean)
-
-if (isDryRun) {
-  console.log(files)
-}
 
 for (const file of files) {
   console.log(file)
