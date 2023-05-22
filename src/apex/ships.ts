@@ -36,10 +36,17 @@ export type Ships = GConstructor<{
 
 export function Ships<TBase extends Events & Util>(Base: TBase) {
   return class Ships extends Base {
-    private ships: Set<ShipInfo> = new Set()
+    private ships: Set<ShipInfo>
 
     constructor(...args: any[]) {
       super(...args)
+
+      this.ships = new Set()
+      try {
+        this.loadShipInfo()
+      } catch (e) {
+        console.debug('[PrUn Palette] Failed to parse ships from localStorage')
+      }
 
       this.events.on('new-buffer', (buffer, command) => {
         if (command?.toLowerCase() === 'inv')
@@ -47,6 +54,17 @@ export function Ships<TBase extends Events & Util>(Base: TBase) {
         if (command?.toLowerCase() === 'flt')
           this.getShipNamesFromFleet(buffer)
       })
+    }
+
+    private storeShipInfo(): void {
+      localStorage.setItem('ships', JSON.stringify(this.Ships))
+    }
+
+    private loadShipInfo(): void {
+      const ships = localStorage.getItem('ships')
+      if (ships) {
+        this.ships = new Set(JSON.parse(ships))
+      }
     }
 
     private mergeShipInfo(shipInfo: ShipInfo[]): void {
@@ -64,6 +82,7 @@ export function Ships<TBase extends Events & Util>(Base: TBase) {
           ...ship,
         })
       })
+      this.storeShipInfo()
     }
 
     private async getShipNamesFromInventory(buffer: Element): Promise<void> {
