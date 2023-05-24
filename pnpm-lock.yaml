@@ -1,5 +1,10 @@
 lockfileVersion: '6.0'
 
+dependencies:
+  webextension-polyfill:
+    specifier: 0.10.0
+    version: 0.10.0
+
 devDependencies:
   '@google/semantic-release-replace-plugin':
     specifier: 1.2.0
@@ -22,6 +27,9 @@ devDependencies:
   '@types/jest':
     specifier: 29.5.1
     version: 29.5.1
+  '@types/webextension-polyfill':
+    specifier: 0.10.0
+    version: 0.10.0
   jest:
     specifier: 29.5.0
     version: 29.5.0
@@ -1125,6 +1133,10 @@ packages:
 
   /@types/stack-utils@2.0.1:
     resolution: {integrity: sha512-Hl219/BT5fLAaz6NDkSuhzasy49dwQS/DSdu4MdggFB8zcXv7vflBI3xp7FEmkmdDkBUI2bPUNeMttp2knYdxw==}
+    dev: true
+
+  /@types/webextension-polyfill@0.10.0:
+    resolution: {integrity: sha512-If4EcaHzYTqcbNMp/FdReVdRmLL/Te42ivnJII551bYjhX19bWem5m14FERCqdJA732OloGuxCRvLBvcMGsn4A==}
     dev: true
 
   /@types/yargs-parser@21.0.0:
@@ -4709,6 +4721,10 @@ packages:
     dependencies:
       makeerror: 1.0.12
     dev: true
+
+  /webextension-polyfill@0.10.0:
+    resolution: {integrity: sha512-c5s35LgVa5tFaHhrZDnr3FpQpjj1BB+RXhLTYUxGqBVN460HkbM8TBtEqdXWbpTKfzwCcjAZVF7zXCYSKtcp9g==}
+    dev: false
 
   /webidl-conversions@3.0.1:
     resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
