@@ -20,9 +20,9 @@ import Apex from "./apex"
 import Palette, { PaletteCommandVariables } from "./palette"
 
 export default function attachCommands(palette: Palette, apex: Apex) {
-  // ######################
-  // #  General commands  #
-  // ######################
+  // ############################
+  // #     General commands     #
+  // ############################
 
   palette.addCommand({
     name: 'Buffer',
@@ -37,9 +37,9 @@ export default function attachCommands(palette: Palette, apex: Apex) {
     signature: ['buffer', PaletteCommandVariables.Command],
   })
 
-  // ######################
-  // # Contract commands  #
-  // ######################
+  // ############################
+  // #    Contract commands     #
+  // ############################
 
   palette.addCommand({
     name: 'Contracts',
@@ -60,9 +60,9 @@ export default function attachCommands(palette: Palette, apex: Apex) {
     signature: ['contract', PaletteCommandVariables.ContractId],
   })
 
-  // ######################
-  // #   Fleet commands   #
-  // ######################
+  // ############################
+  // #      Fleet commands      #
+  // ############################
 
   palette.addCommand({
     name: 'Fleet',
@@ -71,9 +71,9 @@ export default function attachCommands(palette: Palette, apex: Apex) {
     signature: ['fleet'],
   })
 
-  // ######################
-  // # Inventory commands #
-  // ######################
+  // ############################
+  // #    Inventory commands    #
+  // ############################
 
   palette.addCommand({
     name: 'Inventories',
@@ -110,9 +110,9 @@ export default function attachCommands(palette: Palette, apex: Apex) {
     signature: ['inventory', 'warehouse', PaletteCommandVariables.Location],
   })
 
-  // ######################
-  // #  Screen commands   #
-  // ######################
+  // ############################
+  // #     Screen commands      #
+  // ############################
 
   palette.addCommand({
     name: 'Screen',
@@ -121,6 +121,17 @@ export default function attachCommands(palette: Palette, apex: Apex) {
       .find((s) => s.name.toLowerCase() === screen.toLowerCase())
       ?.open(),
     signature: ['screen', PaletteCommandVariables.Screen],
+  })
+
+  // ############################
+  // #  Notification commands   #
+  // ############################
+
+  palette.addCommand({
+    name: 'Notifications',
+    description: 'Open the notifications list',
+    command: () => apex.openNotifications(),
+    signature:['notifications'],
   })
 }
 
