@@ -33,8 +33,8 @@ export default class Apex extends Notification  (
                                   FIO           (
                                   Inventory     (
                                   Ships         (
-                                  Util          (
                                   Buffer        (
+                                  Util          (
                                   Events        (
                                   ApexBase      )))))))))
 {}

@@ -17,9 +17,9 @@
 
 */
 import { GConstructor } from 'mixin'
-import Apex from './base'
 import { Events } from './events'
 import { changeValue } from '../utils/input'
+import { Util } from './utils'
 
 enum Selector {
   EmptyBuffer = '#TOUR_TARGET_EMPTY_BUFFER',
@@ -31,9 +31,11 @@ enum Selector {
 
 export type Buffer = GConstructor<{
   createBuffer(command?: string): Promise<Element | null>
+  closeBuffer(buffer: Element): void
+  closeAllBuffers(): Promise<void>
 }>
 
-export function Buffer<TBase extends GConstructor<Apex> & Events>(Base: TBase) {
+export function Buffer<TBase extends Util & Events>(Base: TBase) {
   return class Buffer extends Base {
     constructor(...args: any[]) {
       super(...args)
@@ -92,6 +94,21 @@ export function Buffer<TBase extends GConstructor<Apex> & Events>(Base: TBase) {
       input.form?.requestSubmit()
 
       return buffer
+    }
+
+    public closeBuffer(buffer: Element) {
+      const closeButton = this.findElementWithContent(buffer, 'x')
+      if (!closeButton || !(closeButton instanceof HTMLElement)) return
+
+      closeButton.click()
+    }
+
+    public async closeAllBuffers(): Promise<void> {
+      const buffers = document.querySelectorAll(Selector.EmptyBuffer)
+
+      buffers.forEach((buffer) => {
+        this.closeBuffer(buffer)
+      })
     }
   }
 }
