@@ -42,6 +42,12 @@ export default function attachCommands(palette: Palette, apex: Apex) {
     command: () => apex.closeAllBuffers(),
     signature: ['buffer', 'close', 'all'],
   })
+  palette.addCommand({
+    name: 'Buffer close',
+    description: 'Close a buffer with a command',
+    command: (command: string) => apex.closeBufferWithCommand(command),
+    signature: ['buffer', 'close', PaletteCommandVariables.Command],
+  })
 
   // ############################
   // #    Contract commands     #
