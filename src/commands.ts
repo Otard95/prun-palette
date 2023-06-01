@@ -130,7 +130,7 @@ export default function attachCommands(palette: Palette, apex: Apex) {
   palette.addCommand({
     name: 'Notifications',
     description: 'Open the notifications list',
-    command: () => apex.openNotifications(),
+    command: () => apex.createBuffer('NOTS'),
     signature:['notifications'],
   })
 
@@ -146,6 +146,13 @@ export default function attachCommands(palette: Palette, apex: Apex) {
     description: 'Mark all notifications as seen',
     command: () => apex.markAllNotificationsSeen(),
     signature:['notifications', 'seen'],
+  })
+
+  palette.addCommand({
+    name: 'Notifications open',
+    description: 'Open a notification',
+    command: (notificationId: string) => apex.openNotificationIndex(Number(notificationId)),
+    signature:['notifications', 'open', PaletteCommandVariables.Number],
   })
 }
 

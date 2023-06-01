@@ -33,7 +33,8 @@ export enum PaletteCommandVariables {
   ContractId = '{contract-id}',
   InventoryId = '{inventory-id}',
   ShipName = '{ship-name}',
-  Location = '{location}'
+  Location = '{location}',
+  Number = '{number}',
 }
 type CommandSignature = (string | PaletteCommandVariables)[]
 

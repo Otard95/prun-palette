@@ -18,49 +18,57 @@
 */
 import { GConstructor } from "mixin"
 import { Buffer } from "./buffer"
+import { Events } from "./events"
 import { Util } from "./utils"
 
-// enum NotificationElementSelector {
-//   AlertListItem = 'div[class^="AlertListItem__container"]',
-//   AlertListItemContent = 'div[class^="AlertListItem__content"]',
-// }
+enum NotificationElementSelector {
+  AlertListItem = 'div[class^="AlertListItem__container"]',
+  AlertListItemContent = 'div[class^="AlertListItem__content"]',
+}
 
 export type Notification = GConstructor<{
-  openNotifications(): Promise<Element | null>
   markAllNotificationsRead(): Promise<void>
   markAllNotificationsSeen(): Promise<void>
+  openNotificationIndex(index: number): Promise<void>
 }>
 
-export function Notification<TBase extends Util & Buffer>(Base: TBase) {
+export function Notification<TBase extends Buffer & Events & Util>(Base: TBase) {
   return class Notification extends Base {
-    // private createAlertIndex(index: number): HTMLDivElement {
-    //   const alertIndex = document.createElement('div')
-    //   alertIndex.classList.add('alert-index')
-    //   alertIndex.innerText = index.toString()
-    //   return alertIndex
-    // }
+    constructor(...args: any[]) {
+      super(...args)
 
-    public async openNotifications() {
-      return await this.createBuffer('NOTS')
-      // const buffer = await this.createBuffer('NOTS')
+      this.events.on('new-buffer', (buffer, cmd) => {
+        if (cmd === 'NOTS') {
+          this.numberAlerts(buffer)
+        }
+      })
+    }
 
-      // this.observer.waitFor(NotificationElementSelector.AlertListItem)
+    private createAlertIndex(index: number): HTMLDivElement {
+      const alertIndex = document.createElement('div')
+      alertIndex.classList.add('prun-alert-index')
+      alertIndex.innerText = index.toString()
+      return alertIndex
+    }
 
-      // const alerts = buffer?.querySelectorAll(NotificationElementSelector.AlertListItem)
-      // if (!alerts) return
+    private numberAlerts(buffer: Element) {
+      this.observer.waitFor(NotificationElementSelector.AlertListItem)
 
-      // // Add numeric index to each alert
-      // alerts.forEach((alert, i) => {
-      //   const alertContent = alert.querySelector(NotificationElementSelector.AlertListItemContent)
-      //   if (!alertContent) return
+      const alerts = buffer?.querySelectorAll(NotificationElementSelector.AlertListItem)
+      if (!alerts) return
 
-      //   const alertIndex = this.createAlertIndex(i + 1)
-      //   alertContent.before(alertIndex)
-      // })
+      // Add numeric index to each alert
+      alerts.forEach((alert, i) => {
+        const alertContent = alert.querySelector(NotificationElementSelector.AlertListItemContent)
+        if (!alertContent) return
+
+        const alertIndex = this.createAlertIndex(i + 1)
+        alertContent.before(alertIndex)
+      })
     }
 
     public async markAllNotificationsRead() {
-      const buffer = await this.openNotifications()
+      const buffer = await this.createBuffer('NOTS')
       const buttons = buffer?.querySelectorAll('button')
 
       if (!buttons) return
@@ -79,7 +87,7 @@ export function Notification<TBase extends Util & Buffer>(Base: TBase) {
     }
 
     public async markAllNotificationsSeen() {
-      const buffer = await this.openNotifications()
+      const buffer = await this.createBuffer('NOTS')
       const buttons = buffer?.querySelectorAll('button')
 
       if (!buttons) return
@@ -92,6 +100,23 @@ export function Notification<TBase extends Util & Buffer>(Base: TBase) {
           )
         ) button.click()
       })
+
+      if (buffer)
+        this.closeBuffer(buffer)
+    }
+
+    public async openNotificationIndex(index: number) {
+      const alertItemsPromise = this.observer.waitFor(NotificationElementSelector.AlertListItem)
+      const buffer = await this.createBuffer('NOTS')
+      await alertItemsPromise
+      const alerts = buffer?.querySelectorAll(NotificationElementSelector.AlertListItem)
+
+      if (!alerts) return
+
+      const alert = alerts[index - 1]
+      if (!alert || !(alert instanceof HTMLDivElement)) return
+
+      alert.click()
 
       if (buffer)
         this.closeBuffer(buffer)
