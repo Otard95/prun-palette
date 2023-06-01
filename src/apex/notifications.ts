@@ -26,7 +26,9 @@ import { Util } from "./utils"
 // }
 
 export type Notification = GConstructor<{
-  openNotifications(): Promise<void>
+  openNotifications(): Promise<Element | null>
+  markAllNotificationsRead(): Promise<void>
+  markAllNotificationsSeen(): Promise<void>
 }>
 
 export function Notification<TBase extends Util & Buffer>(Base: TBase) {
@@ -39,7 +41,7 @@ export function Notification<TBase extends Util & Buffer>(Base: TBase) {
     // }
 
     public async openNotifications() {
-      await this.createBuffer('NOTS')
+      return await this.createBuffer('NOTS')
       // const buffer = await this.createBuffer('NOTS')
 
       // this.observer.waitFor(NotificationElementSelector.AlertListItem)
@@ -55,6 +57,44 @@ export function Notification<TBase extends Util & Buffer>(Base: TBase) {
       //   const alertIndex = this.createAlertIndex(i + 1)
       //   alertContent.before(alertIndex)
       // })
+    }
+
+    public async markAllNotificationsRead() {
+      const buffer = await this.openNotifications()
+      const buttons = buffer?.querySelectorAll('button')
+
+      if (!buttons) return
+
+      buttons.forEach((button) => {
+        const btnText = button.innerText.toLowerCase()
+        if (
+          ['all', 'read'].every(
+            s => btnText.includes(s)
+          )
+        ) button.click()
+      })
+
+      if (buffer)
+        this.closeBuffer(buffer)
+    }
+
+    public async markAllNotificationsSeen() {
+      const buffer = await this.openNotifications()
+      const buttons = buffer?.querySelectorAll('button')
+
+      if (!buttons) return
+
+      buttons.forEach((button) => {
+        const btnText = button.innerText.toLowerCase()
+        if (
+          ['all', 'seen'].every(
+            s => btnText.includes(s)
+          )
+        ) button.click()
+      })
+
+      if (buffer)
+        this.closeBuffer(buffer)
     }
   }
 }

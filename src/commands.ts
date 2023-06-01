@@ -133,6 +133,20 @@ export default function attachCommands(palette: Palette, apex: Apex) {
     command: () => apex.openNotifications(),
     signature:['notifications'],
   })
+
+  palette.addCommand({
+    name: 'Notifications read',
+    description: 'Mark all notifications as read',
+    command: () => apex.markAllNotificationsRead(),
+    signature:['notifications', 'read'],
+  })
+
+  palette.addCommand({
+    name: 'Notifications seen',
+    description: 'Mark all notifications as seen',
+    command: () => apex.markAllNotificationsSeen(),
+    signature:['notifications', 'seen'],
+  })
 }
 
 
