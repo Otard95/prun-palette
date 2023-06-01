@@ -21,30 +21,66 @@ import Apex from './base'
 import { Events } from './events'
 import { changeValue } from '../utils/input'
 
+enum Selector {
+  EmptyBuffer = '#TOUR_TARGET_EMPTY_BUFFER',
+  EmptyBufferNotTaken = '#TOUR_TARGET_EMPTY_BUFFER:not(.prun-palette-taken)',
+  NewBufferButton = '#TOUR_TARGET_BUTTON_BUFFER_NEW',
+  BufferCMDElement = 'div[class^="TileFrame__cmd"]',
+  TakenClass = 'prun-palette-taken',
+}
+
 export type Buffer = GConstructor<{
   createBuffer(command?: string): Promise<Element | null>
 }>
 
 export function Buffer<TBase extends GConstructor<Apex> & Events>(Base: TBase) {
   return class Buffer extends Base {
+    constructor(...args: any[]) {
+      super(...args)
+
+      this.observer.addListener('add', {
+        match: (element) => {
+          const nodeMatches = element.matches(Selector.EmptyBuffer)
+          const nodeHadMatchingChildren = element.querySelector(Selector.EmptyBuffer)
+          const match = nodeMatches || !!nodeHadMatchingChildren
+          return match
+        },
+        callback: async (element) => {
+          const buffer = element.matches(Selector.EmptyBuffer)
+            ? element
+            : element.querySelector(Selector.EmptyBuffer)
+
+          if (!buffer) return
+
+          try {
+            const bufferCMDElement = await this.observer.waitFor(Selector.BufferCMDElement)
+            const cmd = bufferCMDElement.textContent
+
+            console.debug('[PrUn Palette] New buffer', buffer, cmd)
+            this.events.emit('new-buffer', buffer, cmd ?? undefined)
+          } catch (error) {
+            this.events.emit('new-buffer', buffer)
+            console.error('[PrUn Palette] Could not find buffer CMD element in time', error)
+          }
+        },
+      })
+    }
+
     private get newBufferButton(): HTMLButtonElement | null {
-      return document.querySelector('#TOUR_TARGET_BUTTON_BUFFER_NEW')
+      return document.querySelector(Selector.NewBufferButton)
     }
 
     public async createBuffer(command?: string): Promise<Element | null> {
       if (this.newBufferButton === null) return null
 
-      const bufferPromise = this.observer.waitFor('#TOUR_TARGET_EMPTY_BUFFER:not(.prun-palette-taken)')
+      const bufferPromise = this.observer.waitFor(Selector.EmptyBufferNotTaken)
 
       this.newBufferButton.click()
       const buffer = await bufferPromise
 
-      buffer.classList.add('prun-palette-taken')
+      buffer.classList.add(Selector.TakenClass)
 
-      if (!command) {
-        this.events.emit('new-buffer', buffer)
-        return buffer
-      }
+      if (!command) return buffer
 
       const input = buffer.querySelector('input')
 
@@ -52,10 +88,8 @@ export function Buffer<TBase extends GConstructor<Apex> & Events>(Base: TBase) {
         throw new Error('Could not find input element')
       }
 
-      changeValue(input, command)
+      changeValue(input, command.toUpperCase())
       input.form?.requestSubmit()
-
-      this.events.emit('new-buffer', buffer, command)
 
       return buffer
     }
