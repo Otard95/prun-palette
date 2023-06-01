@@ -68,14 +68,12 @@ export default function paletteInput(
     : undefined
 
   const container = div(
-    ...path.map((p) => div(p.concat(' ·')).att$('class', 'palette-input-path')),
+    ...path.map((p) => div(p.concat(' ·')).att$('class', 'prun-palette-input-path')),
     input,
-    bestMatchSuffix && div(bestMatchSuffix).att$('class', 'palette-input-best-match')
-  ).att$('class', 'palette-input')
+    bestMatchSuffix && div(bestMatchSuffix).att$('class', 'prun-alette-input-best-match')
+  ).att$('class', 'prun-palette-input')
 
   container.onClick$(() => focus())
 
   return container
 }
-
-

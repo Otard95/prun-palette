@@ -20,9 +20,9 @@ import Apex from "./apex"
 import Palette, { PaletteCommandVariables } from "./palette"
 
 export default function attachCommands(palette: Palette, apex: Apex) {
-  // ######################
-  // #  General commands  #
-  // ######################
+  // ############################
+  // #     General commands     #
+  // ############################
 
   palette.addCommand({
     name: 'Buffer',
@@ -36,10 +36,22 @@ export default function attachCommands(palette: Palette, apex: Apex) {
     command: (command: string) => apex.createBuffer(command),
     signature: ['buffer', PaletteCommandVariables.Command],
   })
+  palette.addCommand({
+    name: 'Buffer close all',
+    description: 'Close all buffers',
+    command: () => apex.closeAllBuffers(),
+    signature: ['buffer', 'close', 'all'],
+  })
+  palette.addCommand({
+    name: 'Buffer close',
+    description: 'Close a buffer with a command',
+    command: (command: string) => apex.closeBufferWithCommand(command),
+    signature: ['buffer', 'close', PaletteCommandVariables.Command],
+  })
 
-  // ######################
-  // # Contract commands  #
-  // ######################
+  // ############################
+  // #    Contract commands     #
+  // ############################
 
   palette.addCommand({
     name: 'Contracts',
@@ -60,9 +72,9 @@ export default function attachCommands(palette: Palette, apex: Apex) {
     signature: ['contract', PaletteCommandVariables.ContractId],
   })
 
-  // ######################
-  // #   Fleet commands   #
-  // ######################
+  // ############################
+  // #      Fleet commands      #
+  // ############################
 
   palette.addCommand({
     name: 'Fleet',
@@ -71,9 +83,9 @@ export default function attachCommands(palette: Palette, apex: Apex) {
     signature: ['fleet'],
   })
 
-  // ######################
-  // # Inventory commands #
-  // ######################
+  // ############################
+  // #    Inventory commands    #
+  // ############################
 
   palette.addCommand({
     name: 'Inventories',
@@ -88,21 +100,18 @@ export default function attachCommands(palette: Palette, apex: Apex) {
     command: (inventoryId: string) => apex.createBuffer(`INV ${inventoryId}`),
     signature: ['inventory', PaletteCommandVariables.InventoryId],
   })
-
   palette.addCommand({
     name: 'Base inventory',
     description: 'Open the base\'s inventory',
     command: (planetName: string) => apex.openBaseInventory(planetName),
     signature: ['inventory', 'base', PaletteCommandVariables.PlanetName],
   })
-
   palette.addCommand({
     name: 'Ship cargo',
     description: 'Open a ship\'s cargo',
     command: (shipName: string) => apex.openShipCargo(shipName),
     signature: ['inventory', 'cargo', PaletteCommandVariables.ShipName],
   })
-
   palette.addCommand({
     name: 'Warehouse',
     description: 'Open a warehouse inventory',
@@ -110,9 +119,9 @@ export default function attachCommands(palette: Palette, apex: Apex) {
     signature: ['inventory', 'warehouse', PaletteCommandVariables.Location],
   })
 
-  // ######################
-  // #  Screen commands   #
-  // ######################
+  // ############################
+  // #     Screen commands      #
+  // ############################
 
   palette.addCommand({
     name: 'Screen',
@@ -121,6 +130,35 @@ export default function attachCommands(palette: Palette, apex: Apex) {
       .find((s) => s.name.toLowerCase() === screen.toLowerCase())
       ?.open(),
     signature: ['screen', PaletteCommandVariables.Screen],
+  })
+
+  // ############################
+  // #  Notification commands   #
+  // ############################
+
+  palette.addCommand({
+    name: 'Notifications',
+    description: 'Open the notifications list',
+    command: () => apex.createBuffer('NOTS'),
+    signature:['notifications'],
+  })
+  palette.addCommand({
+    name: 'Notifications read',
+    description: 'Mark all notifications as read',
+    command: () => apex.markAllNotificationsRead(),
+    signature:['notifications', 'read'],
+  })
+  palette.addCommand({
+    name: 'Notifications seen',
+    description: 'Mark all notifications as seen',
+    command: () => apex.markAllNotificationsSeen(),
+    signature:['notifications', 'seen'],
+  })
+  palette.addCommand({
+    name: 'Notifications open',
+    description: 'Open a notification',
+    command: (notificationId: string) => apex.openNotificationIndex(Number(notificationId)),
+    signature:['notifications', 'open', PaletteCommandVariables.Number],
   })
 }
 
