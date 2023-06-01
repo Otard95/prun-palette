@@ -20,10 +20,10 @@ import { GConstructor } from "mixin"
 import { Buffer } from "./buffer"
 import { Util } from "./utils"
 
-enum NotificationElementSelector {
-  AlertListItem = 'div[class^="AlertListItem__container"]',
-  AlertListItemContent = 'div[class^="AlertListItem__content"]',
-}
+// enum NotificationElementSelector {
+//   AlertListItem = 'div[class^="AlertListItem__container"]',
+//   AlertListItemContent = 'div[class^="AlertListItem__content"]',
+// }
 
 export type Notification = GConstructor<{
   openNotifications(): Promise<void>
@@ -31,29 +31,30 @@ export type Notification = GConstructor<{
 
 export function Notification<TBase extends Util & Buffer>(Base: TBase) {
   return class Notification extends Base {
-    private createAlertIndex(index: number): HTMLDivElement {
-      const alertIndex = document.createElement('div')
-      alertIndex.classList.add('alert-index')
-      alertIndex.innerText = index.toString()
-      return alertIndex
-    }
+    // private createAlertIndex(index: number): HTMLDivElement {
+    //   const alertIndex = document.createElement('div')
+    //   alertIndex.classList.add('alert-index')
+    //   alertIndex.innerText = index.toString()
+    //   return alertIndex
+    // }
 
     public async openNotifications() {
-      const buffer = await this.createBuffer('NOTS')
+      await this.createBuffer('NOTS')
+      // const buffer = await this.createBuffer('NOTS')
 
-      this.observer.waitFor(NotificationElementSelector.AlertListItem)
+      // this.observer.waitFor(NotificationElementSelector.AlertListItem)
 
-      const alerts = buffer?.querySelectorAll(NotificationElementSelector.AlertListItem)
-      if (!alerts) return
+      // const alerts = buffer?.querySelectorAll(NotificationElementSelector.AlertListItem)
+      // if (!alerts) return
 
-      // Add numeric index to each alert
-      alerts.forEach((alert, i) => {
-        const alertContent = alert.querySelector(NotificationElementSelector.AlertListItemContent)
-        if (!alertContent) return
+      // // Add numeric index to each alert
+      // alerts.forEach((alert, i) => {
+      //   const alertContent = alert.querySelector(NotificationElementSelector.AlertListItemContent)
+      //   if (!alertContent) return
 
-        const alertIndex = this.createAlertIndex(i + 1)
-        alertContent.before(alertIndex)
-      })
+      //   const alertIndex = this.createAlertIndex(i + 1)
+      //   alertContent.before(alertIndex)
+      // })
     }
   }
 }
