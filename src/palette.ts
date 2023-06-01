@@ -168,6 +168,7 @@ export default class Palette {
 
   private isFuzzable(sigPart: string | PaletteCommandVariables): boolean {
     const fuzzableVariables = [
+      PaletteCommandVariables.Command,
       PaletteCommandVariables.SystemName,
       PaletteCommandVariables.SystemId,
       PaletteCommandVariables.PlanetName,
@@ -197,6 +198,8 @@ export default class Palette {
       const nextArg = command.signature[partialSig.length]
       if (!isPaletteCommandVariable(nextArg)) return nextArg
       switch (nextArg) {
+        case PaletteCommandVariables.Command:
+          return this.apex.Cmds.map(c => c.toLowerCase())
         case PaletteCommandVariables.Screen:
           return this.apex.Screens.map(s => s.name.toLowerCase())
         case PaletteCommandVariables.SystemName:

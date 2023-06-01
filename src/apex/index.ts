@@ -26,8 +26,10 @@ import { Screen } from './screen'
 import { Ships } from './ships'
 import { Station } from './station'
 import { Notification } from './notifications'
+import { Cmds } from './cmds'
 
-export default class Apex extends Notification  (
+export default class Apex extends Cmds          (
+                                  Notification  (
                                   Station       (
                                   Screen        (
                                   FIO           (
@@ -36,5 +38,5 @@ export default class Apex extends Notification  (
                                   Buffer        (
                                   Util          (
                                   Events        (
-                                  ApexBase      )))))))))
+                                  ApexBase      ))))))))))
 {}
