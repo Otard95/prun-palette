@@ -59,6 +59,7 @@ export function Buffer<TBase extends GConstructor<Apex> & Events>(Base: TBase) {
             console.debug('[PrUn Palette] New buffer', buffer, cmd)
             this.events.emit('new-buffer', buffer, cmd ?? undefined)
           } catch (error) {
+            this.events.emit('new-buffer', buffer)
             console.error('[PrUn Palette] Could not find buffer CMD element in time', error)
           }
         },
