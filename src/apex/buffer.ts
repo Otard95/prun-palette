@@ -17,9 +17,9 @@
 
 */
 import { GConstructor } from 'mixin'
-import Apex from './base'
 import { Events } from './events'
 import { changeValue } from '../utils/input'
+import { Util } from './utils'
 
 enum Selector {
   EmptyBuffer = '#TOUR_TARGET_EMPTY_BUFFER',
@@ -31,9 +31,12 @@ enum Selector {
 
 export type Buffer = GConstructor<{
   createBuffer(command?: string): Promise<Element | null>
+  closeBuffer(buffer: Element): void
+  closeBufferWithCommand(command: string): void
+  closeAllBuffers(): Promise<void>
 }>
 
-export function Buffer<TBase extends GConstructor<Apex> & Events>(Base: TBase) {
+export function Buffer<TBase extends Util & Events>(Base: TBase) {
   return class Buffer extends Base {
     constructor(...args: any[]) {
       super(...args)
@@ -56,11 +59,9 @@ export function Buffer<TBase extends GConstructor<Apex> & Events>(Base: TBase) {
             const bufferCMDElement = await this.observer.waitFor(Selector.BufferCMDElement)
             const cmd = bufferCMDElement.textContent
 
-            console.debug('[PrUn Palette] New buffer', buffer, cmd)
             this.events.emit('new-buffer', buffer, cmd ?? undefined)
           } catch (error) {
             this.events.emit('new-buffer', buffer)
-            console.error('[PrUn Palette] Could not find buffer CMD element in time', error)
           }
         },
       })
@@ -92,6 +93,35 @@ export function Buffer<TBase extends GConstructor<Apex> & Events>(Base: TBase) {
       input.form?.requestSubmit()
 
       return buffer
+    }
+
+    public closeBuffer(buffer: Element) {
+      const closeButton = this.findElementWithContent(buffer, 'x')
+      if (!closeButton || !(closeButton instanceof HTMLElement)) return
+
+      closeButton.click()
+    }
+
+    public closeBufferWithCommand(command: string) {
+      const buffers = document.querySelectorAll(Selector.EmptyBuffer)
+
+      Array.from(buffers).filter((buffer) => {
+        const bufferCMDElement = buffer.querySelector(Selector.BufferCMDElement)
+        if (!bufferCMDElement) return false
+
+        const bufferCMD = bufferCMDElement.textContent?.toUpperCase()
+        return bufferCMD === command.toUpperCase()
+      }).forEach((buffer) => {
+        this.closeBuffer(buffer)
+      })
+    }
+
+    public async closeAllBuffers(): Promise<void> {
+      const buffers = document.querySelectorAll(Selector.EmptyBuffer)
+
+      buffers.forEach((buffer) => {
+        this.closeBuffer(buffer)
+      })
     }
   }
 }

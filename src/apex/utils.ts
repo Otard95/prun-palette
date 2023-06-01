@@ -27,7 +27,6 @@ export type Util = GConstructor<{
   findMatchingRows: (rows: NodeListOrArray<HTMLTableRowElement>, match: TableMatch) => Element[]
   findMatchingRow: (rows: NodeListOrArray<HTMLTableRowElement>, match: TableMatch) => Element | null
   findElementWithContent: (parent: Element, content: string | RegExp) => Element | null
-  closeBuffer: (buffer: Element) => void
 } & Apex>
 
 export function Util<TBase extends GConstructor<Apex>>(Base: TBase) {
@@ -69,13 +68,6 @@ export function Util<TBase extends GConstructor<Apex>>(Base: TBase) {
         if (!text) return false
         return content.test(text)
       }) ?? null
-    }
-
-    public closeBuffer(buffer: Element) {
-      const closeButton = this.findElementWithContent(buffer, 'x')
-      if (!closeButton || !(closeButton instanceof HTMLElement)) return
-
-      closeButton.click()
     }
   }
 }
