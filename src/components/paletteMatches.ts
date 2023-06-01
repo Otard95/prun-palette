@@ -27,16 +27,14 @@ function paletteMatches(topMatches: PaletteCommand[] = []) {
     ...topMatches.map((match) => {
       return div(
         div(
-          h3(match.name).att$('class', 'palette-match-name'),
-          p(' - ', match.description).att$('class', 'palette-match-description'),
-        ).att$('class', 'palette-match-header'),
-        p(match.signature.join(' · ')).att$('class', 'palette-match-usage')
-      ).att$('class', 'palette-match')
+          h3(match.name).att$('class', 'prun-palette-match-name'),
+          p(' - ', match.description).att$('class', 'prun-palette-match-description'),
+        ).att$('class', 'prun-palette-match-header'),
+        p(match.signature.join(' · ')).att$('class', 'prun-palette-match-usage')
+      ).att$('class', 'prun-palette-match')
     }),
-    topMatches.length === 0 && p('No matches found').att$('class', 'palette-match-empty')
-  ).att$('class', 'palette-matches')
+    topMatches.length === 0 && p('No matches found').att$('class', 'prun-palette-match-empty')
+  ).att$('class', 'prun-palette-matches')
 }
 
 export default memoizee(paletteMatches)
-
-

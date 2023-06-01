@@ -101,10 +101,10 @@ export default function palette({ fuzzNextArg, getTopMatches, execute, close }: 
       paletteInputEl,
       topMatchesListEl,
       p(kbd('enter'), ' to select | ', kbd('tab'), ' to autocomplete | ', kbd('esc'), ' to close')
-        .att$('class', 'palette-help')
-    ).att$('class', 'palette')
+        .att$('class', 'prun-palette-help')
+    ).att$('class', 'prun-palette')
   )
-    .att$('class', 'palette-container')
+    .att$('class', 'prun-palette-container')
     .att$('id', 'prun-palette')
 
   palette.on('mount', () => {
@@ -125,5 +125,3 @@ export default function palette({ fuzzNextArg, getTopMatches, execute, close }: 
 
   return palette
 }
-
-
