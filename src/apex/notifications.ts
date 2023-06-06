@@ -16,10 +16,10 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
-import { GConstructor } from "mixin"
-import { Buffer } from "./buffer"
-import { Events } from "./events"
-import { Util } from "./utils"
+import { GConstructor } from 'mixin'
+import { Buffer } from './buffer'
+import { Events } from './events'
+import { Util } from './utils'
 import './notifications.sass'
 
 enum NotificationElementSelector {
@@ -33,8 +33,11 @@ export type Notification = GConstructor<{
   openNotificationIndex(index: number): Promise<void>
 }>
 
-export function Notification<TBase extends Buffer & Events & Util>(Base: TBase) {
+export function Notification<TBase extends Buffer & Events & Util>(
+  Base: TBase
+) {
   return class Notification extends Base {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     constructor(...args: any[]) {
       super(...args)
 
@@ -63,7 +66,9 @@ export function Notification<TBase extends Buffer & Events & Util>(Base: TBase) 
 
       // Add numeric index to each alert
       alerts.forEach((alert, i) => {
-        const alertContent = alert.querySelector(NotificationElementSelector.AlertListItemContent)
+        const alertContent = alert.querySelector(
+          NotificationElementSelector.AlertListItemContent
+        )
         if (!alertContent) return
 
         const alertIndex = this.createAlertIndex(i + 1)
@@ -77,17 +82,12 @@ export function Notification<TBase extends Buffer & Events & Util>(Base: TBase) 
 
       if (!buttons) return
 
-      buttons.forEach((button) => {
+      buttons.forEach(button => {
         const btnText = button.innerText.toLowerCase()
-        if (
-          ['all', 'read'].every(
-            s => btnText.includes(s)
-          )
-        ) button.click()
+        if (['all', 'read'].every(s => btnText.includes(s))) button.click()
       })
 
-      if (buffer)
-        this.closeBuffer(buffer)
+      if (buffer) this.closeBuffer(buffer)
     }
 
     public async markAllNotificationsSeen() {
@@ -96,17 +96,12 @@ export function Notification<TBase extends Buffer & Events & Util>(Base: TBase) 
 
       if (!buttons) return
 
-      buttons.forEach((button) => {
+      buttons.forEach(button => {
         const btnText = button.innerText.toLowerCase()
-        if (
-          ['all', 'seen'].every(
-            s => btnText.includes(s)
-          )
-        ) button.click()
+        if (['all', 'seen'].every(s => btnText.includes(s))) button.click()
       })
 
-      if (buffer)
-        this.closeBuffer(buffer)
+      if (buffer) this.closeBuffer(buffer)
     }
 
     public async openNotificationIndex(index: number) {
@@ -116,7 +111,9 @@ export function Notification<TBase extends Buffer & Events & Util>(Base: TBase) 
       )
       const buffer = await this.createBuffer('NOTS')
       await alertItemsPromise
-      const alerts = buffer?.querySelectorAll(NotificationElementSelector.AlertListItem)
+      const alerts = buffer?.querySelectorAll(
+        NotificationElementSelector.AlertListItem
+      )
 
       if (!alerts) return
 
@@ -125,8 +122,7 @@ export function Notification<TBase extends Buffer & Events & Util>(Base: TBase) 
 
       alert.click()
 
-      if (buffer)
-        this.closeBuffer(buffer)
+      if (buffer) this.closeBuffer(buffer)
     }
   }
 }

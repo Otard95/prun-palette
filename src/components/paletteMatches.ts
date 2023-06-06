@@ -21,19 +21,22 @@ import { div, h3, p } from '../utils/dom'
 import { memoizee } from '../utils/memoize'
 import './paletteMatches.sass'
 
-
 function paletteMatches(topMatches: PaletteCommand[] = []) {
   return div(
-    ...topMatches.map((match) => {
+    ...topMatches.map(match => {
       return div(
         div(
           h3(match.name).att$('class', 'prun-palette-match-name'),
-          p(' - ', match.description).att$('class', 'prun-palette-match-description'),
+          p(' - ', match.description).att$(
+            'class',
+            'prun-palette-match-description'
+          )
         ).att$('class', 'prun-palette-match-header'),
         p(match.signature.join(' · ')).att$('class', 'prun-palette-match-usage')
       ).att$('class', 'prun-palette-match')
     }),
-    topMatches.length === 0 && p('No matches found').att$('class', 'prun-palette-match-empty')
+    topMatches.length === 0 &&
+      p('No matches found').att$('class', 'prun-palette-match-empty')
   ).att$('class', 'prun-palette-matches')
 }
 

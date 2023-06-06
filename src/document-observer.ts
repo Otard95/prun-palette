@@ -19,8 +19,8 @@
 import Deferred from './utils/deferred'
 
 interface ElementListener {
-  match: (element: Element) => boolean,
-  callback: (element: Element) => void,
+  match: (element: Element) => boolean
+  callback: (element: Element) => void
   once?: boolean
   consume?: boolean
 }
@@ -34,9 +34,9 @@ interface WaitForOptions {
 export default class DocumentObserver {
   private observer: MutationObserver
   private listeners: {
-    added: ElementListener[],
-    removed: ElementListener[],
-    changed: ElementListener[],
+    added: ElementListener[]
+    removed: ElementListener[]
+    changed: ElementListener[]
   } = {
     added: [],
     removed: [],
@@ -53,8 +53,8 @@ export default class DocumentObserver {
   }
 
   private handleMutations(mutations: MutationRecord[]) {
-    mutations.forEach((mutation) => {
-      mutation.addedNodes.forEach((node) => {
+    mutations.forEach(mutation => {
+      mutation.addedNodes.forEach(node => {
         for (const listener of this.listeners.added) {
           if (node instanceof Element && listener.match(node)) {
             listener.callback(node)
@@ -70,7 +70,10 @@ export default class DocumentObserver {
     })
   }
 
-  public addListener(on: 'add' | 'remove' | 'change', listener: ElementListener) {
+  public addListener(
+    on: 'add' | 'remove' | 'change',
+    listener: ElementListener
+  ) {
     switch (on) {
       case 'add':
         this.listeners.added.push(listener)
@@ -84,16 +87,25 @@ export default class DocumentObserver {
     }
   }
 
-  public removeListener(on: 'add' | 'remove' | 'change', listener: ElementListener) {
+  public removeListener(
+    on: 'add' | 'remove' | 'change',
+    listener: ElementListener
+  ) {
     switch (on) {
       case 'add':
         this.listeners.added.splice(this.listeners.added.indexOf(listener), 1)
         break
       case 'remove':
-        this.listeners.removed.splice(this.listeners.removed.indexOf(listener), 1)
+        this.listeners.removed.splice(
+          this.listeners.removed.indexOf(listener),
+          1
+        )
         break
       case 'change':
-        this.listeners.changed.splice(this.listeners.changed.indexOf(listener), 1)
+        this.listeners.changed.splice(
+          this.listeners.changed.indexOf(listener),
+          1
+        )
         break
     }
   }
@@ -120,10 +132,14 @@ export default class DocumentObserver {
         const match = nodeMatches || !!nodeHadMatchingChildren
         return match
       },
-      callback: (element) => {
-        const matchingElement = element.matches(selector) ? element : element.querySelector(selector)
+      callback: element => {
+        const matchingElement = element.matches(selector)
+          ? element
+          : element.querySelector(selector)
         if (!matchingElement) {
-          throw new Error(`Element matching selector '${selector}' was removed before it could be returned`)
+          throw new Error(
+            `Element matching selector '${selector}' was removed before it could be returned`
+          )
         }
         deferred.resolve(matchingElement)
       },
@@ -132,10 +148,12 @@ export default class DocumentObserver {
 
     const timer = setTimeout(() => {
       this.removeListener('add', listener)
-      deferred.reject(new Error(`Timeout waiting for element matching selector '${selector}'`))
+      deferred.reject(
+        new Error(`Timeout waiting for element matching selector '${selector}'`)
+      )
     }, timeout)
 
-    deferred.promise.then((el) => {
+    deferred.promise.then(el => {
       clearTimeout(timer)
       return el
     })
@@ -145,5 +163,3 @@ export default class DocumentObserver {
     return deferred.promise
   }
 }
-
-

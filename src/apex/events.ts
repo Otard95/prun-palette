@@ -17,7 +17,7 @@
 
 */
 import EventEmitter from '../utils/event-emitter'
-import Apex from "./base";
+import Apex from './base'
 import { GConstructor } from 'mixin'
 
 type ApexEvents = {

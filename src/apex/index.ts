@@ -27,6 +27,7 @@ import { Ships } from './ships'
 import { Station } from './station'
 import { Notification } from './notifications'
 
+/* eslint-disable prettier/prettier */
 export default class Apex extends Notification  (
                                   Station       (
                                   Screen        (

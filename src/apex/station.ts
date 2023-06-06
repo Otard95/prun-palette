@@ -16,7 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
-import Apex from "./base";
+import Apex from './base'
 import { GConstructor } from 'mixin'
 
 interface StationItem {
@@ -35,16 +35,30 @@ export function Station<TBase extends GConstructor<Apex>>(Base: TBase) {
 
     constructor(...args: any[]) {
       super(...args)
-      this.stations = new Set(
-        [
-          { name: 'Antares', system: 'Antares I', location: 'Antares Station (Antares I)' },
-          { name: 'Arclight', system: 'Arclight', location: 'Arclight Station (Arclight)' },
-          { name: 'Benten', system: 'Benten', location: 'Benten Station (Benten)' },
-          { name: 'Hortus', system: 'Hortus', location: 'Hortus Station (Hortus)' },
-          { name: 'Hubur', system: 'Hubur', location: 'Hubur Station (Hubur)' },
-          { name: 'Moria', system: 'Moria', location: 'Moria Station (Moria)' }
-        ]
-      )
+      this.stations = new Set([
+        {
+          name: 'Antares',
+          system: 'Antares I',
+          location: 'Antares Station (Antares I)',
+        },
+        {
+          name: 'Arclight',
+          system: 'Arclight',
+          location: 'Arclight Station (Arclight)',
+        },
+        {
+          name: 'Benten',
+          system: 'Benten',
+          location: 'Benten Station (Benten)',
+        },
+        {
+          name: 'Hortus',
+          system: 'Hortus',
+          location: 'Hortus Station (Hortus)',
+        },
+        { name: 'Hubur', system: 'Hubur', location: 'Hubur Station (Hubur)' },
+        { name: 'Moria', system: 'Moria', location: 'Moria Station (Moria)' },
+      ])
     }
 
     public get Stations(): StationItem[] {

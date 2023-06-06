@@ -17,7 +17,7 @@
 
 */
 
-import { PromiseOrValue } from "utility-types"
+import { PromiseOrValue } from 'utility-types'
 
 type ListenerFn<T extends Array<any>> = (...args: T) => PromiseOrValue<void>
 interface Listener<T extends Array<any>> {
@@ -46,7 +46,7 @@ export default class EventEmitter<EventMap extends Record<string, Array<any>>> {
     const listeners = this.listeners[event]
     if (!listeners) return
 
-    listeners.forEach((listener) => {
+    listeners.forEach(listener => {
       if (listener.fn === fn) listeners.delete(listener)
     })
   }
@@ -55,7 +55,7 @@ export default class EventEmitter<EventMap extends Record<string, Array<any>>> {
     const listeners = this.listeners[event]
     if (!listeners) return
 
-    listeners.forEach((listener) => {
+    listeners.forEach(listener => {
       listener.fn(...args)
       if (listener.once) listeners.delete(listener)
     })
@@ -65,5 +65,3 @@ export default class EventEmitter<EventMap extends Record<string, Array<any>>> {
     this.listeners = {}
   }
 }
-
-

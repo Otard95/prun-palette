@@ -40,5 +40,3 @@ export default class Deferred<T> {
     return this._reject
   }
 }
-
-
