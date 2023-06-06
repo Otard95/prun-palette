@@ -1,3 +1,13 @@
+# [0.3.0](https://github.com/Otard95/prun-palette/compare/v0.2.0...v0.3.0) (2023-06-01)
+
+
+### Features
+
+* **apex:** Save and load ship info from/to localStorage ([777b152](https://github.com/Otard95/prun-palette/commit/777b152f05baef452cef697ce84e27211df44a0c))
+* Closing buffers ([#6](https://github.com/Otard95/prun-palette/issues/6)) ([7f43cde](https://github.com/Otard95/prun-palette/commit/7f43cdee21a1604e2e9efd7bea9617397b02ed40))
+* Emit new-buffer event for any new buffer ([#4](https://github.com/Otard95/prun-palette/issues/4)) ([d48ffe9](https://github.com/Otard95/prun-palette/commit/d48ffe93c800dc003548e6686b65237e869017e3))
+* Notification commands ([#5](https://github.com/Otard95/prun-palette/issues/5)) ([ff025e8](https://github.com/Otard95/prun-palette/commit/ff025e8498e2f6c71d4505b93f3308fd65d80ba2))
+
 # [0.2.0](https://github.com/Otard95/prun-palette/compare/v0.1.4...v0.2.0) (2023-05-21)
 
 
