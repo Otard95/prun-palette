@@ -20,6 +20,7 @@ import { GConstructor } from "mixin"
 import { Buffer } from "./buffer"
 import { Events } from "./events"
 import { Util } from "./utils"
+import './notifications.sass'
 
 enum NotificationElementSelector {
   AlertListItem = 'div[class^="AlertListItem__container"]',
