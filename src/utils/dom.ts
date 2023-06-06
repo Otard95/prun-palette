@@ -46,6 +46,7 @@ export type Children = Child[]
 function isEl(el: unknown): el is El {
   return (
     el instanceof HTMLElement &&
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     typeof (el as any).on === 'function' &&
     typeof (el as any).once === 'function' &&
     typeof (el as any).off === 'function' &&
@@ -59,6 +60,7 @@ function isEl(el: unknown): el is El {
     typeof (el as any).replace$ === 'function' &&
     typeof (el as any).mount$ === 'function' &&
     typeof (el as any).unmount$ === 'function'
+    /* eslint-enable @typescript-eslint/no-explicit-any */
   )
 }
 

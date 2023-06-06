@@ -33,6 +33,7 @@ export function Station<TBase extends GConstructor<Apex>>(Base: TBase) {
   return class Station extends Base {
     protected stations: Set<StationItem>
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     constructor(...args: any[]) {
       super(...args)
       this.stations = new Set([

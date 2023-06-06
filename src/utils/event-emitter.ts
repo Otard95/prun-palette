@@ -19,13 +19,15 @@
 
 import { PromiseOrValue } from 'utility-types'
 
-type ListenerFn<T extends Array<any>> = (...args: T) => PromiseOrValue<void>
-interface Listener<T extends Array<any>> {
+type ListenerFn<T extends Array<unknown>> = (...args: T) => PromiseOrValue<void>
+interface Listener<T extends Array<unknown>> {
   fn: ListenerFn<T>
   once?: boolean
 }
 
-export default class EventEmitter<EventMap extends Record<string, Array<any>>> {
+export default class EventEmitter<
+  EventMap extends Record<string, Array<unknown>>
+> {
   private listeners: {
     [K in keyof EventMap]?: Set<Listener<EventMap[K]>>
   } = {}

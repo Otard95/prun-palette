@@ -17,8 +17,10 @@
 
 */
 export default class Deferred<T> {
-  private _resolve: (value: T | PromiseLike<T>) => void = () => {}
-  private _reject: (reason?: any) => void = () => null
+  private _resolve: (value: T | PromiseLike<T>) => void = () => {
+    return
+  }
+  private _reject: (reason?: unknown) => void = () => null
   private _promise: Promise<T>
 
   constructor() {
@@ -36,7 +38,7 @@ export default class Deferred<T> {
     return this._resolve
   }
 
-  public get reject(): (reason?: any) => void {
+  public get reject(): (reason?: unknown) => void {
     return this._reject
   }
 }

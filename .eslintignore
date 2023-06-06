@@ -2,3 +2,4 @@
 build-*
 scripts
 site
+**/__tests__

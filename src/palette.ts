@@ -50,6 +50,7 @@ export interface PaletteCommand {
   name: string
   description: string
   signature: CommandSignature
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   command: (...variables: any[]) => Promise<unknown> | void
   external?: boolean
 }

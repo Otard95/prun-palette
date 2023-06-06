@@ -61,7 +61,7 @@ const keys = [
   'backspace',
 ] as const
 
-type Letter = (typeof alphabet)[number]
+// type Letter = (typeof alphabet)[number]
 type Key = (typeof keys)[number]
 type KeyGroup = Key | `<C-${Key}>` | `<A-${Key}>` | `<S-${Key}>`
 
@@ -192,6 +192,8 @@ export default class Keybinds {
     // Find keybinds that exactly match the current keypresses
     this.keybinds
       .find(keybind => arrayEqual(keybind.keySequence, this.pressedKeys))
-      ?.command(() => {})
+      ?.command(() => {
+        return
+      })
   }
 }

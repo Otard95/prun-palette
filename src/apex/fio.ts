@@ -39,6 +39,7 @@ export function FIO<TBase extends GConstructor<Apex>>(Base: TBase) {
     private planets: Planet[] = []
     private systems: System[] = []
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     constructor(...args: any[]) {
       super(...args)
 

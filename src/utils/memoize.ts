@@ -27,6 +27,7 @@ interface MemoizedValue<R> {
  * @param ttl - Time to live in milliseconds. If not given, the result is cached forever.
  * @returns A function that memoizes the result of the given function
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const memoizee = <A extends Array<any>, R>(
   func: (...args: A) => R,
   ttl?: number
@@ -52,7 +53,7 @@ export const memoizee = <A extends Array<any>, R>(
  */
 export const memoize = (ttl?: number): MethodDecorator => {
   return (
-    _target: Object,
+    _target: object,
     _propertyKey: string | symbol,
     descriptor: PropertyDescriptor
   ) => {
