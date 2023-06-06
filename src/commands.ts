@@ -16,8 +16,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
-import Apex from "./apex"
-import Palette, { PaletteCommandVariables } from "./palette"
+import Apex from './apex'
+import Palette, { PaletteCommandVariables } from './palette'
 
 export default function attachCommands(palette: Palette, apex: Apex) {
   // ############################
@@ -102,13 +102,13 @@ export default function attachCommands(palette: Palette, apex: Apex) {
   })
   palette.addCommand({
     name: 'Base inventory',
-    description: 'Open the base\'s inventory',
+    description: "Open the base's inventory",
     command: (planetName: string) => apex.openBaseInventory(planetName),
     signature: ['inventory', 'base', PaletteCommandVariables.PlanetName],
   })
   palette.addCommand({
     name: 'Ship cargo',
-    description: 'Open a ship\'s cargo',
+    description: "Open a ship's cargo",
     command: (shipName: string) => apex.openShipCargo(shipName),
     signature: ['inventory', 'cargo', PaletteCommandVariables.ShipName],
   })
@@ -126,9 +126,10 @@ export default function attachCommands(palette: Palette, apex: Apex) {
   palette.addCommand({
     name: 'Screen',
     description: 'Open a screen',
-    command: (screen: string) => apex.Screens
-      .find((s) => s.name.toLowerCase() === screen.toLowerCase())
-      ?.open(),
+    command: (screen: string) =>
+      apex.Screens.find(
+        s => s.name.toLowerCase() === screen.toLowerCase()
+      )?.open(),
     signature: ['screen', PaletteCommandVariables.Screen],
   })
 
@@ -140,26 +141,25 @@ export default function attachCommands(palette: Palette, apex: Apex) {
     name: 'Notifications',
     description: 'Open the notifications list',
     command: () => apex.createBuffer('NOTS'),
-    signature:['notifications'],
+    signature: ['notifications'],
   })
   palette.addCommand({
     name: 'Notifications read',
     description: 'Mark all notifications as read',
     command: () => apex.markAllNotificationsRead(),
-    signature:['notifications', 'read'],
+    signature: ['notifications', 'read'],
   })
   palette.addCommand({
     name: 'Notifications seen',
     description: 'Mark all notifications as seen',
     command: () => apex.markAllNotificationsSeen(),
-    signature:['notifications', 'seen'],
+    signature: ['notifications', 'seen'],
   })
   palette.addCommand({
     name: 'Notifications open',
     description: 'Open a notification',
-    command: (notificationId: string) => apex.openNotificationIndex(Number(notificationId)),
-    signature:['notifications', 'open', PaletteCommandVariables.Number],
+    command: (notificationId: string) =>
+      apex.openNotificationIndex(Number(notificationId)),
+    signature: ['notifications', 'open', PaletteCommandVariables.Number],
   })
 }
-
-

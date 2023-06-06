@@ -20,12 +20,49 @@ import EphemeralArray from './utils/ephemeral-array'
 import { arrayEqual, arrayStartsWith } from './utils/array'
 
 // all lovercase letters
-const alphabet = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'] as const
+const alphabet = [
+  'a',
+  'b',
+  'c',
+  'd',
+  'e',
+  'f',
+  'g',
+  'h',
+  'i',
+  'j',
+  'k',
+  'l',
+  'm',
+  'n',
+  'o',
+  'p',
+  'q',
+  'r',
+  's',
+  't',
+  'u',
+  'v',
+  'w',
+  'x',
+  'y',
+  'z',
+] as const
 
-const keys = [...alphabet, 'arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'tab', 'escape', 'enter', 'backspace'] as const
+const keys = [
+  ...alphabet,
+  'arrowup',
+  'arrowdown',
+  'arrowleft',
+  'arrowright',
+  'tab',
+  'escape',
+  'enter',
+  'backspace',
+] as const
 
-type Letter = typeof alphabet[number]
-type Key = typeof keys[number]
+// type Letter = (typeof alphabet)[number]
+type Key = (typeof keys)[number]
 type KeyGroup = Key | `<C-${Key}>` | `<A-${Key}>` | `<S-${Key}>`
 
 type KeybindCallback = (preventDefault: () => void) => void
@@ -40,9 +77,8 @@ export default class Keybinds {
   private pressedKeys: EphemeralArray<KeyGroup> = new EphemeralArray(1000)
 
   constructor(element: HTMLElement | Document = document.body) {
-    element.addEventListener('keydown', (event) => {
-      if (event instanceof KeyboardEvent)
-        this.handleKeyDown(event)
+    element.addEventListener('keydown', event => {
+      if (event instanceof KeyboardEvent) this.handleKeyDown(event)
     })
 
     this.pressedKeys.onTimeout(this.handlePressedOnTimeout.bind(this))
@@ -53,23 +89,38 @@ export default class Keybinds {
 
     if (!/<(C|A|S){1,3}-\w+>/.test(keyStr)) return false
 
-    const [, modifiers, key] = keyStr.match(/<([CAS]+)-(\w+)>/) as [string, string, Key]
+    const [, modifiers, key] = keyStr.match(/<([CAS]+)-(\w+)>/) as [
+      string,
+      string,
+      Key
+    ]
 
     const mods = modifiers.split('')
-    return keys.includes(key as Key) && mods.every(m => ['C', 'A', 'S'].includes(m))
+    return (
+      keys.includes(key as Key) && mods.every(m => ['C', 'A', 'S'].includes(m))
+    )
   }
 
   private parseBind(bind: string): KeyGroup[] {
     const keys = bind.trim().split(/\s+/)
-    if (keys.some((key) => !this.isKey(key))) throw new Error(`Invalid keybind: ${bind}`)
+    if (keys.some(key => !this.isKey(key)))
+      throw new Error(`Invalid keybind: ${bind}`)
 
     return keys as KeyGroup[]
   }
 
-  public addKeybind(bind: string, command: KeybindCallback, { preventDefault = true } = {}) {
+  public addKeybind(
+    bind: string,
+    command: KeybindCallback,
+    { preventDefault = true } = {}
+  ) {
     const keySequence = this.parseBind(bind)
 
-    if (this.keybinds.some(keybind => arrayEqual(keybind.keySequence, keySequence)))
+    if (
+      this.keybinds.some(keybind =>
+        arrayEqual(keybind.keySequence, keySequence)
+      )
+    )
       throw new Error(`Keybind already exists: ${bind}`)
 
     this.keybinds.push({
@@ -81,7 +132,7 @@ export default class Keybinds {
 
   public removeKeybind(bind: string) {
     const keySequence = this.parseBind(bind)
-    this.keybinds = this.keybinds.filter((keybind) => {
+    this.keybinds = this.keybinds.filter(keybind => {
       return !arrayEqual(keybind.keySequence, keySequence)
     })
   }
@@ -110,7 +161,7 @@ export default class Keybinds {
 
     // Find any keybinds that match the current key presses, including those
     // that could become matching.
-    const matchingKeybinds = this.keybinds.filter((keybind) => {
+    const matchingKeybinds = this.keybinds.filter(keybind => {
       return arrayStartsWith(keybind.keySequence, this.pressedKeys)
     })
 
@@ -125,8 +176,9 @@ export default class Keybinds {
     }
 
     // If there is only one match make sure its exact
-    const match = this.keybinds
-      .find(keybind => arrayEqual(keybind.keySequence, this.pressedKeys))
+    const match = this.keybinds.find(keybind =>
+      arrayEqual(keybind.keySequence, this.pressedKeys)
+    )
 
     if (!match) return
 
@@ -138,10 +190,10 @@ export default class Keybinds {
 
   private handlePressedOnTimeout() {
     // Find keybinds that exactly match the current keypresses
-    this.keybinds.find(
-      (keybind) => arrayEqual(keybind.keySequence, this.pressedKeys)
-    )?.command(() => {})
+    this.keybinds
+      .find(keybind => arrayEqual(keybind.keySequence, this.pressedKeys))
+      ?.command(() => {
+        return
+      })
   }
 }
-
-

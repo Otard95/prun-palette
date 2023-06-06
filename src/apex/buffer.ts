@@ -38,17 +38,20 @@ export type Buffer = GConstructor<{
 
 export function Buffer<TBase extends Util & Events>(Base: TBase) {
   return class Buffer extends Base {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     constructor(...args: any[]) {
       super(...args)
 
       this.observer.addListener('add', {
-        match: (element) => {
+        match: element => {
           const nodeMatches = element.matches(Selector.EmptyBuffer)
-          const nodeHadMatchingChildren = element.querySelector(Selector.EmptyBuffer)
+          const nodeHadMatchingChildren = element.querySelector(
+            Selector.EmptyBuffer
+          )
           const match = nodeMatches || !!nodeHadMatchingChildren
           return match
         },
-        callback: async (element) => {
+        callback: async element => {
           const buffer = element.matches(Selector.EmptyBuffer)
             ? element
             : element.querySelector(Selector.EmptyBuffer)
@@ -56,7 +59,10 @@ export function Buffer<TBase extends Util & Events>(Base: TBase) {
           if (!buffer) return
 
           try {
-            const bufferCMDElement = await this.observer.waitFor(Selector.BufferCMDElement)
+            const bufferCMDElement = await this.observer.waitFor(
+              Selector.BufferCMDElement,
+              { within: buffer }
+            )
             const cmd = bufferCMDElement.textContent
 
             this.events.emit('new-buffer', buffer, cmd ?? undefined)
@@ -74,7 +80,10 @@ export function Buffer<TBase extends Util & Events>(Base: TBase) {
     public async createBuffer(command?: string): Promise<Element | null> {
       if (this.newBufferButton === null) return null
 
-      const bufferPromise = this.observer.waitFor(Selector.EmptyBufferNotTaken)
+      const bufferPromise = this.observer.waitFor(
+        Selector.EmptyBufferNotTaken,
+        { onlyNew: true }
+      )
 
       this.newBufferButton.click()
       const buffer = await bufferPromise
@@ -105,21 +114,25 @@ export function Buffer<TBase extends Util & Events>(Base: TBase) {
     public closeBufferWithCommand(command: string) {
       const buffers = document.querySelectorAll(Selector.EmptyBuffer)
 
-      Array.from(buffers).filter((buffer) => {
-        const bufferCMDElement = buffer.querySelector(Selector.BufferCMDElement)
-        if (!bufferCMDElement) return false
+      Array.from(buffers)
+        .filter(buffer => {
+          const bufferCMDElement = buffer.querySelector(
+            Selector.BufferCMDElement
+          )
+          if (!bufferCMDElement) return false
 
-        const bufferCMD = bufferCMDElement.textContent?.toUpperCase()
-        return bufferCMD === command.toUpperCase()
-      }).forEach((buffer) => {
-        this.closeBuffer(buffer)
-      })
+          const bufferCMD = bufferCMDElement.textContent?.toUpperCase()
+          return bufferCMD === command.toUpperCase()
+        })
+        .forEach(buffer => {
+          this.closeBuffer(buffer)
+        })
     }
 
     public async closeAllBuffers(): Promise<void> {
       const buffers = document.querySelectorAll(Selector.EmptyBuffer)
 
-      buffers.forEach((buffer) => {
+      buffers.forEach(buffer => {
         this.closeBuffer(buffer)
       })
     }

@@ -23,40 +23,41 @@ interface FIOPlanetSimple {
 interface FIOSystem {
   Connections: [
     {
-      SystemConnectionId: string,
+      SystemConnectionId: string
       ConnectingId: string
     },
     {
-      SystemConnectionId: string,
+      SystemConnectionId: string
       ConnectingId: string
     }
-  ],
-  SystemId: string,
-  Name: string,
-  NaturalId: string,
-  Type: string,
+  ]
+  SystemId: string
+  Name: string
+  NaturalId: string
+  Type: string
   PositionX: number
   PositionY: number
   PositionZ: number
-  SectorId: string,
-  SubSectorId: string,
-  UserNameSubmitted: string,
+  SectorId: string
+  SubSectorId: string
+  UserNameSubmitted: string
   Timestamp: string
 }
 
 export function fetchFIOPlanets() {
   return fetch('https://rest.fnar.net/planet/allplanets', {
     headers: {
-      'accept': 'application/json',
-    }
+      accept: 'application/json',
+    },
   })
-    .then((response) => response.json())
-    .then((planets: FIOPlanetSimple[]) => planets.map((planet) => ({
+    .then(response => response.json())
+    .then((planets: FIOPlanetSimple[]) =>
+      planets.map(planet => ({
         id: planet.PlanetNaturalId,
         name: planet.PlanetName,
       }))
     )
-    .catch((error) => {
+    .catch(error => {
       console.error('[PrUn Palette](Apex) Failed to fetch planets', error)
     })
 }
@@ -64,18 +65,17 @@ export function fetchFIOPlanets() {
 export function fetchFIOSystems() {
   return fetch('https://rest.fnar.net/systemstars', {
     headers: {
-      'accept': 'application/json',
-    }
+      accept: 'application/json',
+    },
   })
-    .then((response) => response.json())
-    .then((systems: FIOSystem[]) => systems.map((system) => ({
-      id: system.NaturalId,
-      name: system.Name,
-    }))
+    .then(response => response.json())
+    .then((systems: FIOSystem[]) =>
+      systems.map(system => ({
+        id: system.NaturalId,
+        name: system.Name,
+      }))
     )
-    .catch((error) => {
+    .catch(error => {
       console.error('[PrUn Palette](Apex) Failed to fetch planets', error)
     })
 }
-
-
