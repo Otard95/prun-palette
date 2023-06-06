@@ -16,11 +16,11 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
-import EventEmitter from "./event-emitter"
+import EventEmitter from './event-emitter'
 
 type ElEventMap = {
-  'mount': []
-  'unmount': []
+  mount: []
+  unmount: []
 }
 export interface El extends HTMLElement, EventEmitter<ElEventMap> {
   att$(name: string, value: string): El
@@ -33,24 +33,35 @@ export interface El extends HTMLElement, EventEmitter<ElEventMap> {
   unmount$(): El
 }
 
-export type Child = HTMLElement | El | string | number | boolean | null | undefined
+export type Child =
+  | HTMLElement
+  | El
+  | string
+  | number
+  | boolean
+  | null
+  | undefined
 export type Children = Child[]
 
 function isEl(el: unknown): el is El {
-  return el instanceof HTMLElement
-    && typeof((el as any).on) === 'function'
-    && typeof((el as any).once) === 'function'
-    && typeof((el as any).off) === 'function'
-    && typeof((el as any).emit) === 'function'
-    && typeof((el as any).clear) === 'function'
-    && typeof((el as any).att$) === 'function'
-    && typeof((el as any).onClick$) === 'function'
-    && typeof((el as any).onChange$) === 'function'
-    && typeof((el as any).onKeyUp$) === 'function'
-    && typeof((el as any).onKeyDown$) === 'function'
-    && typeof((el as any).replace$) === 'function'
-    && typeof((el as any).mount$) === 'function'
-    && typeof((el as any).unmount$) === 'function'
+  return (
+    el instanceof HTMLElement &&
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    typeof (el as any).on === 'function' &&
+    typeof (el as any).once === 'function' &&
+    typeof (el as any).off === 'function' &&
+    typeof (el as any).emit === 'function' &&
+    typeof (el as any).clear === 'function' &&
+    typeof (el as any).att$ === 'function' &&
+    typeof (el as any).onClick$ === 'function' &&
+    typeof (el as any).onChange$ === 'function' &&
+    typeof (el as any).onKeyUp$ === 'function' &&
+    typeof (el as any).onKeyDown$ === 'function' &&
+    typeof (el as any).replace$ === 'function' &&
+    typeof (el as any).mount$ === 'function' &&
+    typeof (el as any).unmount$ === 'function'
+    /* eslint-enable @typescript-eslint/no-explicit-any */
+  )
 }
 
 function extendWithEventEmitter(el: El) {
@@ -81,7 +92,7 @@ export function tag(name: string, ...children: Children): El {
   const result = document.createElement(name) as El
   extendWithEventEmitter(result)
   for (const child of children) {
-    switch (typeof (child)) {
+    switch (typeof child) {
       case 'string':
       case 'number':
         result.appendChild(document.createTextNode(String(child)))
@@ -89,57 +100,56 @@ export function tag(name: string, ...children: Children): El {
       case 'undefined':
         break
       default:
-        if (isEl(child))
-          result.appendChild(child)
+        if (isEl(child)) result.appendChild(child)
     }
   }
 
-  result.att$ = function(name, value) {
+  result.att$ = function (name, value) {
     this.setAttribute(name, value)
     return this
   }
 
-  result.onClick$ = function(callback) {
+  result.onClick$ = function (callback) {
     this.onclick = callback
     return this
   }
 
-  result.onChange$ = function(callback) {
+  result.onChange$ = function (callback) {
     this.onchange = callback
     return this
   }
 
-  result.onKeyUp$ = function(callback) {
+  result.onKeyUp$ = function (callback) {
     this.onkeyup = callback
     return this
   }
 
-  result.onKeyDown$ = function(callback) {
+  result.onKeyDown$ = function (callback) {
     this.onkeydown = callback
     return this
   }
 
-  result.replace$ = function(element) {
+  result.replace$ = function (element) {
     this.emit('unmount')
     this.replaceWith(element)
     element.emit('mount')
     return this
   }
 
-  result.mount$ = function(on) {
+  result.mount$ = function (on) {
     on.appendChild(this)
     this.emit('mount')
     return this
   }
 
-  result.unmount$ = function() {
+  result.unmount$ = function () {
     this.emit('unmount')
     this.remove()
     return this
   }
 
   result.on('mount', () => {
-    children.forEach((child) => {
+    children.forEach(child => {
       if (isEl(child)) {
         child.emit('mount')
       }
@@ -178,7 +188,7 @@ export function span(...children: Children) {
 }
 
 export function img(src: string) {
-    return tag('img').att$('src', src)
+  return tag('img').att$('src', src)
 }
 
 export function select(...children: Children) {
@@ -188,5 +198,3 @@ export function select(...children: Children) {
 export function input(type: string) {
   return tag('input').att$('type', type)
 }
-
-

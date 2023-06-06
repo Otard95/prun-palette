@@ -22,23 +22,22 @@ import { paletteListener } from './palette'
 
 const cursorEnd = (el: HTMLElement) => {
   const range = document.createRange()
-  range.selectNodeContents(el);
-  range.collapse(false);
-  const selection = window.getSelection();
-  selection?.removeAllRanges();
-  selection?.addRange(range);
+  range.selectNodeContents(el)
+  range.collapse(false)
+  const selection = window.getSelection()
+  selection?.removeAllRanges()
+  selection?.addRange(range)
 }
-
 
 export default function paletteInput(
   path: string[] = [],
-  current: string = '',
-  bestMatch?: string,
+  current = '',
+  bestMatch?: string
 ) {
   const input = div(current)
   input
     .att$('contenteditable', 'true')
-    .onKeyDown$((e) => {
+    .onKeyDown$(e => {
       if (e.key === 'Tab') {
         e.preventDefault()
         return paletteListener.emit('complete', input.innerText)
@@ -64,13 +63,18 @@ export default function paletteInput(
   input.on('mount', focus)
 
   const bestMatchSuffix = bestMatch
-    ? bestMatch.startsWith(current) ? bestMatch.slice(current.length) : ` · ${bestMatch}`
+    ? bestMatch.startsWith(current)
+      ? bestMatch.slice(current.length)
+      : ` · ${bestMatch}`
     : undefined
 
   const container = div(
-    ...path.map((p) => div(p.concat(' ·')).att$('class', 'prun-palette-input-path')),
+    ...path.map(p =>
+      div(p.concat(' ·')).att$('class', 'prun-palette-input-path')
+    ),
     input,
-    bestMatchSuffix && div(bestMatchSuffix).att$('class', 'prun-alette-input-best-match')
+    bestMatchSuffix &&
+      div(bestMatchSuffix).att$('class', 'prun-alette-input-best-match')
   ).att$('class', 'prun-palette-input')
 
   container.onClick$(() => focus())

@@ -55,5 +55,3 @@ export function matchArrays<A, B>(a: A[], b: B[]): [A, B][] {
   }
   return matches
 }
-
-

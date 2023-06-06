@@ -16,10 +16,10 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
-import { GConstructor } from "mixin"
-import { Buffer } from "./buffer"
-import { Util } from "./utils"
-import { regexpIncludesString } from "../utils/regexp"
+import { GConstructor } from 'mixin'
+import { Buffer } from './buffer'
+import { Util } from './utils'
+import { regexpIncludesString } from '../utils/regexp'
 
 export type Inventory = GConstructor<{
   openBaseInventory(planetName: string): Promise<void>
@@ -29,13 +29,10 @@ export type Inventory = GConstructor<{
 
 export function Inventory<TBase extends Util & Buffer>(Base: TBase) {
   return class Inventory extends Base {
-    private async openInventoriesBuffer(): Promise<
-      {
-        inventoryBuffer: Element | null,
-        inventoryRows: HTMLTableRowElement[]
-      }
-      | null
-    > {
+    private async openInventoriesBuffer(): Promise<{
+      inventoryBuffer: Element | null
+      inventoryRows: HTMLTableRowElement[]
+    } | null> {
       const inventoryBuffer = await this.createBuffer('INV')
       if (!inventoryBuffer) return null
 
@@ -61,7 +58,8 @@ export function Inventory<TBase extends Util & Buffer>(Base: TBase) {
     }
 
     public async openBaseInventory(planetName: string) {
-      const { inventoryBuffer, inventoryRows } = (await this.openInventoriesBuffer()) || {}
+      const { inventoryBuffer, inventoryRows } =
+        (await this.openInventoriesBuffer()) || {}
       if (!inventoryBuffer || !inventoryRows) return
 
       const planetRow = this.findMatchingRow(inventoryRows, [
@@ -70,7 +68,9 @@ export function Inventory<TBase extends Util & Buffer>(Base: TBase) {
       ])
 
       if (!planetRow) {
-        console.debug('[PrUn Palette](openBaseInventory) Could not find planet row')
+        console.debug(
+          '[PrUn Palette](openBaseInventory) Could not find planet row'
+        )
         return
       }
 
@@ -80,7 +80,8 @@ export function Inventory<TBase extends Util & Buffer>(Base: TBase) {
     }
 
     public async openShipCargo(shipName: string) {
-      const { inventoryBuffer, inventoryRows } = (await this.openInventoriesBuffer()) || {}
+      const { inventoryBuffer, inventoryRows } =
+        (await this.openInventoriesBuffer()) || {}
       if (!inventoryBuffer || !inventoryRows) return
 
       const shipRow = this.findMatchingRow(inventoryRows, [
@@ -100,7 +101,8 @@ export function Inventory<TBase extends Util & Buffer>(Base: TBase) {
     }
 
     public async openWarehouse(systemName: string) {
-      const { inventoryBuffer, inventoryRows } = (await this.openInventoriesBuffer()) || {}
+      const { inventoryBuffer, inventoryRows } =
+        (await this.openInventoriesBuffer()) || {}
       if (!inventoryBuffer || !inventoryRows) return
 
       const warehouseRow = this.findMatchingRow(inventoryRows, [
@@ -109,7 +111,9 @@ export function Inventory<TBase extends Util & Buffer>(Base: TBase) {
       ])
 
       if (!warehouseRow) {
-        console.debug('[PrUn Palette](openWarehouse) Could not find warehouse row')
+        console.debug(
+          '[PrUn Palette](openWarehouse) Could not find warehouse row'
+        )
         return
       }
 
