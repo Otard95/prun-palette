@@ -86,7 +86,7 @@ export function Ships<TBase extends Events & Util>(Base: TBase) {
     }
 
     private async getShipNamesFromInventory(buffer: Element): Promise<void> {
-      await this.observer.waitFor('tr')
+      await this.observer.waitFor('tr', { within: buffer })
       const rows = buffer.querySelectorAll('tr')
       if (!rows) {
         console.debug('[PrUn Palette] Failed to find rows in inventory buffer')
@@ -114,7 +114,7 @@ export function Ships<TBase extends Events & Util>(Base: TBase) {
     }
 
     private async getShipNamesFromFleet(buffer: Element): Promise<void> {
-      await this.observer.waitFor('tr')
+      await this.observer.waitFor('tr', { within: buffer })
       const rows = buffer.querySelectorAll('tr')
       if (!rows) {
         console.debug('[PrUn Palette] Failed to find rows in fleet buffer')
