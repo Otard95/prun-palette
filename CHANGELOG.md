@@ -1,3 +1,11 @@
+## [0.3.1](https://github.com/Otard95/prun-palette/compare/v0.3.0...v0.3.1) (2023-06-06)
+
+
+### Bug Fixes
+
+* Add some basic styling to notification index ([#9](https://github.com/Otard95/prun-palette/issues/9)) ([8b62dc9](https://github.com/Otard95/prun-palette/commit/8b62dc936d671a051160149bb78a742c29e970c9))
+* Waiting for element may alredy exist ([#8](https://github.com/Otard95/prun-palette/issues/8)) ([e741968](https://github.com/Otard95/prun-palette/commit/e741968d145c7e09bf4f5218aa9d2cdd3640ea76))
+
 # [0.3.0](https://github.com/Otard95/prun-palette/compare/v0.2.0...v0.3.0) (2023-06-01)
 
 
