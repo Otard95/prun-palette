@@ -56,7 +56,10 @@ export function Buffer<TBase extends Util & Events>(Base: TBase) {
           if (!buffer) return
 
           try {
-            const bufferCMDElement = await this.observer.waitFor(Selector.BufferCMDElement)
+            const bufferCMDElement = await this.observer.waitFor(
+              Selector.BufferCMDElement,
+              { within: buffer }
+            )
             const cmd = bufferCMDElement.textContent
 
             this.events.emit('new-buffer', buffer, cmd ?? undefined)
@@ -74,7 +77,10 @@ export function Buffer<TBase extends Util & Events>(Base: TBase) {
     public async createBuffer(command?: string): Promise<Element | null> {
       if (this.newBufferButton === null) return null
 
-      const bufferPromise = this.observer.waitFor(Selector.EmptyBufferNotTaken)
+      const bufferPromise = this.observer.waitFor(
+        Selector.EmptyBufferNotTaken,
+        { onlyNew: true }
+      )
 
       this.newBufferButton.click()
       const buffer = await bufferPromise

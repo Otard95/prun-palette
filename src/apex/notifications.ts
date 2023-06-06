@@ -51,10 +51,13 @@ export function Notification<TBase extends Buffer & Events & Util>(Base: TBase) 
       return alertIndex
     }
 
-    private numberAlerts(buffer: Element) {
-      this.observer.waitFor(NotificationElementSelector.AlertListItem)
-
-      const alerts = buffer?.querySelectorAll(NotificationElementSelector.AlertListItem)
+    private async numberAlerts(buffer: Element) {
+      await this.observer.waitFor(NotificationElementSelector.AlertListItem, {
+        within: buffer,
+      })
+      const alerts = buffer?.querySelectorAll(
+        NotificationElementSelector.AlertListItem
+      )
       if (!alerts) return
 
       // Add numeric index to each alert
@@ -106,7 +109,10 @@ export function Notification<TBase extends Buffer & Events & Util>(Base: TBase) 
     }
 
     public async openNotificationIndex(index: number) {
-      const alertItemsPromise = this.observer.waitFor(NotificationElementSelector.AlertListItem)
+      const alertItemsPromise = this.observer.waitFor(
+        NotificationElementSelector.AlertListItem,
+        { onlyNew: true }
+      )
       const buffer = await this.createBuffer('NOTS')
       await alertItemsPromise
       const alerts = buffer?.querySelectorAll(NotificationElementSelector.AlertListItem)
