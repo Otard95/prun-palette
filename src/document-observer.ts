@@ -25,6 +25,12 @@ interface ElementListener {
   consume?: boolean
 }
 
+interface WaitForOptions {
+  timeout?: number
+  within?: Element
+  onlyNew?: boolean
+}
+
 export default class DocumentObserver {
   private observer: MutationObserver
   private listeners: {
@@ -92,10 +98,23 @@ export default class DocumentObserver {
     }
   }
 
-  public async waitFor(selector: string, timeout: number = 1000) {
+  public async waitFor(
+    selector: string,
+    option: WaitForOptions = {}
+  ): Promise<Element> {
+    const { timeout = 1000, onlyNew, within = document.body } = option
+
+    if (!onlyNew) {
+      const existingElement = within.querySelector(selector)
+      if (existingElement) {
+        return existingElement
+      }
+    }
+
     const deferred = new Deferred<Element>()
     const listener: ElementListener = {
-      match: (element) => {
+      match: element => {
+        if (within !== document.body && !within.contains(element)) return false
         const nodeMatches = element.matches(selector)
         const nodeHadMatchingChildren = element.querySelector(selector)
         const match = nodeMatches || !!nodeHadMatchingChildren
