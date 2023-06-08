@@ -1,3 +1,10 @@
+## [0.3.2](https://github.com/Otard95/prun-palette/compare/v0.3.1...v0.3.2) (2023-06-08)
+
+
+### Bug Fixes
+
+* Compat with PMMG Extended ([86d531d](https://github.com/Otard95/prun-palette/commit/86d531deecd0a33a2565ad9b60ca840f49892538))
+
 ## [0.3.1](https://github.com/Otard95/prun-palette/compare/v0.3.0...v0.3.1) (2023-06-06)
 
 
