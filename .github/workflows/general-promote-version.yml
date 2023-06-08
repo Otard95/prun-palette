@@ -18,7 +18,7 @@ jobs:
         run: |
           git config --global user.name '@actions-bot'
           git config --global user.email 'actions-bot@users.noreply.github.com'
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git remote set-url origin https://x-access-token:${{ secrets.PROMOTE_PAT }}@github.com/${{ github.repository }}
       - name: Promote version (merge dev to main)
         run: |
           git checkout main
