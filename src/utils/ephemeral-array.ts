@@ -55,7 +55,7 @@ export default class EphemeralArray<T> extends Array<T> {
   private resetTimeout() {
     if (this.timeout !== null) clearTimeout(this.timeout)
     this.timeout = setTimeout(() => {
-      this.onTimeoutHandlers.forEach((handler) => handler(this))
+      this.onTimeoutHandlers.forEach(handler => handler(this))
       this.length = 0
     }, this.ttl) as unknown as number
   }
@@ -64,5 +64,3 @@ export default class EphemeralArray<T> extends Array<T> {
     this.onTimeoutHandlers.push(callback)
   }
 }
-
-

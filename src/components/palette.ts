@@ -26,10 +26,10 @@ import paletteMatches from './paletteMatches'
 import kbd from './kbd'
 
 type EventMap = {
-  'change': [string]
-  'complete': [string]
-  'back': []
-  'submit': [string]
+  change: [string]
+  complete: [string]
+  back: []
+  submit: [string]
 }
 export const paletteListener = new EventEmitter<EventMap>()
 
@@ -39,9 +39,14 @@ interface PaletteProps {
   execute: (path: string[], input: string) => Promise<unknown> | void
   close: () => void
 }
-export default function palette({ fuzzNextArg, getTopMatches, execute, close }: PaletteProps) {
+export default function palette({
+  fuzzNextArg,
+  getTopMatches,
+  execute,
+  close,
+}: PaletteProps) {
   const path: string[] = []
-  let current: string = ''
+  let current = ''
   let bestMatch: string | undefined = undefined
   let topMatches: PaletteCommand[] = []
 
@@ -69,7 +74,7 @@ export default function palette({ fuzzNextArg, getTopMatches, execute, close }: 
   }
 
   const onPaletteInputComplete = () => {
-    if (!bestMatch && !current || topMatches.length === 0) return
+    if ((!bestMatch && !current) || topMatches.length === 0) return
     path.push(bestMatch || current)
     current = ''
     bestMatch = undefined
@@ -100,11 +105,17 @@ export default function palette({ fuzzNextArg, getTopMatches, execute, close }: 
     div(
       paletteInputEl,
       topMatchesListEl,
-      p(kbd('enter'), ' to select | ', kbd('tab'), ' to autocomplete | ', kbd('esc'), ' to close')
-        .att$('class', 'palette-help')
-    ).att$('class', 'palette')
+      p(
+        kbd('enter'),
+        ' to select | ',
+        kbd('tab'),
+        ' to autocomplete | ',
+        kbd('esc'),
+        ' to close'
+      ).att$('class', 'prun-palette prun-help')
+    ).att$('class', 'prun-palette prun-container')
   )
-    .att$('class', 'palette-container')
+    .att$('class', 'prun-palette prun-backdrop')
     .att$('id', 'prun-palette')
 
   palette.on('mount', () => {
@@ -125,5 +136,3 @@ export default function palette({ fuzzNextArg, getTopMatches, execute, close }: 
 
   return palette
 }
-
-

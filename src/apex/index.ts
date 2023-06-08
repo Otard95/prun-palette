@@ -25,5 +25,17 @@ import { Buffer } from './buffer'
 import { Screen } from './screen'
 import { Ships } from './ships'
 import { Station } from './station'
+import { Notification } from './notifications'
 
-export default class Apex extends Station(Screen(FIO(Inventory(Ships(Util(Buffer(Events(ApexBase)))))))) {}
+/* eslint-disable prettier/prettier */
+export default class Apex extends Notification  (
+                                  Station       (
+                                  Screen        (
+                                  FIO           (
+                                  Inventory     (
+                                  Ships         (
+                                  Buffer        (
+                                  Util          (
+                                  Events        (
+                                  ApexBase      )))))))))
+{}

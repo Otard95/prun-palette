@@ -21,22 +21,23 @@ import { div, h3, p } from '../utils/dom'
 import { memoizee } from '../utils/memoize'
 import './paletteMatches.sass'
 
-
 function paletteMatches(topMatches: PaletteCommand[] = []) {
   return div(
-    ...topMatches.map((match) => {
+    ...topMatches.map(match => {
       return div(
         div(
-          h3(match.name).att$('class', 'palette-match-name'),
-          p(' - ', match.description).att$('class', 'palette-match-description'),
-        ).att$('class', 'palette-match-header'),
-        p(match.signature.join(' · ')).att$('class', 'palette-match-usage')
-      ).att$('class', 'palette-match')
+          h3(match.name).att$('class', 'prun-palette prun-match-name'),
+          p(' - ', match.description).att$(
+            'class',
+            'prun-palette prun-match-description'
+          )
+        ).att$('class', 'prun-palette prun-match-header'),
+        p(match.signature.join(' · ')).att$('class', 'prun-palette prun-match-usage')
+      ).att$('class', 'prun-palette prun-match')
     }),
-    topMatches.length === 0 && p('No matches found').att$('class', 'palette-match-empty')
-  ).att$('class', 'palette-matches')
+    topMatches.length === 0 &&
+      p('No matches found').att$('class', 'prun-palette prun-match-empty')
+  ).att$('class', 'prun-palette prun-matches')
 }
 
 export default memoizee(paletteMatches)
-
-

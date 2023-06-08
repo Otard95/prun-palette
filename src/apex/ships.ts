@@ -17,8 +17,8 @@
 
 */
 import { GConstructor } from 'mixin'
-import { Events } from "./events";
-import { Util } from './utils';
+import { Events } from './events'
+import { Util } from './utils'
 
 interface ShipWithTransponder {
   transponder: string
@@ -38,6 +38,7 @@ export function Ships<TBase extends Events & Util>(Base: TBase) {
   return class Ships extends Base {
     private ships: Set<ShipInfo>
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     constructor(...args: any[]) {
       super(...args)
 
@@ -51,8 +52,7 @@ export function Ships<TBase extends Events & Util>(Base: TBase) {
       this.events.on('new-buffer', (buffer, command) => {
         if (command?.toLowerCase() === 'inv')
           this.getShipNamesFromInventory(buffer)
-        if (command?.toLowerCase() === 'flt')
-          this.getShipNamesFromFleet(buffer)
+        if (command?.toLowerCase() === 'flt') this.getShipNamesFromFleet(buffer)
       })
     }
 
@@ -68,9 +68,10 @@ export function Ships<TBase extends Events & Util>(Base: TBase) {
     }
 
     private mergeShipInfo(shipInfo: ShipInfo[]): void {
-      shipInfo.forEach((ship) => {
-        const existingShip = [...this.ships.values()].find((s) => {
-          if (ship.transponder && s.transponder === ship.transponder) return true
+      shipInfo.forEach(ship => {
+        const existingShip = [...this.ships.values()].find(s => {
+          if (ship.transponder && s.transponder === ship.transponder)
+            return true
           if (ship.name && s.name === ship.name) return true
           return false
         })
@@ -86,57 +87,59 @@ export function Ships<TBase extends Events & Util>(Base: TBase) {
     }
 
     private async getShipNamesFromInventory(buffer: Element): Promise<void> {
-      await this.observer.waitFor('tr')
+      await this.observer.waitFor('tr', { within: buffer })
       const rows = buffer.querySelectorAll('tr')
       if (!rows) {
         console.debug('[PrUn Palette] Failed to find rows in inventory buffer')
         return
       }
 
-      const shipRows = this.findMatchingRows(rows, [
-        'Cargo hold',
-      ])
+      const shipRows = this.findMatchingRows(rows, ['Cargo hold'])
       if (!shipRows) return
 
-      const shipInfo = shipRows.map<ShipInfo | null>((row) => {
-        const shipNameColumn = row.querySelector('td:nth-child(3)')
-        if (!shipNameColumn) return null
+      const shipInfo = shipRows
+        .map<ShipInfo | null>(row => {
+          const shipNameColumn = row.querySelector('td:nth-child(3)')
+          if (!shipNameColumn) return null
 
-        const shipName = shipNameColumn.textContent
-        if (!shipName) return null
+          const shipName = shipNameColumn.textContent
+          if (!shipName) return null
 
-        return {
-          name: shipName,
-        }
-      }).filter((shipInfo): shipInfo is ShipInfo => shipInfo !== null)
+          return {
+            name: shipName,
+          }
+        })
+        .filter((shipInfo): shipInfo is ShipInfo => shipInfo !== null)
 
       this.mergeShipInfo(shipInfo)
     }
 
     private async getShipNamesFromFleet(buffer: Element): Promise<void> {
-      await this.observer.waitFor('tr')
+      await this.observer.waitFor('tr', { within: buffer })
       const rows = buffer.querySelectorAll('tr')
       if (!rows) {
         console.debug('[PrUn Palette] Failed to find rows in fleet buffer')
         return
       }
 
-      const shipInfo = Array.from(rows).map<Partial<ShipInfo> | null>((row) => {
-        const shipTransponderColumn = row.querySelector('td:nth-child(1)')
-        const shipNameColumn = row.querySelector('td:nth-child(2)')
+      const shipInfo = Array.from(rows)
+        .map<Partial<ShipInfo> | null>(row => {
+          const shipTransponderColumn = row.querySelector('td:nth-child(1)')
+          const shipNameColumn = row.querySelector('td:nth-child(2)')
 
-        const shipTransponder = shipTransponderColumn?.textContent
-        const shipName = shipNameColumn?.textContent
+          const shipTransponder = shipTransponderColumn?.textContent
+          const shipName = shipNameColumn?.textContent
 
-        return {
-          ...(shipTransponder && { transponder: shipTransponder }),
-          ...(shipName && { name: shipName }),
-        }
-      }).filter((shipInfo): shipInfo is ShipInfo => {
-        if (shipInfo === null) return false
-        if (!shipInfo.transponder && !shipInfo.name) return false
-        return true
-      })
+          return {
+            ...(shipTransponder && { transponder: shipTransponder }),
+            ...(shipName && { name: shipName }),
+          }
+        })
+        .filter((shipInfo): shipInfo is ShipInfo => {
+          if (shipInfo === null) return false
+          if (!shipInfo.transponder && !shipInfo.name) return false
+          return true
+        })
 
       this.mergeShipInfo(shipInfo)
     }
@@ -147,4 +150,3 @@ export function Ships<TBase extends Events & Util>(Base: TBase) {
     }
   }
 }
-

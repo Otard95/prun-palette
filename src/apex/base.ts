@@ -29,7 +29,7 @@ export default class Apex {
   ]
 
   private static hasRequiredElements(): boolean {
-    return Apex._requiredSelectors.every((selector) => {
+    return Apex._requiredSelectors.every(selector => {
       return document.querySelector(selector)
     })
   }
@@ -50,7 +50,7 @@ export default class Apex {
       callback: () => {
         deferred.resolve()
       },
-      once: true
+      once: true,
     })
   }
 

@@ -27,7 +27,11 @@ interface MemoizedValue<R> {
  * @param ttl - Time to live in milliseconds. If not given, the result is cached forever.
  * @returns A function that memoizes the result of the given function
  */
-export const memoizee = <A extends Array<any>, R>(func: (...args: A) => R, ttl?: number): (...args: A) => R => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const memoizee = <A extends Array<any>, R>(
+  func: (...args: A) => R,
+  ttl?: number
+): ((...args: A) => R) => {
   const cache = new Map<string, MemoizedValue<R>>()
   return function (...args: A): R {
     const key = JSON.stringify(args)
@@ -48,7 +52,11 @@ export const memoizee = <A extends Array<any>, R>(func: (...args: A) => R, ttl?:
  * @returns A decorator that memoizes the result of the given function
  */
 export const memoize = (ttl?: number): MethodDecorator => {
-  return (_target: Object, _propertyKey: string | symbol, descriptor: PropertyDescriptor) => {
+  return (
+    _target: object,
+    _propertyKey: string | symbol,
+    descriptor: PropertyDescriptor
+  ) => {
     if ('value' in descriptor) {
       const func = descriptor.value
       descriptor.value = memoizee(func, ttl)
@@ -60,5 +68,3 @@ export const memoize = (ttl?: number): MethodDecorator => {
     return descriptor
   }
 }
-
-

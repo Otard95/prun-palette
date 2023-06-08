@@ -39,7 +39,5 @@ export const fuzzStrings = (str: string, options: string[]) => {
     return s
   }
 
-  return options.map((option) => score(str.toLowerCase(), option.toLowerCase()))
+  return options.map(option => score(str.toLowerCase(), option.toLowerCase()))
 }
-
-

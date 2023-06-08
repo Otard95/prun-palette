@@ -16,19 +16,29 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
-import Apex from "./base";
+import Apex from './base'
 import { GConstructor } from 'mixin'
 
 export type TableMatch = Array<string | RegExp | undefined>
 
 type NodeListOrArray<T extends Element> = NodeListOf<T> | T[]
 
-export type Util = GConstructor<{
-  findMatchingRows: (rows: NodeListOrArray<HTMLTableRowElement>, match: TableMatch) => Element[]
-  findMatchingRow: (rows: NodeListOrArray<HTMLTableRowElement>, match: TableMatch) => Element | null
-  findElementWithContent: (parent: Element, content: string | RegExp) => Element | null
-  closeBuffer: (buffer: Element) => void
-} & Apex>
+export type Util = GConstructor<
+  {
+    findMatchingRows: (
+      rows: NodeListOrArray<HTMLTableRowElement>,
+      match: TableMatch
+    ) => Element[]
+    findMatchingRow: (
+      rows: NodeListOrArray<HTMLTableRowElement>,
+      match: TableMatch
+    ) => Element | null
+    findElementWithContent: (
+      parent: Element,
+      content: string | RegExp
+    ) => Element | null
+  } & Apex
+>
 
 export function Util<TBase extends GConstructor<Apex>>(Base: TBase) {
   return class Util extends Base {
@@ -36,15 +46,24 @@ export function Util<TBase extends GConstructor<Apex>>(Base: TBase) {
       return Array.isArray(elements) ? elements : Array.from(elements)
     }
 
-    public findMatchingRows(rows: NodeListOrArray<HTMLTableRowElement>, match: TableMatch): Element[] {
-      return this.resolveToArray(rows).filter((row) => {
+    public findMatchingRows(
+      rows: NodeListOrArray<HTMLTableRowElement>,
+      match: TableMatch
+    ): Element[] {
+      return this.resolveToArray(rows).filter(row => {
         return match.every((match, i) => {
           if (!match) return true
           if (typeof match === 'string') {
-            return row.querySelector(`td:nth-child(${i + 1})`)?.textContent?.trim() === match
+            return (
+              row
+                .querySelector(`td:nth-child(${i + 1})`)
+                ?.textContent?.trim() === match
+            )
           }
           if (match instanceof RegExp) {
-            const col = row.querySelector(`td:nth-child(${i + 1})`)?.textContent?.trim()
+            const col = row
+              .querySelector(`td:nth-child(${i + 1})`)
+              ?.textContent?.trim()
             if (!col) return false
             return match.test(col)
           }
@@ -53,29 +72,30 @@ export function Util<TBase extends GConstructor<Apex>>(Base: TBase) {
       })
     }
 
-    public findMatchingRow(rows: NodeListOrArray<HTMLTableRowElement>, match: TableMatch): Element | null {
+    public findMatchingRow(
+      rows: NodeListOrArray<HTMLTableRowElement>,
+      match: TableMatch
+    ): Element | null {
       const matchingRows = this.findMatchingRows(rows, match)
       if (matchingRows.length === 0) return null
       return matchingRows[0]
     }
 
-    public findElementWithContent(parent: Element, content: string | RegExp): Element | null {
+    public findElementWithContent(
+      parent: Element,
+      content: string | RegExp
+    ): Element | null {
       const elements = Array.from(parent.querySelectorAll('*'))
-      return elements.find((element) => {
-        if (typeof content === 'string') {
-          return element.textContent?.trim() === content
-        }
-        const text = element.textContent?.trim()
-        if (!text) return false
-        return content.test(text)
-      }) ?? null
-    }
-
-    public closeBuffer(buffer: Element) {
-      const closeButton = this.findElementWithContent(buffer, 'x')
-      if (!closeButton || !(closeButton instanceof HTMLElement)) return
-
-      closeButton.click()
+      return (
+        elements.find(element => {
+          if (typeof content === 'string') {
+            return element.textContent?.trim() === content
+          }
+          const text = element.textContent?.trim()
+          if (!text) return false
+          return content.test(text)
+        }) ?? null
+      )
     }
   }
 }

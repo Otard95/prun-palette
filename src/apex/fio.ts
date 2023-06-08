@@ -16,7 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
-import Apex from "./base";
+import Apex from './base'
 import { GConstructor } from 'mixin'
 import { fetchFIOPlanets, fetchFIOSystems } from '../fio'
 
@@ -39,15 +39,20 @@ export function FIO<TBase extends GConstructor<Apex>>(Base: TBase) {
     private planets: Planet[] = []
     private systems: System[] = []
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     constructor(...args: any[]) {
       super(...args)
 
       fetchFIOPlanets()
-        .then((planets) => planets && (this.planets = planets))
-        .catch((error) => console.error('[PrUn Palette] Failed to fetch planets', error))
+        .then(planets => planets && (this.planets = planets))
+        .catch(error =>
+          console.error('[PrUn Palette] Failed to fetch planets', error)
+        )
       fetchFIOSystems()
-        .then((systems) => systems && (this.systems = systems))
-        .catch((error) => console.error('[PrUn Palette] Failed to fetch systems', error))
+        .then(systems => systems && (this.systems = systems))
+        .catch(error =>
+          console.error('[PrUn Palette] Failed to fetch systems', error)
+        )
     }
 
     public get Planets(): Planet[] {

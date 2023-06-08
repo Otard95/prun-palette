@@ -16,7 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
-import Apex from "./base";
+import Apex from './base'
 import { GConstructor } from 'mixin'
 
 export interface ScreenItem {
@@ -33,43 +33,45 @@ export type Screen = GConstructor<{
 export function Screen<TBase extends GConstructor<Apex>>(Base: TBase) {
   return class Screen extends Base {
     public get Screens(): ScreenItem[] {
-      const screenList = document
-        .querySelector('#TOUR_TARGET_SCREEN_CONTROLS')
-        ?.querySelector('ul')
-        ?? null
+      const screenList =
+        document
+          .querySelector('#TOUR_TARGET_SCREEN_CONTROLS')
+          ?.querySelector('ul') ?? null
       if (screenList === null) return []
 
       const listItems = Array.from(screenList.querySelectorAll('li'))
 
-      return listItems.map((listItem): ScreenItem | null => {
-        const a = listItem.querySelector('a')
-        if (!a) return null
+      return listItems
+        .map((listItem): ScreenItem | null => {
+          const a = listItem.querySelector('a')
+          if (!a) return null
 
-        const name = a.textContent?.trim()
-        if (!name) return null
+          const name = a.textContent?.trim()
+          if (!name) return null
 
-        const href = a.getAttribute('href')
-        if (!href) return null
+          const href = a.getAttribute('href')
+          if (!href) return null
 
-        let deleteButton: HTMLDivElement | null = null
-        let copyButton: HTMLDivElement | null = null
-        listItem.querySelectorAll('div').forEach((div) => {
-          if (div.textContent?.trim().toLowerCase() === 'del') {
-            deleteButton = div
-          } else if (div.textContent?.trim().toLowerCase() === 'cpy') {
-            copyButton = div
+          let deleteButton: HTMLDivElement | null = null
+          let copyButton: HTMLDivElement | null = null
+          listItem.querySelectorAll('div').forEach(div => {
+            if (div.textContent?.trim().toLowerCase() === 'del') {
+              deleteButton = div
+            } else if (div.textContent?.trim().toLowerCase() === 'cpy') {
+              copyButton = div
+            }
+          })
+
+          if (!deleteButton || !copyButton) return null
+
+          return {
+            name,
+            open: () => (location.hash = href),
+            delete: () => deleteButton?.click(),
+            copy: () => copyButton?.click(),
           }
         })
-
-        if (!deleteButton || !copyButton) return null
-
-        return {
-          name,
-          open: () => location.hash = href,
-          delete: () => deleteButton?.click(),
-          copy: () => copyButton?.click(),
-        }
-      }).filter((screen): screen is ScreenItem => screen !== null)
+        .filter((screen): screen is ScreenItem => screen !== null)
     }
   }
 }
