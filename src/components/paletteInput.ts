@@ -70,12 +70,12 @@ export default function paletteInput(
 
   const container = div(
     ...path.map(p =>
-      div(p.concat(' ·')).att$('class', 'prun-palette-input-path')
+      div(p.concat(' ·')).att$('class', 'prun-palette prun-input-path')
     ),
     input,
     bestMatchSuffix &&
       div(bestMatchSuffix).att$('class', 'prun-alette-input-best-match')
-  ).att$('class', 'prun-palette-input')
+  ).att$('class', 'prun-palette prun-input')
 
   container.onClick$(() => focus())
 

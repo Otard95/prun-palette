@@ -23,10 +23,10 @@ import { Util } from './utils'
 
 enum Selector {
   EmptyBuffer = '#TOUR_TARGET_EMPTY_BUFFER',
-  EmptyBufferNotTaken = '#TOUR_TARGET_EMPTY_BUFFER:not(.prun-palette-taken)',
+  EmptyBufferNotTaken = '#TOUR_TARGET_EMPTY_BUFFER:not(.prun-palette.prun-taken)',
   NewBufferButton = '#TOUR_TARGET_BUTTON_BUFFER_NEW',
   BufferCMDElement = 'div[class^="TileFrame__cmd"]',
-  TakenClass = 'prun-palette-taken',
+  TakenClass = 'prun-palette.prun-taken',
 }
 
 export type Buffer = GConstructor<{
