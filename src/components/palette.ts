@@ -112,10 +112,10 @@ export default function palette({
         ' to autocomplete | ',
         kbd('esc'),
         ' to close'
-      ).att$('class', 'prun-palette-help')
-    ).att$('class', 'prun-palette')
+      ).att$('class', 'prun-palette prun-help')
+    ).att$('class', 'prun-palette prun-container')
   )
-    .att$('class', 'prun-palette-container')
+    .att$('class', 'prun-palette prun-backdrop')
     .att$('id', 'prun-palette')
 
   palette.on('mount', () => {

@@ -50,7 +50,7 @@ export function Notification<TBase extends Buffer & Events & Util>(
 
     private createAlertIndex(index: number): HTMLDivElement {
       const alertIndex = document.createElement('div')
-      alertIndex.classList.add('prun-alert-index')
+      alertIndex.classList.add('prun-palette', 'prun-alert-index')
       alertIndex.innerText = index.toString()
       return alertIndex
     }
