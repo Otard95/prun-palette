@@ -26,7 +26,6 @@
     "@semantic-release/github": "8.0.7",
     "@semantic-release/release-notes-generator": "11.0.1",
     "@types/jest": "29.5.1",
-    "@types/webextension-polyfill": "0.10.0",
     "@typescript-eslint/eslint-plugin": "5.59.9",
     "@typescript-eslint/parser": "5.59.9",
     "eslint": "8.42.0",
@@ -46,8 +45,5 @@
     "ts-jest": "29.1.0",
     "tslib": "2.5.0",
     "typescript": "5.0.4"
-  },
-  "dependencies": {
-    "webextension-polyfill": "0.10.0"
   }
 }

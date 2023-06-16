@@ -21,6 +21,7 @@ const plugins = ({
         rename: 'manifest.json'
       },
       { src: 'assets/*.png', dest: `build-${browser}` },
+      { src: 'web-ext/index.js', dest: `build-${browser}`, rename: 'web-ext.js' },
     ],
   }),
   license({

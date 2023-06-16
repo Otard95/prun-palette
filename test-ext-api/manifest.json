@@ -1,0 +1,14 @@
+{
+  "manifest_version": 2,
+  "name": "PrUn Palette ext api test",
+  "version": "0.0.1",
+
+  "description": "Test external api for PrUn Palette",
+
+  "content_scripts": [
+    {
+      "matches": ["https://apex.prosperousuniverse.com/*"],
+      "js": ["web-ext.js", "index.js"]
+    }
+  ]
+}

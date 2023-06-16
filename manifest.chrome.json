@@ -14,7 +14,7 @@
   "content_scripts": [
     {
       "matches": ["https://apex.prosperousuniverse.com/*"],
-      "js": ["index.js"],
+      "js": ["web-ext.js", "index.js"],
       "css": ["index.css"]
     }
   ],

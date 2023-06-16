@@ -20,6 +20,7 @@ import Apex from './apex'
 import attachCommands from './commands'
 import Keybinds from './keybinds'
 import Palette from './palette'
+import initExternalAPI from './ext-api'
 ;(async function () {
   console.debug('[PrUn Palette] Initializing...')
 
@@ -28,6 +29,7 @@ import Palette from './palette'
   const palette = new Palette(apex)
 
   attachCommands(palette, apex)
+  initExternalAPI(palette)
 
   await apex.ready
 
