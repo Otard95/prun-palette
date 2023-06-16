@@ -59,9 +59,14 @@ export function Ships<TBase extends Events & Util & Buffer>(Base: TBase) {
       }
 
       this.events.on('new-buffer', (buffer, command) => {
-        if (command?.toLowerCase() === 'inv')
-          this.getShipNamesFromInventory(buffer)
-        if (command?.toLowerCase() === 'flt') this.getShipNamesFromFleet(buffer)
+        switch (command?.toLowerCase()) {
+          case 'inv':
+            this.getShipNamesFromInventory(buffer)
+            break
+          case 'flt':
+            this.getShipNamesFromFleet(buffer)
+            break
+        }
       })
     }
 
