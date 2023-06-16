@@ -39,6 +39,7 @@ export type Ships = GConstructor<{
   get Ships(): ShipInfo[]
   fleetOpenShipRoute(shipName: string): Promise<void>
   fleetOpenShipCargo(shipName: string): Promise<void>
+  fleetOpenShipFuel(shipTransponder: string): Promise<void>
 }>
 
 export function Ships<TBase extends Events & Util & Buffer>(Base: TBase) {
@@ -228,6 +229,21 @@ export function Ships<TBase extends Events & Util & Buffer>(Base: TBase) {
       if (!shipCargoButton) return
 
       shipCargoButton.click()
+      this.closeBuffer(fleetBuffer)
+    }
+
+    public async fleetOpenShipFuel(shipName: string): Promise<void> {
+      const fleetBuffer = await this.createBuffer('flt')
+      if (!fleetBuffer) return
+
+      const shipFuelButton = await this.waitForShipRowButton(
+        fleetBuffer,
+        shipName,
+        'fuel'
+      )
+      if (!shipFuelButton) return
+
+      shipFuelButton.click()
       this.closeBuffer(fleetBuffer)
     }
   }
