@@ -31,6 +31,10 @@ interface ShipWithName {
 }
 type ShipInfo = ShipWithTransponder | ShipWithName
 
+enum Selector {
+  FleetButtons = 'div[class^="Fleet__buttons"]',
+}
+
 export type Ships = GConstructor<{
   get Ships(): ShipInfo[]
 }>
