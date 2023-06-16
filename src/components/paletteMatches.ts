@@ -32,7 +32,10 @@ function paletteMatches(topMatches: PaletteCommand[] = []) {
             'prun-palette prun-match-description'
           )
         ).att$('class', 'prun-palette prun-match-header'),
-        p(match.signature.join(' · ')).att$('class', 'prun-palette prun-match-usage')
+        p(match.signature.join(' · ')).att$(
+          'class',
+          'prun-palette prun-match-usage'
+        )
       ).att$('class', 'prun-palette prun-match')
     }),
     topMatches.length === 0 &&

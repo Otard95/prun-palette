@@ -17,6 +17,7 @@
 
 */
 import { GConstructor } from 'mixin'
+import { Buffer } from './buffer'
 import { Events } from './events'
 import { Util } from './utils'
 
@@ -30,11 +31,19 @@ interface ShipWithName {
 }
 type ShipInfo = ShipWithTransponder | ShipWithName
 
+enum Selector {
+  FleetButtons = 'div[class^="Fleet__buttons"]',
+}
+
 export type Ships = GConstructor<{
   get Ships(): ShipInfo[]
+  fleetOpenShipRoute(shipName: string): Promise<void>
+  fleetOpenShipCargo(shipName: string): Promise<void>
+  fleetOpenShipFuel(shipTransponder: string): Promise<void>
+  fleetUnloadShip(shipName: string): Promise<void>
 }>
 
-export function Ships<TBase extends Events & Util>(Base: TBase) {
+export function Ships<TBase extends Events & Util & Buffer>(Base: TBase) {
   return class Ships extends Base {
     private ships: Set<ShipInfo>
 
@@ -50,9 +59,14 @@ export function Ships<TBase extends Events & Util>(Base: TBase) {
       }
 
       this.events.on('new-buffer', (buffer, command) => {
-        if (command?.toLowerCase() === 'inv')
-          this.getShipNamesFromInventory(buffer)
-        if (command?.toLowerCase() === 'flt') this.getShipNamesFromFleet(buffer)
+        switch (command?.toLowerCase()) {
+          case 'inv':
+            this.getShipNamesFromInventory(buffer)
+            break
+          case 'flt':
+            this.getShipNamesFromFleet(buffer)
+            break
+        }
       })
     }
 
@@ -147,6 +161,111 @@ export function Ships<TBase extends Events & Util>(Base: TBase) {
     public get Ships(): ShipInfo[] {
       // return the this.ships set as an array
       return [...this.ships.values()]
+    }
+
+    private async waitForShipRow(
+      buffer: Element,
+      shipName: string
+    ): Promise<Element | undefined> {
+      await this.observer.waitFor('tr', { within: buffer })
+
+      const shipRows = buffer.querySelectorAll('tr')
+      const shipRow = this.findMatchingRow(shipRows, [
+        undefined,
+        new RegExp(`^${shipName}$`, 'i'),
+      ])
+      if (!shipRow) return
+
+      return shipRow
+    }
+
+    private async waitForShipRowButtons(
+      buffer: Element,
+      shipName: string
+    ): Promise<Element | undefined> {
+      const shipRow = await this.waitForShipRow(buffer, shipName)
+      if (!shipRow) return
+
+      const fleetButtons = shipRow.querySelector(Selector.FleetButtons)
+      if (!fleetButtons) return
+
+      return fleetButtons
+    }
+
+    private async waitForShipRowButton(
+      buffer: Element,
+      shipName: string,
+      buttonName: string
+    ): Promise<HTMLButtonElement | undefined> {
+      const fleetButtons = await this.waitForShipRowButtons(buffer, shipName)
+      if (!fleetButtons) return
+
+      const button = this.findElementWithContent(fleetButtons, buttonName)
+      if (!button || !(button instanceof HTMLButtonElement)) return
+
+      return button
+    }
+
+    public async fleetOpenShipRoute(shipName: string): Promise<void> {
+      const fleetBuffer = await this.createBuffer('flt')
+      if (!fleetBuffer) return
+
+      const shipRouteButtonOptions = await Promise.all([
+        await this.waitForShipRowButton(fleetBuffer, shipName, 'view'),
+        await this.waitForShipRowButton(fleetBuffer, shipName, 'fly'),
+      ])
+
+      const [viewButton, flyButton] = shipRouteButtonOptions
+      const button = viewButton || flyButton
+      if (!button) return
+
+      button.click()
+      this.closeBuffer(fleetBuffer)
+    }
+
+    public async fleetOpenShipCargo(shipName: string): Promise<void> {
+      const fleetBuffer = await this.createBuffer('flt')
+      if (!fleetBuffer) return
+
+      const shipCargoButton = await this.waitForShipRowButton(
+        fleetBuffer,
+        shipName,
+        'cargo'
+      )
+      if (!shipCargoButton) return
+
+      shipCargoButton.click()
+      this.closeBuffer(fleetBuffer)
+    }
+
+    public async fleetOpenShipFuel(shipName: string): Promise<void> {
+      const fleetBuffer = await this.createBuffer('flt')
+      if (!fleetBuffer) return
+
+      const shipFuelButton = await this.waitForShipRowButton(
+        fleetBuffer,
+        shipName,
+        'fuel'
+      )
+      if (!shipFuelButton) return
+
+      shipFuelButton.click()
+      this.closeBuffer(fleetBuffer)
+    }
+
+    public async fleetUnloadShip(shipName: string): Promise<void> {
+      const fleetBuffer = await this.createBuffer('flt')
+      if (!fleetBuffer) return
+
+      const shipUnloadButton = await this.waitForShipRowButton(
+        fleetBuffer,
+        shipName,
+        'unload'
+      )
+      if (!shipUnloadButton) return
+
+      shipUnloadButton.click()
+      this.closeBuffer(fleetBuffer)
     }
   }
 }
