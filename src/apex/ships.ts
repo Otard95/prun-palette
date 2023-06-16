@@ -17,6 +17,7 @@
 
 */
 import { GConstructor } from 'mixin'
+import { Buffer } from './buffer'
 import { Events } from './events'
 import { Util } from './utils'
 
@@ -34,7 +35,7 @@ export type Ships = GConstructor<{
   get Ships(): ShipInfo[]
 }>
 
-export function Ships<TBase extends Events & Util>(Base: TBase) {
+export function Ships<TBase extends Events & Util & Buffer>(Base: TBase) {
   return class Ships extends Base {
     private ships: Set<ShipInfo>
 
