@@ -38,6 +38,7 @@ enum Selector {
 export type Ships = GConstructor<{
   get Ships(): ShipInfo[]
   fleetOpenShipRoute(shipName: string): Promise<void>
+  fleetOpenShipCargo(shipName: string): Promise<void>
 }>
 
 export function Ships<TBase extends Events & Util & Buffer>(Base: TBase) {
@@ -212,6 +213,21 @@ export function Ships<TBase extends Events & Util & Buffer>(Base: TBase) {
       if (!button) return
 
       button.click()
+      this.closeBuffer(fleetBuffer)
+    }
+
+    public async fleetOpenShipCargo(shipName: string): Promise<void> {
+      const fleetBuffer = await this.createBuffer('flt')
+      if (!fleetBuffer) return
+
+      const shipCargoButton = await this.waitForShipRowButton(
+        fleetBuffer,
+        shipName,
+        'cargo'
+      )
+      if (!shipCargoButton) return
+
+      shipCargoButton.click()
       this.closeBuffer(fleetBuffer)
     }
   }
