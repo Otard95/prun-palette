@@ -148,5 +148,48 @@ export function Ships<TBase extends Events & Util>(Base: TBase) {
       // return the this.ships set as an array
       return [...this.ships.values()]
     }
+
+    private async waitForShipRow(
+      buffer: Element,
+      shipName: string
+    ): Promise<Element | undefined> {
+      await this.observer.waitFor('tr', { within: buffer })
+
+      const shipRows = buffer.querySelectorAll('tr')
+      const shipRow = this.findMatchingRow(shipRows, [
+        undefined,
+        new RegExp(`^${shipName}$`, 'i'),
+      ])
+      if (!shipRow) return
+
+      return shipRow
+    }
+
+    private async waitForShipRowButtons(
+      buffer: Element,
+      shipName: string
+    ): Promise<Element | undefined> {
+      const shipRow = await this.waitForShipRow(buffer, shipName)
+      if (!shipRow) return
+
+      const fleetButtons = shipRow.querySelector(Selector.FleetButtons)
+      if (!fleetButtons) return
+
+      return fleetButtons
+    }
+
+    private async waitForShipRowButton(
+      buffer: Element,
+      shipName: string,
+      buttonName: string
+    ): Promise<HTMLButtonElement | undefined> {
+      const fleetButtons = await this.waitForShipRowButtons(buffer, shipName)
+      if (!fleetButtons) return
+
+      const button = this.findElementWithContent(fleetButtons, buttonName)
+      if (!button || !(button instanceof HTMLButtonElement)) return
+
+      return button
+    }
   }
 }
