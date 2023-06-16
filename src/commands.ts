@@ -82,6 +82,30 @@ export default function attachCommands(palette: Palette, apex: Apex) {
     command: () => apex.createBuffer('FLT'),
     signature: ['fleet'],
   })
+  palette.addCommand({
+    name: 'Fleet route',
+    description: 'View or plot a route for a ship in the fleet',
+    command: (shipName: string) => apex.fleetOpenShipRoute(shipName),
+    signature: ['fleet', 'route', PaletteCommandVariables.ShipName],
+  })
+  palette.addCommand({
+    name: 'Fleet cargo',
+    description: 'Open a the cargo of a ship in the fleet',
+    command: (shipName: string) => apex.fleetOpenShipCargo(shipName),
+    signature: ['fleet', 'cargo', PaletteCommandVariables.ShipName],
+  })
+  palette.addCommand({
+    name: 'Fleet fuel',
+    description: 'Open a the fuel of a ship in the fleet',
+    command: (shipName: string) => apex.fleetOpenShipFuel(shipName),
+    signature: ['fleet', 'fuel', PaletteCommandVariables.ShipName],
+  })
+  palette.addCommand({
+    name: 'Fleet unload',
+    description: 'Unload a ship in the fleet',
+    command: (shipName: string) => apex.fleetUnloadShip(shipName),
+    signature: ['fleet', 'unload', PaletteCommandVariables.ShipName],
+  })
 
   // ############################
   // #    Inventory commands    #
