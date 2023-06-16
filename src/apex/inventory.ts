@@ -23,7 +23,7 @@ import { regexpIncludesString } from '../utils/regexp'
 
 export type Inventory = GConstructor<{
   openBaseInventory(planetName: string): Promise<void>
-  openShipCargo(shipName: string): Promise<void>
+  invOpenShipCargo(shipName: string): Promise<void>
   openWarehouse(systemName: string): Promise<void>
 }>
 
@@ -79,7 +79,7 @@ export function Inventory<TBase extends Util & Buffer>(Base: TBase) {
       this.closeBuffer(inventoryBuffer)
     }
 
-    public async openShipCargo(shipName: string) {
+    public async invOpenShipCargo(shipName: string) {
       const { inventoryBuffer, inventoryRows } =
         (await this.openInventoriesBuffer()) || {}
       if (!inventoryBuffer || !inventoryRows) return

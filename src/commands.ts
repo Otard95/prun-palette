@@ -109,7 +109,7 @@ export default function attachCommands(palette: Palette, apex: Apex) {
   palette.addCommand({
     name: 'Ship cargo',
     description: "Open a ship's cargo",
-    command: (shipName: string) => apex.openShipCargo(shipName),
+    command: (shipName: string) => apex.invOpenShipCargo(shipName),
     signature: ['inventory', 'cargo', PaletteCommandVariables.ShipName],
   })
   palette.addCommand({
