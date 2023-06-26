@@ -17,6 +17,7 @@
 
 */
 import { GConstructor } from 'mixin'
+import { FleetSelector } from '../utils/constants'
 import { Buffer } from './buffer'
 import { Events } from './events'
 import { Util } from './utils'
@@ -30,10 +31,6 @@ interface ShipWithName {
   name: string
 }
 type ShipInfo = ShipWithTransponder | ShipWithName
-
-enum Selector {
-  FleetButtons = 'div[class^="Fleet__buttons"]',
-}
 
 export type Ships = GConstructor<{
   get Ships(): ShipInfo[]
@@ -186,7 +183,7 @@ export function Ships<TBase extends Events & Util & Buffer>(Base: TBase) {
       const shipRow = await this.waitForShipRow(buffer, shipName)
       if (!shipRow) return
 
-      const fleetButtons = shipRow.querySelector(Selector.FleetButtons)
+      const fleetButtons = shipRow.querySelector(FleetSelector.FleetButtons)
       if (!fleetButtons) return
 
       return fleetButtons

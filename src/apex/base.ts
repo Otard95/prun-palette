@@ -18,15 +18,13 @@
 */
 import Deferred from '../utils/deferred'
 import DocumentObserver from '../document-observer'
+import { BufferSelector } from '../utils/constants'
 
 export default class Apex {
   private readyPromise: Promise<void>
   protected observer: DocumentObserver
 
-  private static _requiredSelectors = [
-    '.Frame__main___Psr0SIB',
-    '#TOUR_TARGET_BUTTON_BUFFER_NEW',
-  ]
+  private static _requiredSelectors = [BufferSelector.NewBufferButton]
 
   private static hasRequiredElements(): boolean {
     return Apex._requiredSelectors.every(selector => {

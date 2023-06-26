@@ -20,14 +20,7 @@ import { GConstructor } from 'mixin'
 import { Events } from './events'
 import { changeValue } from '../utils/input'
 import { Util } from './utils'
-
-enum Selector {
-  EmptyBuffer = '#TOUR_TARGET_EMPTY_BUFFER',
-  EmptyBufferNotTaken = '#TOUR_TARGET_EMPTY_BUFFER:not(.prun-palette.prun-taken)',
-  NewBufferButton = '#TOUR_TARGET_BUTTON_BUFFER_NEW',
-  BufferCMDElement = 'div[class^="TileFrame__cmd"]',
-  TakenClass = 'prun-palette.prun-taken',
-}
+import { BufferSelector } from '../utils/constants'
 
 export type Buffer = GConstructor<{
   createBuffer(command?: string): Promise<Element | null>
@@ -44,23 +37,23 @@ export function Buffer<TBase extends Util & Events>(Base: TBase) {
 
       this.observer.addListener('add', {
         match: element => {
-          const nodeMatches = element.matches(Selector.EmptyBuffer)
+          const nodeMatches = element.matches(BufferSelector.EmptyBuffer)
           const nodeHadMatchingChildren = element.querySelector(
-            Selector.EmptyBuffer
+            BufferSelector.EmptyBuffer
           )
           const match = nodeMatches || !!nodeHadMatchingChildren
           return match
         },
         callback: async element => {
-          const buffer = element.matches(Selector.EmptyBuffer)
+          const buffer = element.matches(BufferSelector.EmptyBuffer)
             ? element
-            : element.querySelector(Selector.EmptyBuffer)
+            : element.querySelector(BufferSelector.EmptyBuffer)
 
           if (!buffer) return
 
           try {
             const bufferCMDElement = await this.observer.waitFor(
-              Selector.BufferCMDElement,
+              BufferSelector.BufferCMDElement,
               { within: buffer }
             )
             const cmd = bufferCMDElement.textContent
@@ -74,21 +67,21 @@ export function Buffer<TBase extends Util & Events>(Base: TBase) {
     }
 
     private get newBufferButton(): HTMLButtonElement | null {
-      return document.querySelector(Selector.NewBufferButton)
+      return document.querySelector(BufferSelector.NewBufferButton)
     }
 
     public async createBuffer(command?: string): Promise<Element | null> {
       if (this.newBufferButton === null) return null
 
       const bufferPromise = this.observer.waitFor(
-        Selector.EmptyBufferNotTaken,
+        BufferSelector.EmptyBufferNotTaken,
         { onlyNew: true }
       )
 
       this.newBufferButton.click()
       const buffer = await bufferPromise
 
-      buffer.classList.add(Selector.TakenClass)
+      buffer.classList.add(BufferSelector.TakenClass)
 
       if (!command) return buffer
 
@@ -112,12 +105,12 @@ export function Buffer<TBase extends Util & Events>(Base: TBase) {
     }
 
     public closeBufferWithCommand(command: string) {
-      const buffers = document.querySelectorAll(Selector.EmptyBuffer)
+      const buffers = document.querySelectorAll(BufferSelector.EmptyBuffer)
 
       Array.from(buffers)
         .filter(buffer => {
           const bufferCMDElement = buffer.querySelector(
-            Selector.BufferCMDElement
+            BufferSelector.BufferCMDElement
           )
           if (!bufferCMDElement) return false
 
@@ -130,7 +123,7 @@ export function Buffer<TBase extends Util & Events>(Base: TBase) {
     }
 
     public async closeAllBuffers(): Promise<void> {
-      const buffers = document.querySelectorAll(Selector.EmptyBuffer)
+      const buffers = document.querySelectorAll(BufferSelector.EmptyBuffer)
 
       buffers.forEach(buffer => {
         this.closeBuffer(buffer)
