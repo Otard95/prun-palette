@@ -20,14 +20,28 @@ import Apex from './apex'
 import attachCommands from './commands'
 import Keybinds from './keybinds'
 import Palette from './palette'
-;(async function () {
+import { SettingsManager } from './settings'
+import { settingsStore } from './settings/settings-store'
+
+async function init() {
   console.debug('[PrUn Palette] Initializing...')
 
   const apex = new Apex()
   const keybinds = new Keybinds()
   const palette = new Palette(apex)
+  const settingsManager = new SettingsManager(apex.createBuffer.bind(apex))
 
-  attachCommands(palette, apex)
+  attachCommands(palette, apex, settingsManager)
+
+  settingsStore.State.keybinds?.forEach(keybind => {
+    keybinds.addKeybind(keybind.keySequence, () => {
+      switch (keybind.action) {
+        case 'buffer':
+          apex.createBuffer(keybind.arg)
+          break
+      }
+    })
+  })
 
   await apex.ready
 
@@ -42,4 +56,5 @@ import Palette from './palette'
   )
 
   console.debug('[PrUn Palette] Ready!')
-})()
+}
+init()
