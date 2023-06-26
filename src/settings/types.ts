@@ -19,6 +19,9 @@
 export enum KeybindAction {
   Buffer = 'buffer',
 }
+export function isKeybindAction(arg: string): arg is KeybindAction {
+  return Object.values(KeybindAction).includes(arg as any)
+}
 
 export interface CustomKeybind {
   v: number

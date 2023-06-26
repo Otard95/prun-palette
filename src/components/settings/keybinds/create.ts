@@ -31,23 +31,24 @@ import {
   tr,
 } from '../../../utils/dom'
 import { addButton } from '../../buttons'
-import { KeybindAction } from '../../../settings/types'
+import { isKeybindAction, KeybindAction } from '../../../settings/types'
 import { textInput } from '../../text-input'
+import { HasType } from 'utility-types'
 
 interface CreateKeybindProps {
   add: AddKeybindFn
 }
 export function createKeybind({ add }: CreateKeybindProps) {
-  const selector = select(
-    option(KeybindAction.Buffer, 'Create buffer'),
-    option('test', 'Test')
+  const selector = select(option(KeybindAction.Buffer, 'Create buffer')).att$(
+    'class',
+    'prun-palette prun-select'
   )
-    .att$('name', 'action')
-    .att$('class', 'prun-palette prun-select')
 
+  if (!isKeybindAction(selector.value)) throw new Error('Invalid action')
   let additionalInputs = createAdditionalInputs(selector.value)
 
   selector.onChange$(() => {
+    if (!isKeybindAction(selector.value)) throw new Error('Invalid action')
     additionalInputs = additionalInputs.replace$(
       createAdditionalInputs(selector.value)
     )
@@ -82,11 +83,12 @@ export function createKeybind({ add }: CreateKeybindProps) {
   )
 }
 
-function createAdditionalInputs(action: string) {
+function createAdditionalInputs(action: KeybindAction) {
   switch (action) {
     case KeybindAction.Buffer:
       return createBufferInputs()
     default:
+      action as HasType<never, typeof action>
       return div('Unknown keybind action')
   }
 }

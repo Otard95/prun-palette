@@ -16,6 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
+import { HasType } from 'utility-types'
 import { CustomKeybind, KeybindAction } from '../../../settings/types'
 import { div, td, tr } from '../../../utils/dom'
 import { removeButton } from '../../buttons'
@@ -29,6 +30,7 @@ export function keybind({ customKeybind, remove }: KeybindProps) {
     case KeybindAction.Buffer:
       return keybindBuffer({ customKeybind, remove })
     default:
+      customKeybind.action as HasType<never, typeof customKeybind.action>
       return div('Unknown keybind action')
   }
 }

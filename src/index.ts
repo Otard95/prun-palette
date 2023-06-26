@@ -16,12 +16,14 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
+import { HasType } from 'utility-types'
 import Apex from './apex'
 import attachCommands from './commands'
 import Keybinds from './keybinds'
 import Palette from './palette'
 import { SettingsManager } from './settings'
 import { settingsStore } from './settings/settings-store'
+import { KeybindAction } from './settings/types'
 
 async function init() {
   console.debug('[PrUn Palette] Initializing...')
@@ -36,9 +38,11 @@ async function init() {
   settingsStore.State.keybinds?.forEach(keybind => {
     keybinds.addKeybind(keybind.keySequence, () => {
       switch (keybind.action) {
-        case 'buffer':
+        case KeybindAction.Buffer:
           apex.createBuffer(keybind.arg)
           break
+        default:
+          keybind.action as HasType<never, typeof keybind.action>
       }
     })
   })

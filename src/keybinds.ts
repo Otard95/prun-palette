@@ -18,6 +18,7 @@
 */
 import EphemeralArray from './utils/ephemeral-array'
 import { arrayEqual, arrayStartsWith } from './utils/array'
+import { HasType } from 'utility-types'
 
 // all lovercase letters
 const alphabet = [
@@ -185,6 +186,9 @@ export default class Keybinds {
         return 'S'
       case 'meta':
         return 'M'
+      default:
+        mod as HasType<never, typeof mod>
+        throw new Error(`Invalid modifier: ${mod}`)
     }
   }
 

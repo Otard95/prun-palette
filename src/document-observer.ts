@@ -16,6 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
+import { HasType } from 'utility-types'
 import Deferred from './utils/deferred'
 
 interface ElementListener {
@@ -84,6 +85,8 @@ export default class DocumentObserver {
       case 'change':
         this.listeners.changed.push(listener)
         break
+      default:
+        on as HasType<never, typeof on>
     }
   }
 
@@ -107,6 +110,8 @@ export default class DocumentObserver {
           1
         )
         break
+      default:
+        on as HasType<never, typeof on>
     }
   }
 
