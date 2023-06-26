@@ -22,16 +22,17 @@ type ElEventMap = {
   mount: []
   unmount: []
 }
-export interface El extends HTMLElement, EventEmitter<ElEventMap> {
-  att$(name: string, value: string): El
-  onClick$(callback: () => void): El
-  onChange$(callback: () => void): El
-  onKeyUp$(callback: (e: KeyboardEvent) => void): El
-  onKeyDown$(callback: (e: KeyboardEvent) => void): El
-  replace$(element: El): El
-  mount$(on: HTMLElement): El
-  unmount$(): El
-}
+export type El<E extends HTMLElement = HTMLElement> = {
+  att$(name: string, value: string): El<E>
+  onClick$(callback: () => void): El<E>
+  onChange$(callback: () => void): El<E>
+  onKeyUp$(callback: (e: KeyboardEvent) => void): El<E>
+  onKeyDown$(callback: (e: KeyboardEvent) => void): El<E>
+  replace$<E2 extends HTMLElement = HTMLElement>(element: El<E2>): El<E2>
+  mount$(on: HTMLElement): El<E>
+  unmount$(): El<E>
+} & E &
+  EventEmitter<ElEventMap>
 
 export type Child =
   | HTMLElement
@@ -88,7 +89,10 @@ function extendWithEventEmitter(el: El) {
   }
 }
 
-export function tag(name: string, ...children: Children): El {
+export function tag<E extends HTMLElement>(
+  name: string,
+  ...children: Children
+): El<E> {
   const result = document.createElement(name) as El
   extendWithEventEmitter(result)
   for (const child of children) {
@@ -129,11 +133,13 @@ export function tag(name: string, ...children: Children): El {
     return this
   }
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   result.replace$ = function (element) {
     this.emit('unmount')
     this.replaceWith(element)
     element.emit('mount')
-    return this
+    return element
   }
 
   result.mount$ = function (on) {
@@ -156,45 +162,74 @@ export function tag(name: string, ...children: Children): El {
     })
   })
 
-  return result
+  return result as El<E>
 }
 
-export function h1(...children: Children) {
+export function h1(...children: Children): El<HTMLHeadingElement> {
   return tag('h1', ...children)
 }
 
-export function h2(...children: Children) {
+export function h2(...children: Children): El<HTMLHeadingElement> {
   return tag('h2', ...children)
 }
 
-export function h3(...children: Children) {
+export function h3(...children: Children): El<HTMLHeadingElement> {
   return tag('h3', ...children)
 }
 
-export function p(...children: Children) {
+export function p(...children: Children): El<HTMLParagraphElement> {
   return tag('p', ...children)
 }
 
-export function a(href: string, ...children: Children) {
-  return tag('a', ...children).att$('href', href)
+export function a(href: string, ...children: Children): El<HTMLAnchorElement> {
+  return tag<HTMLAnchorElement>('a', ...children).att$('href', href)
 }
 
-export function div(...children: Children) {
+export function div(...children: Children): El<HTMLDivElement> {
   return tag('div', ...children)
 }
 
-export function span(...children: Children) {
+export function span(...children: Children): El<HTMLSpanElement> {
   return tag('span', ...children)
 }
 
-export function img(src: string) {
-  return tag('img').att$('src', src)
+export function img(src: string): El<HTMLImageElement> {
+  return tag<HTMLImageElement>('img').att$('src', src)
 }
 
-export function select(...children: Children) {
+export function select(...children: Children): El<HTMLSelectElement> {
   return tag('select', ...children)
 }
+export function option(
+  value: string,
+  ...children: Children
+): El<HTMLOptionElement> {
+  return tag<HTMLOptionElement>('option', ...children).att$('value', value)
+}
 
-export function input(type: string) {
-  return tag('input').att$('type', type)
+export function input(type: string, value: string): El<HTMLInputElement> {
+  return tag<HTMLInputElement>('input').att$('type', type).att$('value', value)
+}
+
+export function button(...children: Children): El<HTMLButtonElement> {
+  return tag('button', ...children)
+}
+
+export function table(...children: Children): El<HTMLTableElement> {
+  return tag('table', ...children)
+}
+export function thead(...children: Children): El<HTMLTableSectionElement> {
+  return tag('thead', ...children)
+}
+export function tbody(...children: Children): El<HTMLTableSectionElement> {
+  return tag('tbody', ...children)
+}
+export function tr(...children: Children): El<HTMLTableRowElement> {
+  return tag('tr', ...children)
+}
+export function th(...children: Children): El<HTMLTableHeaderCellElement> {
+  return tag('th', ...children)
+}
+export function td(...children: Children): El<HTMLTableDataCellElement> {
+  return tag('td', ...children)
 }
