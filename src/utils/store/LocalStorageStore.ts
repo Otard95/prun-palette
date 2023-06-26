@@ -23,11 +23,11 @@ export class LocalStorageStore<State extends Record<string, unknown>>
   extends InMemoryStore<State>
   implements Store<State>
 {
-  private localStorageKey: string
-
-  constructor(localStorageKey: string, initialState: Partial<State> = {}) {
+  constructor(
+    private localStorageKey: string,
+    initialState: Partial<State> = {}
+  ) {
     super(initialState)
-    this.localStorageKey = localStorageKey
     this.merge(this.loadFromLocalStorage())
   }
 
