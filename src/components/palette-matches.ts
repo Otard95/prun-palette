@@ -19,7 +19,7 @@
 import { PaletteCommand } from '../palette'
 import { div, h3, p } from '../utils/dom'
 import { memoizee } from '../utils/memoize'
-import './paletteMatches.sass'
+import './palette-matches.sass'
 
 function paletteMatches(topMatches: PaletteCommand[] = []) {
   return div(
