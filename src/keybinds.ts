@@ -63,10 +63,10 @@ const keys = [
 
 // type Letter = (typeof alphabet)[number]
 type Key = (typeof keys)[number]
-type KeyGroup = Key | `<C-${Key}>` | `<A-${Key}>` | `<S-${Key}>`
+export type KeyGroup = Key | `<C-${Key}>` | `<A-${Key}>` | `<S-${Key}>`
 
 type KeybindCallback = (preventDefault: () => void) => void
-interface Keybind {
+export interface Keybind {
   keySequence: KeyGroup[]
   command: KeybindCallback
   preventDefault: boolean
@@ -135,6 +135,13 @@ export default class Keybinds {
     this.keybinds = this.keybinds.filter(keybind => {
       return !arrayEqual(keybind.keySequence, keySequence)
     })
+  }
+
+  public hasKeybind(bind: string) {
+    const keySequence = this.parseBind(bind)
+    return this.keybinds.some(keybind =>
+      arrayEqual(keybind.keySequence, keySequence)
+    )
   }
 
   private keyFromKeyboardEvent(event: KeyboardEvent): KeyGroup | null {
