@@ -18,6 +18,7 @@
 */
 import EphemeralArray from './utils/ephemeral-array'
 import { arrayEqual, arrayStartsWith } from './utils/array'
+import { HasType } from 'utility-types'
 
 // all lovercase letters
 const alphabet = [
@@ -78,12 +79,13 @@ const keys = [...regularKeys, ...mods] as const
 type RegularKey = (typeof regularKeys)[number]
 type Key = (typeof keys)[number]
 type Mod = (typeof mods)[number]
+type KeyGroupMod = 'C' | 'A' | 'S' | 'M'
 type KeyGroup =
   | RegularKey
-  | `<C-${RegularKey}>`
-  | `<A-${RegularKey}>`
-  | `<S-${RegularKey}>`
-  | `<M-${RegularKey}>`
+  | `<${KeyGroupMod}-${RegularKey}>`
+  | `<${KeyGroupMod}${KeyGroupMod}-${RegularKey}>`
+  | `<${KeyGroupMod}${KeyGroupMod}${KeyGroupMod}-${RegularKey}>`
+  | `<${KeyGroupMod}${KeyGroupMod}${KeyGroupMod}${KeyGroupMod}-${RegularKey}>`
 
 type KeybindCallback = (preventDefault: () => void) => Promise<void> | void
 interface Keybind {
@@ -142,11 +144,7 @@ export default class Keybinds {
   ) {
     const keySequence = this.parseBind(bind)
 
-    if (
-      this.keybinds.some(keybind =>
-        arrayEqual(keybind.keySequence, keySequence)
-      )
-    )
+    if (this.hasKeybind(bind))
       throw new Error(`Keybind already exists: ${bind}`)
 
     this.keybinds.push({
@@ -161,6 +159,13 @@ export default class Keybinds {
     this.keybinds = this.keybinds.filter(keybind => {
       return !arrayEqual(keybind.keySequence, keySequence)
     })
+  }
+
+  public hasKeybind(bind: string) {
+    const keySequence = this.parseBind(bind)
+    return this.keybinds.some(keybind =>
+      arrayEqual(keybind.keySequence, keySequence)
+    )
   }
 
   private isModifier(key: Key): key is Mod {
@@ -181,6 +186,9 @@ export default class Keybinds {
         return 'S'
       case 'meta':
         return 'M'
+      default:
+        mod as HasType<never, typeof mod>
+        throw new Error(`Invalid modifier: ${mod}`)
     }
   }
 

@@ -18,8 +18,13 @@
 */
 import Apex from './apex'
 import Palette, { PaletteCommandVariables } from './palette'
+import { SettingsManager } from './settings'
 
-export default function attachCommands(palette: Palette, apex: Apex) {
+export default function attachCommands(
+  palette: Palette,
+  apex: Apex,
+  settingsManager: SettingsManager
+) {
   // ############################
   // #     General commands     #
   // ############################
@@ -185,5 +190,16 @@ export default function attachCommands(palette: Palette, apex: Apex) {
     command: (notificationId: string) =>
       apex.openNotificationIndex(Number(notificationId)),
     signature: ['notifications', 'open', PaletteCommandVariables.Number],
+  })
+
+  // ############################
+  // #     Settings commands    #
+  // ############################
+
+  palette.addCommand({
+    name: 'Settings',
+    description: 'PrUn Palette settings',
+    command: () => settingsManager.openSettings(),
+    signature: ['settings'],
   })
 }
