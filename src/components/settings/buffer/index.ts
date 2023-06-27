@@ -1,10 +1,11 @@
 import { settingsStore } from '../../../settings/settings-store'
-import { div } from '../../../utils/dom'
+import { div, p } from '../../../utils/dom'
 import { checkboxButton } from '../../elements/checkbox-button'
 import { fromLine } from '../../elements/form'
 
 export function bufferSettings() {
   return div(
+    p('Experimental feature'),
     fromLine({ label: 'Remember buffer size', input: rememberSize() }),
     fromLine({ label: 'Remember buffer position', input: rememberPosition() })
   )
