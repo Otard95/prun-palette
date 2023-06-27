@@ -21,5 +21,5 @@ import { Settings } from './types'
 
 export const settingsStore = new LocalStorageStore<Settings>(
   'PrUn-Palette-Settings',
-  { keybinds: [] }
+  { keybinds: [], rememberBufferPosition: false, rememberBufferSize: false }
 )

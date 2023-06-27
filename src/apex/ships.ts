@@ -68,11 +68,20 @@ export function Ships<TBase extends Events & Util & Buffer>(Base: TBase) {
     }
 
     private storeShipInfo(): void {
-      localStorage.setItem('ships', JSON.stringify(this.Ships))
+      localStorage.setItem('PrUn-Palette-Ships', JSON.stringify(this.Ships))
+    }
+
+    /** @deprecated remove in 1 release */
+    private upgradeShipLocalStorageKey(): void {
+      const ships = localStorage.getItem('ships')
+      if (ships && ships.length > 0) {
+        localStorage.setItem('PrUn-Palette-Ships', ships)
+      }
     }
 
     private loadShipInfo(): void {
-      const ships = localStorage.getItem('ships')
+      this.upgradeShipLocalStorageKey()
+      const ships = localStorage.getItem('PrUn-Palette-Ships')
       if (ships) {
         this.ships = new Set(JSON.parse(ships))
       }

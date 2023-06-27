@@ -18,6 +18,7 @@
 */
 import { a, p } from '../../utils/dom'
 import bufferBody from '../buffer/body'
+import { bufferSettings } from './buffer'
 import { settingsHeader } from './header'
 import { keybindsSettings } from './keybinds'
 
@@ -36,6 +37,8 @@ export default function settings() {
       ' for more information'
     ),
     settingsHeader({ title: 'Key bindings' }),
-    keybindsSettings()
+    keybindsSettings(),
+    settingsHeader({ title: 'Buffer' }),
+    bufferSettings()
   )
 }

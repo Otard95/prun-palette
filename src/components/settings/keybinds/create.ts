@@ -30,9 +30,9 @@ import {
   thead,
   tr,
 } from '../../../utils/dom'
-import { addButton } from '../../buttons'
+import { addButton } from '../../elements/buttons'
 import { isKeybindAction, KeybindAction } from '../../../settings/types'
-import { textInput } from '../../text-input'
+import { textInput } from '../../elements/text-input'
 import { HasType } from 'utility-types'
 
 interface CreateKeybindProps {

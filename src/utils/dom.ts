@@ -197,6 +197,10 @@ export function img(src: string): El<HTMLImageElement> {
   return tag<HTMLImageElement>('img').att$('src', src)
 }
 
+export function label(...children: Children): El<HTMLLabelElement> {
+  return tag('label', ...children)
+}
+
 export function select(...children: Children): El<HTMLSelectElement> {
   return tag('select', ...children)
 }
@@ -207,8 +211,10 @@ export function option(
   return tag<HTMLOptionElement>('option', ...children).att$('value', value)
 }
 
-export function input(type: string, value: string): El<HTMLInputElement> {
-  return tag<HTMLInputElement>('input').att$('type', type).att$('value', value)
+export function input(type: string, value?: string): El<HTMLInputElement> {
+  const i = tag<HTMLInputElement>('input').att$('type', type)
+  if (value) i.att$('value', value)
+  return i
 }
 
 export function button(...children: Children): El<HTMLButtonElement> {

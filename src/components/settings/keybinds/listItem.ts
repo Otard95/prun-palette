@@ -19,7 +19,7 @@
 import { HasType } from 'utility-types'
 import { CustomKeybind, KeybindAction } from '../../../settings/types'
 import { div, td, tr } from '../../../utils/dom'
-import { removeButton } from '../../buttons'
+import { removeButton } from '../../elements/buttons'
 
 interface KeybindProps {
   customKeybind: CustomKeybind
