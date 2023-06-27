@@ -21,6 +21,19 @@ import { Events } from './events'
 import { changeValue } from '../utils/input'
 import { Util } from './utils'
 import { BufferSelector } from '../utils/constants'
+import { settingsStore } from '../settings/settings-store'
+import { LocalStorageStore } from '../utils/store/LocalStorageStore'
+
+interface BufferState {
+  size?: { width: number; height: number }
+  position?: { x: number; y: number }
+}
+interface BufferStateMap {
+  [cmd: string]: BufferState
+}
+const bufferStateStore = new LocalStorageStore<BufferStateMap>(
+  'PrUn-Palette-BufferState'
+)
 
 export type Buffer = GConstructor<{
   createBuffer(command?: string): Promise<Element | null>
@@ -59,6 +72,7 @@ export function Buffer<TBase extends Util & Events>(Base: TBase) {
             const cmd = bufferCMDElement.textContent
 
             this.events.emit('new-buffer', buffer, cmd ?? undefined)
+            this.rememberBufferState(buffer, cmd ?? undefined)
           } catch (error) {
             this.events.emit('new-buffer', buffer)
           }
@@ -128,6 +142,50 @@ export function Buffer<TBase extends Util & Events>(Base: TBase) {
       buffers.forEach(buffer => {
         this.closeBuffer(buffer)
       })
+    }
+
+    // ###############################
+    // #        Buffer state         #
+    // ###############################
+
+    private setBufferPosition(
+      buffer: Element,
+      position: Required<BufferState>['position']
+    ) {
+      if (settingsStore.get('rememberBufferPosition') === false) return
+
+      const positionable = buffer.querySelector(BufferSelector.EmptyBuffer)
+      if (positionable instanceof HTMLElement) {
+        positionable.style.top = `${position.y}px`
+        positionable.style.left = `${position.x}px`
+      }
+    }
+
+    private setBufferSize(
+      buffer: Element,
+      size: Required<BufferState>['size']
+    ) {
+      if (settingsStore.get('rememberBufferSize') === false) return
+
+      const resizeable = buffer.querySelector(BufferSelector.Body)
+      if (resizeable instanceof HTMLElement) {
+        resizeable.style.width = `${size.width}px`
+        resizeable.style.height = `${size.height}px`
+      }
+    }
+
+    private setBufferState(buffer: Element, state: BufferState) {
+      if (state.position) this.setBufferPosition(buffer, state.position)
+      if (state.size) this.setBufferSize(buffer, state.size)
+    }
+
+    private rememberBufferState(buffer: Element, cmd?: string) {
+      if (!cmd) return
+
+      const bufferState = bufferStateStore.get(cmd)
+      if (bufferState) this.setBufferState(buffer, bufferState)
+
+      // TODO: Observe buffer for changes
     }
   }
 }
