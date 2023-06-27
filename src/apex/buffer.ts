@@ -159,7 +159,9 @@ export function Buffer<TBase extends Util & Events>(Base: TBase) {
     ) {
       if (settingsStore.get('rememberBufferPosition') === false) return
 
-      const positionable = buffer.querySelector(BufferSelector.EmptyBuffer)
+      const positionable = buffer.matches(BufferSelector.EmptyBuffer)
+        ? buffer
+        : buffer.querySelector(BufferSelector.EmptyBuffer)
       if (positionable instanceof HTMLElement) {
         positionable.style.top = `${position.y}px`
         positionable.style.left = `${position.x}px`
