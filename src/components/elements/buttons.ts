@@ -16,9 +16,16 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
-import './text-input.sass'
-import { input } from '../utils/dom'
+import { button } from '../../utils/dom'
 
-export const textInput = (value: string) => {
-  return input('text', value).att$('class', 'prun-palette prun-text-input')
+export function removeButton(remove: () => void) {
+  return button('REMOVE')
+    .att$('class', 'Button__btn___UJGZ1b7 Button__danger___S2rSOES')
+    .onClick$(remove)
+}
+
+export function addButton(add: () => void) {
+  return button('ADD')
+    .att$('class', 'Button__primary____lObPiw Button__btn___UJGZ1b7')
+    .onClick$(add)
 }
