@@ -172,7 +172,14 @@ export function Buffer<TBase extends Util & Events>(Base: TBase) {
       buffer: Element,
       size: Required<BufferState>['size']
     ) {
-      if (settingsStore.get('rememberBufferSize') === false) return
+      const cmd = buffer.querySelector(
+        BufferSelector.BufferCMDElement
+      )?.textContent
+      if (
+        settingsStore.get('rememberBufferSize') === false &&
+        cmd !== 'prun settings'
+      )
+        return
 
       const resizeable = buffer.querySelector(BufferSelector.Body)
       if (resizeable instanceof HTMLElement) {
