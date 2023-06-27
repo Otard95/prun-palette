@@ -1,0 +1,22 @@
+.prun-palette.prun-checkbox
+  position: relative
+  color: #bbb
+  background-color: #2d2920
+  max-width: 100px
+  line-height: 1.5
+  padding: 0 5px 0 12px
+  cursor: pointer
+
+  ::before
+    content: ""
+    position: absolute
+    top: 0
+    bottom: 0
+    left: 4px
+    width: 2px
+    background-color: #4b3c1b
+
+  &.prun-checked
+    ::before
+      background-color: #f7a600
+      box-shadow: 0 0 4px #f7a600
