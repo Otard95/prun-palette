@@ -19,19 +19,11 @@
 import './palette.sass'
 import { div, p } from '../utils/dom'
 
-import paletteInput from './paletteInput'
-import EventEmitter from '../utils/event-emitter'
+import paletteInput from './palette-input'
 import { PaletteCommand } from '../palette'
-import paletteMatches from './paletteMatches'
+import paletteMatches from './palette-matches'
 import kbd from './kbd'
-
-type EventMap = {
-  change: [string]
-  complete: [string]
-  back: []
-  submit: [string]
-}
-export const paletteListener = new EventEmitter<EventMap>()
+import { paletteEventEmitter } from '../palette-event-emitter'
 
 interface PaletteProps {
   fuzzNextArg: (path: string[], current: string) => string | null
@@ -54,15 +46,13 @@ export default function palette({
   let topMatchesListEl = paletteMatches(topMatches)
 
   const updatePaletteInput = () => {
-    const newPaletteInputEl = paletteInput(path, current, bestMatch)
-    paletteInputEl.replace$(newPaletteInputEl)
-    paletteInputEl = newPaletteInputEl
+    paletteInputEl = paletteInputEl.replace$(
+      paletteInput(path, current, bestMatch)
+    )
   }
 
   const updateTopMatches = () => {
-    const newTopMatchesEl = paletteMatches(topMatches)
-    topMatchesListEl.replace$(newTopMatchesEl)
-    topMatchesListEl = newTopMatchesEl
+    topMatchesListEl = topMatchesListEl.replace$(paletteMatches(topMatches))
   }
 
   const onPaletteInputChange = (value: string) => {
@@ -93,7 +83,7 @@ export default function palette({
   }
 
   const onPaletteInputSubmit = async () => {
-    await execute(path, current.trim())
+    await execute(path, current)
     path.length = 0
     current = ''
     bestMatch = undefined
@@ -120,18 +110,18 @@ export default function palette({
 
   palette.on('mount', () => {
     console.debug('[PrUn palette] palette mounted')
-    paletteListener.on('change', onPaletteInputChange)
-    paletteListener.on('complete', onPaletteInputComplete)
-    paletteListener.on('back', onPaletteInputBack)
-    paletteListener.on('submit', onPaletteInputSubmit)
+    paletteEventEmitter.on('change', onPaletteInputChange)
+    paletteEventEmitter.on('complete', onPaletteInputComplete)
+    paletteEventEmitter.on('back', onPaletteInputBack)
+    paletteEventEmitter.on('submit', onPaletteInputSubmit)
   })
 
   palette.on('unmount', () => {
     console.debug('[PrUn palette] palette unmounted')
-    paletteListener.off('change', onPaletteInputChange)
-    paletteListener.off('complete', onPaletteInputComplete)
-    paletteListener.off('back', onPaletteInputBack)
-    paletteListener.off('submit', onPaletteInputSubmit)
+    paletteEventEmitter.off('change', onPaletteInputChange)
+    paletteEventEmitter.off('complete', onPaletteInputComplete)
+    paletteEventEmitter.off('back', onPaletteInputBack)
+    paletteEventEmitter.off('submit', onPaletteInputSubmit)
   })
 
   return palette

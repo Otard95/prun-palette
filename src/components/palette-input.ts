@@ -16,9 +16,10 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
-import './paletteInput.sass'
-import { div } from '../utils/dom'
-import { paletteListener } from './palette'
+import './palette-input.sass'
+import { div, span } from '../utils/dom'
+import { debounce } from '../utils/fn'
+import { paletteEventEmitter } from '../palette-event-emitter'
 
 const cursorEnd = (el: HTMLElement) => {
   const range = document.createRange()
@@ -29,31 +30,55 @@ const cursorEnd = (el: HTMLElement) => {
   selection?.addRange(range)
 }
 
+const replaceWhitespace = (str: string) => {
+  const children = []
+  let acc = ''
+  for (const char of str) {
+    if (/\s/.test(char)) {
+      children.push(acc)
+      children.push(span(char))
+      acc = ''
+    } else {
+      acc += char
+    }
+  }
+  children.push(acc)
+  console.debug('[PrUn Palette](replaceWhitespace) res', children)
+  return children
+}
+
 export default function paletteInput(
   path: string[] = [],
   current = '',
   bestMatch?: string
 ) {
-  const input = div(current)
+  let spaces = 0
+  // TODO: Fix whitespace being removed
+  const input = div(...replaceWhitespace(current))
   input
     .att$('contenteditable', 'true')
     .onKeyDown$(e => {
       if (e.key === 'Tab') {
         e.preventDefault()
-        return paletteListener.emit('complete', input.innerText)
+        return paletteEventEmitter.emit('complete', input.innerText)
       }
       if (e.key === 'Enter') {
         e.preventDefault()
-        return paletteListener.emit('submit', input.innerText)
+        return paletteEventEmitter.emit('submit', input.innerText)
       }
       if (e.key === 'Backspace' && input.innerText === '') {
         e.preventDefault()
-        return paletteListener.emit('back')
+        return paletteEventEmitter.emit('back')
       }
+      if (e.key === ' ') spaces++
     })
-    .onKeyUp$(() => {
-      paletteListener.emit('change', input.innerText)
-    })
+    .onKeyUp$(
+      debounce(() => {
+        const text = input.innerText
+        if (spaces > 0) return spaces--
+        paletteEventEmitter.emit('change', text)
+      }, 100)
+    )
 
   const focus = () => {
     input.focus()

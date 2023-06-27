@@ -19,7 +19,7 @@
 import { PaletteCommand } from '../palette'
 import { div, h3, p } from '../utils/dom'
 import { memoizee } from '../utils/memoize'
-import './paletteMatches.sass'
+import './palette-matches.sass'
 
 function paletteMatches(topMatches: PaletteCommand[] = []) {
   return div(
@@ -32,7 +32,10 @@ function paletteMatches(topMatches: PaletteCommand[] = []) {
             'prun-palette prun-match-description'
           )
         ).att$('class', 'prun-palette prun-match-header'),
-        p(match.signature.join(' · ')).att$('class', 'prun-palette prun-match-usage')
+        p(match.signature.join(' · ')).att$(
+          'class',
+          'prun-palette prun-match-usage'
+        )
       ).att$('class', 'prun-palette prun-match')
     }),
     topMatches.length === 0 &&
