@@ -32,7 +32,12 @@ interface BufferStateMap {
   [cmd: string]: BufferState
 }
 const bufferStateStore = new LocalStorageStore<BufferStateMap>(
-  'PrUn-Palette-BufferState'
+  'PrUn-Palette-BufferState',
+  {
+    'prun settings': {
+      size: { width: 600, height: 400 },
+    },
+  }
 )
 
 export type Buffer = GConstructor<{
