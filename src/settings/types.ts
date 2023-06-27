@@ -32,4 +32,6 @@ export interface CustomKeybind {
 
 export type Settings = {
   keybinds: CustomKeybind[]
+  rememberBufferPosition: boolean
+  rememberBufferSize: boolean
 }
