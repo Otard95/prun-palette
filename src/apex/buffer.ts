@@ -193,13 +193,67 @@ export function Buffer<TBase extends Util & Events>(Base: TBase) {
       if (state.size) this.setBufferSize(buffer, state.size)
     }
 
+    private observeBufferPosition(buffer: Element, cmd: string) {
+      if (settingsStore.get('rememberBufferPosition') === false) return
+      const bufferObserver = new MutationObserver(mutations => {
+        mutations.forEach(mutation => {
+          const { type, attributeName, target } = mutation
+          if (type !== 'attributes' || attributeName !== 'style') return
+          if (
+            target instanceof HTMLElement &&
+            target.matches(BufferSelector.EmptyBuffer)
+          ) {
+            const x = parseInt(target.style.left.replace('px', ''))
+            const y = parseInt(target.style.top.replace('px', ''))
+            if (x && y) {
+              const currentState = bufferStateStore.get(cmd) ?? {}
+              bufferStateStore.set(cmd, { ...currentState, position: { x, y } })
+            }
+          }
+        })
+      })
+      bufferObserver.observe(buffer, {
+        attributes: true,
+      })
+    }
+
+    private observeBufferSize(buffer: Element, cmd: string) {
+      if (settingsStore.get('rememberBufferSize') === false) return
+      const body = buffer.querySelector(BufferSelector.Body)
+      if (!body) return
+      const bufferObserver = new MutationObserver(mutations => {
+        mutations.forEach(mutation => {
+          const { type, attributeName, target } = mutation
+          if (type !== 'attributes' || attributeName !== 'style') return
+          if (
+            target instanceof HTMLElement &&
+            target.matches(BufferSelector.Body)
+          ) {
+            const width = parseInt(target.style.width.replace('px', ''))
+            const height = parseInt(target.style.height.replace('px', ''))
+            if (width && height) {
+              const currentState = bufferStateStore.get(cmd) ?? {}
+              bufferStateStore.set(cmd, {
+                ...currentState,
+                size: { width, height },
+              })
+            }
+          }
+        })
+      })
+      bufferObserver.observe(body, {
+        attributes: true,
+      })
+    }
+
     private rememberBufferState(buffer: Element, cmd?: string) {
       if (!cmd) return
 
       const bufferState = bufferStateStore.get(cmd)
       if (bufferState) this.setBufferState(buffer, bufferState)
 
-      // TODO: Observe buffer for changes
+      this.observeBufferPosition(buffer, cmd)
+      this.observeBufferSize(buffer, cmd)
     }
   }
 }
