@@ -21,11 +21,7 @@ import { Buffer } from './buffer'
 import { Events } from './events'
 import { Util } from './utils'
 import './notifications.sass'
-
-enum NotificationElementSelector {
-  AlertListItem = 'div[class^="AlertListItem__container"]',
-  AlertListItemContent = 'div[class^="AlertListItem__content"]',
-}
+import { NotificationElementSelector } from '../utils/constants'
 
 export type Notification = GConstructor<{
   markAllNotificationsRead(): Promise<void>

@@ -16,20 +16,38 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
+import { HasType } from 'utility-types'
 import Apex from './apex'
 import attachCommands from './commands'
 import Keybinds from './keybinds'
 import Palette from './palette'
 import initExternalAPI from './ext-api'
-;(async function () {
+import { SettingsManager } from './settings'
+import { settingsStore } from './settings/settings-store'
+import { KeybindAction } from './settings/types'
+
+async function init() {
   console.debug('[PrUn Palette] Initializing...')
 
   const apex = new Apex()
   const keybinds = new Keybinds()
   const palette = new Palette(apex)
+  const settingsManager = new SettingsManager(apex.createBuffer.bind(apex))
 
-  attachCommands(palette, apex)
+  attachCommands(palette, apex, settingsManager)
   initExternalAPI(palette)
+
+  settingsStore.State.keybinds?.forEach(keybind => {
+    keybinds.addKeybind(keybind.keySequence, () => {
+      switch (keybind.action) {
+        case KeybindAction.Buffer:
+          apex.createBuffer(keybind.arg)
+          break
+        default:
+          keybind.action as HasType<never, typeof keybind.action>
+      }
+    })
+  })
 
   await apex.ready
 
@@ -44,4 +62,5 @@ import initExternalAPI from './ext-api'
   )
 
   console.debug('[PrUn Palette] Ready!')
-})()
+}
+init()

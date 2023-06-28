@@ -18,8 +18,13 @@
 */
 import Apex from './apex'
 import Palette, { PaletteCommandVariables } from './palette'
+import { SettingsManager } from './settings'
 
-export default function attachCommands(palette: Palette, apex: Apex) {
+export default function attachCommands(
+  palette: Palette,
+  apex: Apex,
+  settingsManager: SettingsManager
+) {
   // ############################
   // #     General commands     #
   // ############################
@@ -82,6 +87,30 @@ export default function attachCommands(palette: Palette, apex: Apex) {
     command: () => apex.createBuffer('FLT'),
     signature: ['fleet'],
   })
+  palette.addCommand({
+    name: 'Fleet route',
+    description: 'View or plot a route for a ship in the fleet',
+    command: (shipName: string) => apex.fleetOpenShipRoute(shipName),
+    signature: ['fleet', 'route', PaletteCommandVariables.ShipName],
+  })
+  palette.addCommand({
+    name: 'Fleet cargo',
+    description: 'Open a the cargo of a ship in the fleet',
+    command: (shipName: string) => apex.fleetOpenShipCargo(shipName),
+    signature: ['fleet', 'cargo', PaletteCommandVariables.ShipName],
+  })
+  palette.addCommand({
+    name: 'Fleet fuel',
+    description: 'Open a the fuel of a ship in the fleet',
+    command: (shipName: string) => apex.fleetOpenShipFuel(shipName),
+    signature: ['fleet', 'fuel', PaletteCommandVariables.ShipName],
+  })
+  palette.addCommand({
+    name: 'Fleet unload',
+    description: 'Unload a ship in the fleet',
+    command: (shipName: string) => apex.fleetUnloadShip(shipName),
+    signature: ['fleet', 'unload', PaletteCommandVariables.ShipName],
+  })
 
   // ############################
   // #    Inventory commands    #
@@ -109,7 +138,7 @@ export default function attachCommands(palette: Palette, apex: Apex) {
   palette.addCommand({
     name: 'Ship cargo',
     description: "Open a ship's cargo",
-    command: (shipName: string) => apex.openShipCargo(shipName),
+    command: (shipName: string) => apex.invOpenShipCargo(shipName),
     signature: ['inventory', 'cargo', PaletteCommandVariables.ShipName],
   })
   palette.addCommand({
@@ -161,5 +190,16 @@ export default function attachCommands(palette: Palette, apex: Apex) {
     command: (notificationId: string) =>
       apex.openNotificationIndex(Number(notificationId)),
     signature: ['notifications', 'open', PaletteCommandVariables.Number],
+  })
+
+  // ############################
+  // #     Settings commands    #
+  // ############################
+
+  palette.addCommand({
+    name: 'Settings',
+    description: 'PrUn Palette settings',
+    command: () => settingsManager.openSettings(),
+    signature: ['settings'],
   })
 }
