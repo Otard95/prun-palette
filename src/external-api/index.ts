@@ -1,8 +1,6 @@
 import { connect } from '../extension-api/connect'
 import Palette from '../palette'
 
-console.log('[PrUn Pallette] Browser', browser)
-
 export const initExternalAPI = (palette: Palette) => {
   const port = connect()
   port.onMessage.addListener(message => {

@@ -18,6 +18,9 @@
       "css": ["index.css"]
     }
   ],
+  "background": {
+    "scripts": ["background.js"]
+  },
 
   "permissions": [
     "*://rest.fnar.net/*"
