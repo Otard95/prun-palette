@@ -21,6 +21,7 @@ import Apex from './apex'
 import attachCommands from './commands'
 import Keybinds from './keybinds'
 import Palette from './palette'
+import { initExternalAPI } from './external-api'
 import { SettingsManager } from './settings'
 import { settingsStore } from './settings/settings-store'
 import { KeybindAction } from './settings/types'
@@ -34,6 +35,7 @@ async function init() {
   const settingsManager = new SettingsManager(apex.createBuffer.bind(apex))
 
   attachCommands(palette, apex, settingsManager)
+  initExternalAPI(palette)
 
   settingsStore.State.keybinds?.forEach(keybind => {
     keybinds.addKeybind(keybind.keySequence, () => {

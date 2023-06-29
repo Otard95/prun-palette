@@ -8,7 +8,13 @@ const plugins = ({
   browser,
   uglify,
 }) => ([
-  typescript(),
+  typescript({
+    tsconfigOverride: {
+      compilerOptions: {
+        moduleSuffixes: ['', `.${browser}`],
+      }
+    }
+  }),
   sass({
     output: `build-${browser}/index.css`,
   }),
@@ -21,6 +27,7 @@ const plugins = ({
         rename: 'manifest.json'
       },
       { src: 'assets/*.png', dest: `build-${browser}` },
+      { src: 'web-ext/index.js', dest: `build-${browser}`, rename: 'web-ext.js' },
     ],
   }),
   license({
@@ -42,17 +49,33 @@ if (production) {
 
 export default [
   {
-    input: 'src/index.ts',
+    input: 'src/content.ts',
     output: {
-      file: 'build-chrome/index.js',
+      file: 'build-chrome/content.js',
       format: 'iife',
     },
     plugins: plugins({ browser: 'chrome', uglify: production }),
   },
   {
-    input: 'src/index.ts',
+    input: 'src/content.ts',
     output: {
-      file: 'build-firefox/index.js',
+      file: 'build-firefox/content.js',
+      format: 'iife',
+    },
+    plugins: plugins({ browser: 'firefox', uglify: production }),
+  },
+  {
+    input: 'src/background.ts',
+    output: {
+      file: 'build-chrome/background.js',
+      format: 'iife',
+    },
+    plugins: plugins({ browser: 'chrome', uglify: production }),
+  },
+  {
+    input: 'src/background.ts',
+    output: {
+      file: 'build-firefox/background.js',
       format: 'iife',
     },
     plugins: plugins({ browser: 'firefox', uglify: production }),

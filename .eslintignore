@@ -3,3 +3,5 @@ build-*
 scripts
 site
 **/__tests__
+rollup.config.mjs
+./web-ext/*.js

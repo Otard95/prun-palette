@@ -14,10 +14,13 @@
   "content_scripts": [
     {
       "matches": ["https://apex.prosperousuniverse.com/*"],
-      "js": ["index.js"],
+      "js": ["content.js"],
       "css": ["index.css"]
     }
   ],
+  "background": {
+    "service_worker": "background.js"
+  },
 
   "host_permissions": [
     "*://rest.fnar.net/*"
