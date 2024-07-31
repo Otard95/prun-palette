@@ -198,7 +198,7 @@ export default class Keybinds {
       if (char === '>') {
         buf += char
         if (this.isKeyNotation(buf)) {
-          keys.push(buf)
+          keys.push(buf.toLowerCase() as KeyNotation)
           buf = ''
         } else {
           throw new Error(`Invalid key notation: ${buf}`)
@@ -206,7 +206,7 @@ export default class Keybinds {
       } else if (buf.length || char === '<') {
         buf += char
       } else if (this.isKeyNotation(char)) {
-        keys.push(char)
+        keys.push(char.toLowerCase() as KeyNotation)
       } else {
         throw new Error(`Invalid key notation: ${char}`)
       }
@@ -304,7 +304,7 @@ export default class Keybinds {
 
     if (!this.isKeyNotation(key)) return null
 
-    return key
+    return key.toLowerCase() as KeyNotation
   }
 
   private handleKeyDown(event: KeyboardEvent) {
