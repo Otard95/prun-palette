@@ -229,11 +229,15 @@ export default class Keybinds {
     const keySequence = this.parseBind(bind)
 
     let node = this.keybindTreeRoot
-    keySequence.forEach(keyGroup => {
-      if (!(keyGroup in node.children)) {
-        node.children[keyGroup] = { parent: node, key: keyGroup, children: {} }
+    keySequence.forEach(keyNotation => {
+      if (!(keyNotation in node.children)) {
+        node.children[keyNotation] = {
+          parent: node,
+          key: keyNotation,
+          children: {},
+        }
       }
-      node = node.children[keyGroup]
+      node = node.children[keyNotation]
     })
 
     if (node.action) throw new Error(`Keybind already exists: ${bind}`)
@@ -253,11 +257,11 @@ export default class Keybinds {
     const keySequence = this.parseBind(bind)
 
     let node = this.keybindTreeRoot
-    keySequence.forEach(keyGroup => {
-      if (!(keyGroup in node.children)) {
+    keySequence.forEach(keyNotation => {
+      if (!(keyNotation in node.children)) {
         throw new Error(`Keybind does not exist: ${bind}`)
       }
-      node = node.children[keyGroup]
+      node = node.children[keyNotation]
     })
 
     delete node.action
@@ -279,7 +283,7 @@ export default class Keybinds {
     }
   }
 
-  private createKeyGroupFromKeyboardEvent(
+  private createKeyNotationFromKeyboardEvent(
     event: KeyboardEvent
   ): KeyNotation | null {
     let key = ''
@@ -308,7 +312,7 @@ export default class Keybinds {
   }
 
   private handleKeyDown(event: KeyboardEvent) {
-    const keyNotation = this.createKeyGroupFromKeyboardEvent(event)
+    const keyNotation = this.createKeyNotationFromKeyboardEvent(event)
 
     console.debug(
       `[PrUn Palette](Keybinds) Key down: ↓${event.key} | notation: ${keyNotation} | event:`,
