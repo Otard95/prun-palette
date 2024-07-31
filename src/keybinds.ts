@@ -16,7 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
-import { HasType } from 'utility-types'
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { isEmpty } from './utils/object'
 
 // all lovercase letters
@@ -49,50 +49,87 @@ const alphabet = [
   'z',
 ] as const
 
-const regularKeys = [
-  ...alphabet,
-  'arrowup',
-  'arrowdown',
-  'arrowleft',
-  'arrowright',
-  'tab',
-  'escape',
-  'enter',
-  'backspace',
-  'delete',
-  'home',
-  'end',
-  'pageup',
-  'pagedown',
-  'space',
-  'insert',
+const symbols = [
+  '+',
+  '-',
+  '*',
+  '/',
+  '=',
+  '%',
+  '&',
+  '|',
+  '^',
+  '~',
+  '!',
+  '?',
+  ':',
+  '#',
+  '@',
+  '$',
 ] as const
 
-const mods = ['control', 'alt', 'shift', 'meta'] as const
+const eventKeyToKeyNotation: Record<string, KeyNotation> = {
+  arrowup: '<up>',
+  arrowdown: '<down>',
+  arrowleft: '<left>',
+  arrowright: '<right>',
+  tab: '<tab>',
+  escape: '<esc>',
+  enter: '<cr>',
+  backspace: '<bs>',
+  delete: '<del>',
+  home: '<home>',
+  end: '<end>',
+  pageup: '<pageup>',
+  pagedown: '<pagedown>',
+  space: '<space>',
+  insert: '<insert>',
+  '<': '<lt>',
+  '>': '<gt>',
+}
 
-const keys = [...regularKeys, ...mods] as const
+const keyNotationSpecialKeys = [
+  '<up>',
+  '<down>',
+  '<left>',
+  '<right>',
+  '<tab>',
+  '<esc>',
+  '<enter>',
+  '<return>',
+  '<cr>',
+  '<bs>',
+  '<del>',
+  '<home>',
+  '<end>',
+  '<pageup>',
+  '<pagedown>',
+  '<space>',
+  '<insert>',
+  '<lt>',
+  '<gt>',
+] as const
 
-// type Letter = (typeof alphabet)[number]
-type RegularKey = (typeof regularKeys)[number]
-type Key = (typeof keys)[number]
-type Mod = (typeof mods)[number]
-type KeyGroupMod = 'C' | 'A' | 'S' | 'M'
-type KeyGroup =
-  | RegularKey
-  | `<${KeyGroupMod}-${RegularKey}>`
-  | `<${KeyGroupMod}${KeyGroupMod}-${RegularKey}>`
-  | `<${KeyGroupMod}${KeyGroupMod}${KeyGroupMod}-${RegularKey}>`
-  | `<${KeyGroupMod}${KeyGroupMod}${KeyGroupMod}${KeyGroupMod}-${RegularKey}>`
+type Letter = (typeof alphabet)[number]
+type SymbolKey = (typeof symbols)[number]
+type SpecialKey = (typeof keyNotationSpecialKeys)[number]
+type Key = Letter | SymbolKey | SpecialKey
+type KeyNotationMod = 'C' | 'A' | 'S' | 'M'
+type KeyNotation =
+  | Key
+  | `<${KeyNotationMod}-${Key}>`
+  | `<${KeyNotationMod}${KeyNotationMod}-${Key}>`
+  | `<${KeyNotationMod}${KeyNotationMod}${KeyNotationMod}-${Key}>`
+  | `<${KeyNotationMod}${KeyNotationMod}${KeyNotationMod}${KeyNotationMod}-${Key}>`
 
 type KeybindCallback = (preventDefault: () => void) => Promise<void> | void
 interface Keybind {
-  keySequence: KeyGroup[]
   command: KeybindCallback
   preventDefault: boolean
 }
 
 interface KeybindTreeNode {
-  key?: KeyGroup
+  key?: KeyNotation
   parent?: KeybindTreeNode
   action?: Keybind
   children: Record<string, KeybindTreeNode>
@@ -109,30 +146,79 @@ export default class Keybinds {
     })
   }
 
-  private isKeyGroup(keyStr: string): keyStr is KeyGroup {
-    if (regularKeys.includes(keyStr as RegularKey)) return true
+  get CurrentKeySequence() {
+    let seq = ''
+    let node = this.keybindTreeCurrent
+    while (node.parent) {
+      seq = `${node.key || ''}${seq}`
+      node = node.parent
+    }
+    return seq
+  }
 
-    if (!/<(C|A|S|M){1,4}-\w+>/.test(keyStr)) return false
+  private isSingleKeyNotation(notation: string): notation is Key {
+    if (alphabet.includes(notation.toLowerCase() as Letter)) return true
+    if (symbols.includes(notation as SymbolKey)) return true
+    if (
+      /^<\w+>$/.test(notation) &&
+      keyNotationSpecialKeys.includes(notation.toLowerCase() as SpecialKey)
+    )
+      return true
 
-    const [, modifiers, key] = keyStr.match(/<([CASM]+)-(\w+)>/) as [
+    return false
+  }
+
+  private isKeyNotation(keyStr: string): keyStr is KeyNotation {
+    if (this.isSingleKeyNotation(keyStr)) return true
+
+    if (!/<(C|A|S|M){1,4}-[^><]+>/i.test(keyStr)) return false
+
+    const [, modifiers, key] = keyStr.match(/<([CASM]+)-([^><]+)>/i) as [
       string,
       string,
-      RegularKey
+      Key
     ]
 
     const mods = modifiers.split('')
-    return (
-      regularKeys.includes(key as RegularKey) &&
-      mods.every(m => ['C', 'A', 'S', 'M'].includes(m))
+    const modsAreValid = mods.every(m =>
+      ['c', 'a', 's', 'm'].includes(m.toLowerCase())
     )
+    const keyIsValid = this.isKeyNotation(key) || this.isKeyNotation(`<${key}>`)
+    return modsAreValid && keyIsValid
   }
 
-  private parseBind(bind: string): KeyGroup[] {
-    const keys = bind.trim().split(/\s+/)
-    if (keys.some(key => !this.isKeyGroup(key)))
-      throw new Error(`Invalid keybind: ${bind}`)
+  private parseBind(bind: string): KeyNotation[] {
+    const keys: KeyNotation[] = []
+    let buf = ''
 
-    return keys as KeyGroup[]
+    const chars = bind.split('')
+    while (chars.length) {
+      const char = chars.shift()
+      if (char === undefined) break
+      if (char === '>') {
+        buf += char
+        if (this.isKeyNotation(buf)) {
+          keys.push(buf)
+          buf = ''
+        } else {
+          throw new Error(`Invalid key notation: ${buf}`)
+        }
+      } else if (buf.length || char === '<') {
+        buf += char
+      } else if (this.isKeyNotation(char)) {
+        keys.push(char)
+      } else {
+        throw new Error(`Invalid key notation: ${char}`)
+      }
+    }
+
+    if (buf) throw new Error(`Incomplete key notation: ${buf}`)
+
+    if (!keys.length) {
+      throw new Error('Key notation was empty')
+    }
+
+    return keys
   }
 
   public addKeybind(
@@ -153,10 +239,14 @@ export default class Keybinds {
     if (node.action) throw new Error(`Keybind already exists: ${bind}`)
 
     node.action = {
-      keySequence,
       command,
       preventDefault,
     }
+
+    console.debug(
+      `[PrUn Palette](Keybinds) New keybind tree`,
+      this.keybindTreeRoot
+    )
   }
 
   public removeKeybind(bind: string) {
@@ -172,6 +262,11 @@ export default class Keybinds {
 
     delete node.action
     this.cleanKeybindTree(this.keybindTreeRoot)
+
+    console.debug(
+      `[PrUn Palette](Keybinds) New keybind tree`,
+      this.keybindTreeRoot
+    )
   }
 
   private cleanKeybindTree(node: KeybindTreeNode) {
@@ -184,9 +279,22 @@ export default class Keybinds {
     }
   }
 
-  private createKeyGroupFromKeyboardEvent(event: KeyboardEvent): KeyGroup {
+  private createKeyGroupFromKeyboardEvent(
+    event: KeyboardEvent
+  ): KeyNotation | null {
     let key = ''
-    if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey) {
+
+    if (event.key.toLowerCase() in eventKeyToKeyNotation)
+      return eventKeyToKeyNotation[event.key.toLowerCase()]
+
+    if (symbols.includes(event.key as SymbolKey)) {
+      key = event.key
+    } else if (
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey ||
+      event.metaKey
+    ) {
       key = `<${event.ctrlKey ? 'C' : ''}${event.shiftKey ? 'S' : ''}${
         event.altKey ? 'A' : ''
       }${event.metaKey ? 'M' : ''}-${event.key.toLowerCase()}>`
@@ -194,26 +302,30 @@ export default class Keybinds {
       key = event.key.toLowerCase()
     }
 
-    if (!this.isKeyGroup(key))
-      throw new Error(
-        `Failed to create keygroup from keyboar event: ${event.key}`
-      )
+    if (!this.isKeyNotation(key)) return null
+
     return key
   }
 
   private handleKeyDown(event: KeyboardEvent) {
-    const key = event.key.toLowerCase() as RegularKey
-    if (!regularKeys.includes(key)) return
+    const keyNotation = this.createKeyGroupFromKeyboardEvent(event)
 
-    console.debug(`[PrUn Palette](Keybinds) ↓${key}`)
+    console.debug(
+      `[PrUn Palette](Keybinds) Key down: ↓${event.key} | notation: ${keyNotation} | event:`,
+      event
+    )
 
-    const keyGroup = this.createKeyGroupFromKeyboardEvent(event)
+    if (keyNotation === null) return
+
+    console.debug(
+      `[PrUn Palette](Keybinds) Recognised key notation: ${keyNotation}`
+    )
 
     const hadWaitingCommand = this.executeActionTimeout !== undefined
     clearTimeout(this.executeActionTimeout)
     this.executeActionTimeout = undefined
 
-    if (!(keyGroup in this.keybindTreeCurrent.children)) {
+    if (!(keyNotation in this.keybindTreeCurrent.children)) {
       if (hadWaitingCommand && event.key !== 'escape') {
         this.keybindTreeCurrent.action?.command(() => {})
       }
@@ -222,7 +334,10 @@ export default class Keybinds {
       return
     }
 
-    this.keybindTreeCurrent = this.keybindTreeCurrent.children[keyGroup]
+    this.keybindTreeCurrent = this.keybindTreeCurrent.children[keyNotation]
+    console.debug(
+      `[PrUn Palette](Keybinds) Current key sequence: ${this.CurrentKeySequence}`
+    )
 
     if (
       isEmpty(this.keybindTreeCurrent.children) &&

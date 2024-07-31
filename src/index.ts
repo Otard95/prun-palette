@@ -35,6 +35,18 @@ async function init() {
 
   attachCommands(palette, apex, settingsManager)
 
+  await apex.ready
+
+  keybinds.addKeybind('<C-p>', () => palette.toggle())
+  keybinds.addKeybind(
+    '<esc>',
+    preventDefault => {
+      if (palette.Open) preventDefault()
+      palette.close()
+    },
+    { preventDefault: false }
+  )
+
   settingsStore.State.keybinds?.forEach(keybind => {
     keybinds.addKeybind(keybind.keySequence, () => {
       switch (keybind.action) {
@@ -46,18 +58,6 @@ async function init() {
       }
     })
   })
-
-  await apex.ready
-
-  keybinds.addKeybind('<C-p>', () => palette.toggle())
-  keybinds.addKeybind(
-    'escape',
-    preventDefault => {
-      if (palette.Open) preventDefault()
-      palette.close()
-    },
-    { preventDefault: false }
-  )
 
   console.debug('[PrUn Palette] Ready!')
 }
