@@ -36,7 +36,10 @@ export default function settings() {
       ).att$('target', '_blank'),
       ' for more information'
     ),
-    settingsHeader({ title: 'Key bindings' }),
+    settingsHeader({
+      title: 'Key bindings',
+      info: 'Learn more about keybinds at the website',
+    }),
     keybindsSettings(),
     settingsHeader({ title: 'Buffer' }),
     bufferSettings()
