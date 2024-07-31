@@ -20,13 +20,15 @@ import { h3, span } from '../../utils/dom'
 
 interface SettingsHeaderProps {
   title: string
+  info?: string
 }
-export const settingsHeader = ({ title }: SettingsHeaderProps) => {
+export const settingsHeader = ({ title, info }: SettingsHeaderProps) => {
   return h3(
     title,
-    span('ⓘ')
-      .att$('data-tooltip', 'Learn more about keybinds at the website')
-      .att$('data-tooltip-position', 'right')
+    info &&
+      span('ⓘ')
+        .att$('data-tooltip', info)
+        .att$('data-tooltip-position', 'right')
   ).att$(
     'class',
     'Sidebar__sectionHead____NHLKDT fonts__font-regular___Sxp1xjo'
