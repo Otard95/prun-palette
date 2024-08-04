@@ -82,7 +82,7 @@ const eventKeyToKeyNotation: Record<string, KeyNotation> = {
   end: '<end>',
   pageup: '<pageup>',
   pagedown: '<pagedown>',
-  space: '<space>',
+  ' ': '<space>',
   insert: '<insert>',
   '<': '<lt>',
   '>': '<gt>',
@@ -156,71 +156,6 @@ export default class Keybinds {
     return seq
   }
 
-  private isSingleKeyNotation(notation: string): notation is Key {
-    if (alphabet.includes(notation.toLowerCase() as Letter)) return true
-    if (symbols.includes(notation as SymbolKey)) return true
-    if (
-      /^<\w+>$/.test(notation) &&
-      keyNotationSpecialKeys.includes(notation.toLowerCase() as SpecialKey)
-    )
-      return true
-
-    return false
-  }
-
-  private isKeyNotation(keyStr: string): keyStr is KeyNotation {
-    if (this.isSingleKeyNotation(keyStr)) return true
-
-    if (!/<(C|A|S|M){1,4}-[^><]+>/i.test(keyStr)) return false
-
-    const [, modifiers, key] = keyStr.match(/<([CASM]+)-([^><]+)>/i) as [
-      string,
-      string,
-      Key
-    ]
-
-    const mods = modifiers.split('')
-    const modsAreValid = mods.every(m =>
-      ['c', 'a', 's', 'm'].includes(m.toLowerCase())
-    )
-    const keyIsValid = this.isKeyNotation(key) || this.isKeyNotation(`<${key}>`)
-    return modsAreValid && keyIsValid
-  }
-
-  private parseBind(bind: string): KeyNotation[] {
-    const keys: KeyNotation[] = []
-    let buf = ''
-
-    const chars = bind.split('')
-    while (chars.length) {
-      const char = chars.shift()
-      if (char === undefined) break
-      if (char === '>') {
-        buf += char
-        if (this.isKeyNotation(buf)) {
-          keys.push(buf.toLowerCase() as KeyNotation)
-          buf = ''
-        } else {
-          throw new Error(`Invalid key notation: ${buf}`)
-        }
-      } else if (buf.length || char === '<') {
-        buf += char
-      } else if (this.isKeyNotation(char)) {
-        keys.push(char.toLowerCase() as KeyNotation)
-      } else {
-        throw new Error(`Invalid key notation: ${char}`)
-      }
-    }
-
-    if (buf) throw new Error(`Incomplete key notation: ${buf}`)
-
-    if (!keys.length) {
-      throw new Error('Key notation was empty')
-    }
-
-    return keys
-  }
-
   public addKeybind(
     bind: string,
     command: KeybindCallback,
@@ -273,6 +208,11 @@ export default class Keybinds {
     )
   }
 
+  public clearAll() {
+    this.keybindTreeRoot.children = {}
+    this.keybindTreeCurrent = this.keybindTreeRoot
+  }
+
   private cleanKeybindTree(node: KeybindTreeNode) {
     Object.getOwnPropertyNames(node.children).forEach(key =>
       this.cleanKeybindTree(node.children[key])
@@ -283,32 +223,184 @@ export default class Keybinds {
     }
   }
 
+  private isSingleKeyNotation(
+    notation: string
+  ): notation is Letter | SymbolKey {
+    return (
+      alphabet.includes(notation.toLowerCase() as Letter) ||
+      symbols.includes(notation as SymbolKey)
+    )
+  }
+
+  private isSpecialKeyNotation(notation: string): notation is SpecialKey {
+    return (
+      /^<[a-zA-Z]+>$/.test(notation) &&
+      keyNotationSpecialKeys.includes(notation.toLowerCase() as SpecialKey)
+    )
+  }
+
+  private isModifiedKeyNotation(notation: string): boolean {
+    if (!/<(C|A|S|M){1,4}-[^><]+>/i.test(notation)) return false
+
+    const [, modifiers, key] = notation.match(/<([CASM]+)-([^><]+)>/i) as [
+      string,
+      string,
+      Key
+    ]
+
+    const mods = modifiers.split('')
+    const modsAreValid = mods.every(m =>
+      ['c', 'a', 's', 'm'].includes(m.toLowerCase())
+    )
+    const keyIsValid =
+      this.isSingleKeyNotation(key) || this.isSpecialKeyNotation(`<${key}>`)
+    return modsAreValid && keyIsValid
+  }
+
+  private isKeyNotation(notation: string): notation is KeyNotation {
+    return (
+      this.isSingleKeyNotation(notation) ||
+      this.isSpecialKeyNotation(notation) ||
+      this.isModifiedKeyNotation(notation)
+    )
+  }
+
+  private normalizeKeyNotation(notation: KeyNotation): KeyNotation {
+    if (this.isSingleKeyNotation(notation)) return notation
+
+    if (this.isSpecialKeyNotation(notation))
+      return notation.toLowerCase() as KeyNotation
+
+    const [, modifiers, key] = notation.match(/<([CASM]+)-([^><]+)>/i) as [
+      string,
+      string,
+      Key
+    ]
+
+    const mods = modifiers.split('')
+    const orderedMods: string[] = []
+    mods.forEach(m => {
+      switch (m.toLowerCase()) {
+        case 'c':
+          orderedMods[0] = 'C'
+          break
+        case 's':
+          orderedMods[1] = 'S'
+          break
+        case 'a':
+          orderedMods[2] = 'A'
+          break
+        case 'm':
+          orderedMods[3] = 'M'
+          break
+      }
+    })
+
+    if (
+      alphabet.includes(key.toLowerCase() as Letter) &&
+      key.toUpperCase() === key
+    ) {
+      orderedMods[1] = 'S'
+    }
+
+    return `<${orderedMods.join('')}-${
+      this.isSingleKeyNotation(key) ? key : key.toLowerCase()
+    }>` as KeyNotation
+  }
+
+  private parseBind(bind: string): KeyNotation[] {
+    const keys: KeyNotation[] = []
+    let buf = ''
+
+    const chars = bind.split('')
+    while (chars.length) {
+      const char = chars.shift()
+      if (char === undefined) break
+      if (char === '>') {
+        buf += char
+        if (this.isKeyNotation(buf)) {
+          keys.push(this.normalizeKeyNotation(buf))
+          buf = ''
+        } else {
+          throw new Error(`Invalid key notation: ${buf}`)
+        }
+      } else if (buf.length || char === '<') {
+        buf += char
+      } else if (this.isKeyNotation(char)) {
+        keys.push(char as KeyNotation)
+      } else {
+        throw new Error(`Invalid key notation: ${char}`)
+      }
+    }
+
+    if (buf) throw new Error(`Incomplete key notation: ${buf}`)
+
+    if (!keys.length) {
+      throw new Error('Key notation was empty')
+    }
+
+    return keys
+  }
+
+  private isEventOnlyCtrl(event: KeyboardEvent): boolean {
+    return event.ctrlKey && !event.shiftKey && !event.altKey && !event.metaKey
+  }
+
+  private isEventOnlyShift(event: KeyboardEvent): boolean {
+    return event.shiftKey && !event.ctrlKey && !event.altKey && !event.metaKey
+  }
+
+  private shouldMakeModKeyNotationOfEvent(event: KeyboardEvent): boolean {
+    // SymbolKey's can only get mod key notation by ctrl
+    if (symbols.includes(event.key as SymbolKey) && this.isEventOnlyCtrl(event))
+      return true
+
+    // Shifted alpha keys should only get mod key notation if other mods are pressed
+    if (
+      alphabet.includes(event.key.toLowerCase() as Letter) &&
+      event.key.toUpperCase() === event.key &&
+      this.isEventOnlyShift(event)
+    )
+      return false
+
+    // lt and gt shoyld not get mod key notation if only shift is pressed
+    if (
+      (event.key === '<' || event.key === '>') &&
+      this.isEventOnlyShift(event)
+    )
+      return false
+
+    // Otherwise any modifier should result in a mod key notation
+
+    return event.ctrlKey || event.shiftKey || event.altKey || event.metaKey
+  }
+
   private createKeyNotationFromKeyboardEvent(
     event: KeyboardEvent
   ): KeyNotation | null {
-    let key = ''
+    let key = event.key
 
     if (event.key.toLowerCase() in eventKeyToKeyNotation)
-      return eventKeyToKeyNotation[event.key.toLowerCase()]
+      key = eventKeyToKeyNotation[event.key.toLowerCase()]
+    else if (event.key.length > 1) {
+      console.debug(
+        '[PrUn Palette](Keybinds) Unhandled special key:',
+        event.key
+      )
+      return null
+    }
 
-    if (symbols.includes(event.key as SymbolKey)) {
-      key = event.key
-    } else if (
-      event.ctrlKey ||
-      event.shiftKey ||
-      event.altKey ||
-      event.metaKey
-    ) {
+    if (this.shouldMakeModKeyNotationOfEvent(event)) {
       key = `<${event.ctrlKey ? 'C' : ''}${event.shiftKey ? 'S' : ''}${
         event.altKey ? 'A' : ''
-      }${event.metaKey ? 'M' : ''}-${event.key.toLowerCase()}>`
-    } else {
-      key = event.key.toLowerCase()
+      }${event.metaKey ? 'M' : ''}-${
+        this.isSpecialKeyNotation(key) ? key.slice(1, -1).toLowerCase() : key
+      }>`
     }
 
     if (!this.isKeyNotation(key)) return null
 
-    return key.toLowerCase() as KeyNotation
+    return key as KeyNotation
   }
 
   private handleKeyDown(event: KeyboardEvent) {
@@ -320,10 +412,6 @@ export default class Keybinds {
     )
 
     if (keyNotation === null) return
-
-    console.debug(
-      `[PrUn Palette](Keybinds) Recognised key notation: ${keyNotation}`
-    )
 
     const hadWaitingCommand = this.executeActionTimeout !== undefined
     clearTimeout(this.executeActionTimeout)

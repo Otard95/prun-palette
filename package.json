@@ -11,7 +11,7 @@
     "watch": "rollup -c -w",
     "test": "tsc --noEmit && jest",
     "jest:watch": "jest --watchAll",
-    "ext": "cd build-firefox && web-ext run --firefox=/opt/firefox/firefox --keep-profile-changes --firefox-profile=prun-palette-dev",
+    "ext": "cd build-firefox && web-ext run --firefox=/usr/bin/firefox --keep-profile-changes --firefox-profile=prun-palette-dev",
     "ext:lint": "cd build-firefox && web-ext lint",
     "lint": "eslint --ext .ts,.js src",
     "lint:fix": "eslint --ext .ts,.js src --fix"
