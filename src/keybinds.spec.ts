@@ -1,5 +1,6 @@
 import Keybinds from './keybinds'
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 global.KeyboardEvent = Object
 
@@ -18,7 +19,8 @@ const mockElement = {
     ),
 }
 
-console.debug = () => {}
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+// console.debug = () => {}
 
 beforeEach(() => keyEventListenerSpy.mockClear())
 
@@ -88,6 +90,27 @@ describe('Keybinds', () => {
     })
   })
 
+  describe('special binds', () => {
+    it('should be able to handle simple special key binds', () => {
+      const fn = jest.fn()
+      keybinds.addKeybind('<space>', fn)
+      keyEventListener(key(' '))
+
+      expect(keyEventListenerSpy).toHaveBeenCalled()
+      expect(fn).toHaveBeenCalled()
+    })
+
+    it('should be able to handle a bind with a sequence of special keys', () => {
+      const fn = jest.fn()
+      keybinds.addKeybind('<space><tab>', fn)
+      keyEventListener(key(' '))
+      keyEventListener(key('tab'))
+
+      expect(keyEventListenerSpy).toHaveBeenCalled()
+      expect(fn).toHaveBeenCalled()
+    })
+  })
+
   describe('multiple overlapping binds', () => {
     it('should activate a bind overlapping a longer bind after 500ms', async () => {
       const fn1 = jest.fn()
@@ -145,13 +168,51 @@ describe('Keybinds', () => {
   })
 
   describe('modifier notation', () => {
-    it('should be able to handle simple moded alpha key', () => {
+    it.each(['c', 's', 'a', 'm'] as const)(
+      'should be able to handle simple `%s` moded alpha key',
+      mod => {
+        const fn = jest.fn()
+        keybinds.addKeybind(`<${mod}-a>`, fn)
+        keyEventListener(key('a').mod(mod))
+
+        expect(keyEventListenerSpy).toHaveBeenCalled()
+        expect(fn).toHaveBeenCalled()
+      }
+    )
+
+    it('should handle multiple mods on simple alpha key', () => {
       const fn = jest.fn()
-      keybinds.addKeybind('<c-a>', fn)
-      keyEventListener(key('a').ctrl())
+      keybinds.addKeybind(`<csam-a>`, fn)
+      keyEventListener(key('a').ctrl().shift().alt().meta())
 
       expect(keyEventListenerSpy).toHaveBeenCalled()
       expect(fn).toHaveBeenCalled()
+    })
+
+    it('should handle moded capitalized alpha key', () => {
+      const fn = jest.fn()
+      keybinds.addKeybind(`<C-A>`, fn)
+      keyEventListener(key('a').ctrl().shift())
+
+      expect(keyEventListenerSpy).toHaveBeenCalled()
+      expect(fn).toHaveBeenCalled()
+    })
+
+    it.each([
+      ['', 'c', true],
+      [' not', 's', false],
+      [' not', 'a', false],
+      [' not', 'm', false],
+    ] as const)('should%s handle `<%s-...>` symbol', (_, mod, shouldHandle) => {
+      const fn = jest.fn()
+
+      shouldHandle
+        ? expect(() => keybinds.addKeybind(`<${mod}-$>`, fn)).not.toThrow()
+        : expect(() => keybinds.addKeybind(`<${mod}-$>`, fn)).toThrow()
+      keyEventListener(key(`$`).mod(mod))
+
+      expect(keyEventListenerSpy).toHaveBeenCalled()
+      expect(fn).toBeCalledTimes(Number(shouldHandle))
     })
   })
 })
@@ -176,6 +237,20 @@ class MockKeyboardEventBuilder implements MockKeyboardEvent {
 
   preventDefault = jest.fn()
 
+  mod(mod: 'c' | 's' | 'a' | 'm' | 'C' | 'S' | 'A' | 'M') {
+    switch (mod.toLowerCase()) {
+      case 'c':
+        return this.ctrl()
+      case 's':
+        return this.shift()
+      case 'a':
+        return this.alt()
+      case 'm':
+        return this.meta()
+      default:
+        return this
+    }
+  }
   ctrl() {
     this.ctrlKey = true
     return this
