@@ -298,13 +298,27 @@ export default class Keybinds {
 
     if (
       alphabet.includes(key.toLowerCase() as Letter) &&
+      orderedMods[1] === 'S' &&
+      orderedMods.filter(Boolean).length === 1
+    ) {
+      return key.toUpperCase() as Letter
+    }
+    if (
+      alphabet.includes(key.toLowerCase() as Letter) &&
       key.toUpperCase() === key
     ) {
       orderedMods[1] = 'S'
     }
 
+    if (symbols.includes(key as SymbolKey) && orderedMods.length > 1)
+      throw new Error('Symbold keys can only have ctrl modifier')
+
     return `<${orderedMods.join('')}-${
-      this.isSingleKeyNotation(key) ? key : key.toLowerCase()
+      this.isSingleKeyNotation(key)
+        ? orderedMods[1] === 'S'
+          ? key.toUpperCase()
+          : key.toLowerCase()
+        : key.toLowerCase()
     }>` as KeyNotation
   }
 
@@ -352,23 +366,19 @@ export default class Keybinds {
 
   private shouldMakeModKeyNotationOfEvent(event: KeyboardEvent): boolean {
     // SymbolKey's can only get mod key notation by ctrl
-    if (symbols.includes(event.key as SymbolKey) && this.isEventOnlyCtrl(event))
-      return true
+    if (symbols.includes(event.key as SymbolKey))
+      return this.isEventOnlyCtrl(event)
 
     // Shifted alpha keys should only get mod key notation if other mods are pressed
     if (
       alphabet.includes(event.key.toLowerCase() as Letter) &&
-      event.key.toUpperCase() === event.key &&
-      this.isEventOnlyShift(event)
+      event.key.toUpperCase() === event.key
     )
-      return false
+      return !this.isEventOnlyShift(event)
 
-    // lt and gt shoyld not get mod key notation if only shift is pressed
-    if (
-      (event.key === '<' || event.key === '>') &&
-      this.isEventOnlyShift(event)
-    )
-      return false
+    // lt and gt should not get mod key notation if only shift is pressed
+    if (event.key === '<' || event.key === '>')
+      return !this.isEventOnlyShift(event)
 
     // Otherwise any modifier should result in a mod key notation
 
