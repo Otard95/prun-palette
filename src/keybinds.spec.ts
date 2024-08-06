@@ -20,7 +20,7 @@ const mockElement = {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
-// console.debug = () => {}
+console.debug = () => {}
 
 beforeEach(() => keyEventListenerSpy.mockClear())
 
@@ -35,6 +35,23 @@ describe('Keybinds', () => {
       expect.any(Function)
     )
     expect(keyEventListener).not.toBeUndefined()
+  })
+
+  it('should not be able to set bind with single unknown char', () => {
+    const fn = jest.fn()
+
+    expect(() => keybinds.addKeybind('\t', fn)).toThrow()
+
+    keyEventListener(key('\t'))
+
+    expect(keyEventListenerSpy).toHaveBeenCalled()
+    expect(fn).not.toHaveBeenCalled()
+  })
+
+  it('should not be able to set empty bind', () => {
+    const fn = jest.fn()
+
+    expect(() => keybinds.addKeybind('', fn)).toThrow()
   })
 
   describe('alpha binds', () => {
@@ -108,6 +125,29 @@ describe('Keybinds', () => {
 
       expect(keyEventListenerSpy).toHaveBeenCalled()
       expect(fn).toHaveBeenCalled()
+    })
+
+    it('should handle the edge case for `<` and `>`', () => {
+      const fn = jest.fn()
+      keybinds.addKeybind('<lt><gt>', fn)
+      keyEventListener(key('<').shift())
+      keyEventListener(key('>').shift())
+
+      expect(keyEventListenerSpy).toHaveBeenCalled()
+      expect(fn).toHaveBeenCalled()
+    })
+
+    it('should not allow setting a keybind for the `<` and `>` keys without `<lt>` and `<gt>`', () => {
+      const fn = jest.fn()
+
+      expect(() => keybinds.addKeybind('<', fn)).toThrow()
+      expect(() => keybinds.addKeybind('>', fn)).toThrow()
+
+      keyEventListener(key('<').shift())
+      keyEventListener(key('>').shift())
+
+      expect(keyEventListenerSpy).toHaveBeenCalled()
+      expect(fn).not.toHaveBeenCalled()
     })
   })
 
@@ -213,6 +253,23 @@ describe('Keybinds', () => {
 
       expect(keyEventListenerSpy).toHaveBeenCalled()
       expect(fn).toBeCalledTimes(Number(shouldHandle))
+    })
+
+    it.each([
+      ['', 'c', true],
+      [' not', 's', false],
+      ['', 'a', true],
+      ['', 'm', true],
+    ] as const)('should%s handle `<%s-lt|gt>`', (_, mod, shouldHandle) => {
+      const fn = jest.fn()
+
+      keybinds.addKeybind(`<${mod}-lt>`, fn)
+      keybinds.addKeybind(`<${mod}-gt>`, fn)
+      keyEventListener(key(`<`).mod(mod))
+      keyEventListener(key(`>`).mod(mod))
+
+      expect(keyEventListenerSpy).toHaveBeenCalled()
+      expect(fn).toBeCalledTimes(Number(shouldHandle) * 2)
     })
   })
 })
