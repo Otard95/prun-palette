@@ -1,6 +1,6 @@
 /*
     PrUn Palette - A command pallet for Prosperous Universe
-    Copyright (C) 2023  Stian Myklebostad
+    Copyright (C) 2024  Stian Myklebostad
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
