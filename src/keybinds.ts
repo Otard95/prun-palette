@@ -66,6 +66,12 @@ const symbols = [
   '#',
   '@',
   '$',
+  '[',
+  ']',
+  '{',
+  '}',
+  '(',
+  ')',
 ] as const
 
 const eventKeyToKeyNotation: Record<string, KeyNotation> = {
@@ -219,7 +225,7 @@ export default class Keybinds {
     )
 
     if (node.key && node.parent && !node.action && isEmpty(node.children)) {
-      node.parent.children[node.key]
+      delete node.parent.children[node.key]
     }
   }
 
