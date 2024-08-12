@@ -1,3 +1,20 @@
+# [0.4.0](https://github.com/Otard95/prun-palette/compare/v0.3.2...v0.4.0) (2023-06-27)
+
+
+### Features
+
+* Add settings ([#13](https://github.com/Otard95/prun-palette/issues/13)) ([a45a2fb](https://github.com/Otard95/prun-palette/commit/a45a2fbc1f3205c428258ebf6f9abd83c71197bb))
+* Fleet commands ([#11](https://github.com/Otard95/prun-palette/issues/11)) ([0291972](https://github.com/Otard95/prun-palette/commit/02919728e2d72900131ea337ae329c6b265f159b))
+* Improve keybind handling. ([#12](https://github.com/Otard95/prun-palette/issues/12)) ([515142a](https://github.com/Otard95/prun-palette/commit/515142a4e6cd011598775c179143e5accc72af3b))
+* Remember size and position of buffers ([#14](https://github.com/Otard95/prun-palette/issues/14)) ([9a73ab0](https://github.com/Otard95/prun-palette/commit/9a73ab0b9f593a93b05a2b07049cbf340605290f))
+
+## [0.3.2](https://github.com/Otard95/prun-palette/compare/v0.3.1...v0.3.2) (2023-06-08)
+
+
+### Bug Fixes
+
+* Compat with PMMG Extended ([86d531d](https://github.com/Otard95/prun-palette/commit/86d531deecd0a33a2565ad9b60ca840f49892538))
+
 ## [0.3.1](https://github.com/Otard95/prun-palette/compare/v0.3.0...v0.3.1) (2023-06-06)
 
 
