@@ -1,6 +1,6 @@
 /*
     PrUn Palette - A command pallet for Prosperous Universe
-    Copyright (C) 2023  Stian Myklebostad
+    Copyright (C) 2024  Stian Myklebostad
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,13 +20,15 @@ import { h3, span } from '../../utils/dom'
 
 interface SettingsHeaderProps {
   title: string
+  info?: string
 }
-export const settingsHeader = ({ title }: SettingsHeaderProps) => {
+export const settingsHeader = ({ title, info }: SettingsHeaderProps) => {
   return h3(
     title,
-    span('ⓘ')
-      .att$('data-tooltip', 'Learn more about keybinds at the website')
-      .att$('data-tooltip-position', 'right')
+    info &&
+      span('ⓘ')
+        .att$('data-tooltip', info)
+        .att$('data-tooltip-position', 'right')
   ).att$(
     'class',
     'Sidebar__sectionHead____NHLKDT fonts__font-regular___Sxp1xjo'
