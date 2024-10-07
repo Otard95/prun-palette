@@ -41,7 +41,7 @@ async function init() {
   keybinds.addKeybind(
     '<esc>',
     preventDefault => {
-      if (palette.Open) preventDefault()
+      if (palette.isOpen) preventDefault()
       palette.close()
     },
     { preventDefault: false }
