@@ -53,6 +53,9 @@ async function init() {
         case KeybindAction.Buffer:
           apex.createBuffer(keybind.arg)
           break
+        case KeybindAction.Palette:
+          palette.executeSignature(keybind.arg.split(/\s*[:·]\s*/), '')
+          break
         default:
           keybind.action as HasType<never, typeof keybind.action>
       }

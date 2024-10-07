@@ -39,10 +39,10 @@ interface CreateKeybindProps {
   add: AddKeybindFn
 }
 export function createKeybind({ add }: CreateKeybindProps) {
-  const selector = select(option(KeybindAction.Buffer, 'Create buffer')).att$(
-    'class',
-    'prun-palette prun-select'
-  )
+  const selector = select(
+    option(KeybindAction.Buffer, 'Create buffer'),
+    option(KeybindAction.Palette, 'Palette command')
+  ).att$('class', 'prun-palette prun-select')
 
   if (!isKeybindAction(selector.value)) throw new Error('Invalid action')
   let additionalInputs = createAdditionalInputs(selector.value)
@@ -87,6 +87,8 @@ function createAdditionalInputs(action: KeybindAction) {
   switch (action) {
     case KeybindAction.Buffer:
       return createBufferInputs()
+    case KeybindAction.Palette:
+      return createPaletteInputs()
     default:
       action as HasType<never, typeof action>
       return div('Unknown keybind action')
@@ -95,4 +97,8 @@ function createAdditionalInputs(action: KeybindAction) {
 
 function createBufferInputs() {
   return div(textInput('').att$('placeholder', 'Buffer command'))
+}
+
+function createPaletteInputs() {
+  return div(textInput('').att$('placeholder', 'Palette command'))
 }
