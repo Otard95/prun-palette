@@ -19,6 +19,11 @@
 import './text-input.sass'
 import { input } from '../../utils/dom'
 
-export const textInput = (value: string) => {
-  return input('text', value).att$('class', 'prun-palette prun-text-input')
+interface TextInputProps {
+  styles?: string
+}
+export const textInput = (value: string, props?: TextInputProps) => {
+  const el = input('text', value).att$('class', 'prun-palette prun-text-input')
+  if (props?.styles) el.att$('style', props.styles)
+  return el
 }

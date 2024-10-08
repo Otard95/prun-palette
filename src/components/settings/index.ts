@@ -16,32 +16,45 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
-import { a, p } from '../../utils/dom'
+import { a, p, El } from '../../utils/dom'
 import bufferBody from '../buffer/body'
 import { bufferSettings } from './buffer'
 import { settingsHeader } from './header'
+import { importExportSettings } from './import-export'
 import { keybindsSettings } from './keybinds'
 
 // interface SettingsProps {
 // }
 export default function settings() {
-  return bufferBody(
-    { name: 'PrUn Palette Settings', command: 'prun settings' },
-    p('Changes require a refresh to take effect.'),
-    p(
-      'Checkout the ',
-      a(
-        'https://otard95.github.io/prun-palette-site/#/features',
-        'website'
-      ).att$('target', '_blank'),
-      ' for more information'
-    ),
-    settingsHeader({
-      title: 'Key bindings',
-      info: 'Learn more about keybinds at the website',
-    }),
-    keybindsSettings(),
-    settingsHeader({ title: 'Buffer' }),
-    bufferSettings()
-  )
+  let settings: El<HTMLDivElement> | undefined
+  function renderSettings() {
+    return bufferBody(
+      { name: 'PrUn Palette Settings', command: 'prun settings' },
+      p('Changes require a refresh to take effect.'),
+      p(
+        'Checkout the ',
+        a(
+          'https://otard95.github.io/prun-palette-site/#/features',
+          'website'
+        ).att$('target', '_blank'),
+        ' for more information'
+      ),
+      settingsHeader({
+        title: 'Key bindings',
+        info: 'Learn more about keybinds at the website',
+      }),
+      keybindsSettings(),
+      settingsHeader({ title: 'Buffer' }),
+      bufferSettings(),
+      settingsHeader({ title: 'Import/Export' }),
+      importExportSettings({
+        rerender: () => {
+          settings = settings?.replace$(renderSettings())
+        },
+      })
+    )
+  }
+  settings = renderSettings()
+
+  return settings
 }
