@@ -1,3 +1,10 @@
+# [0.5.0](https://github.com/Otard95/prun-palette/compare/v0.4.0...v0.5.0) (2024-08-12)
+
+
+### Features
+
+* **keybinds:** Refactor keybinds ([#17](https://github.com/Otard95/prun-palette/issues/17)) ([2205dbf](https://github.com/Otard95/prun-palette/commit/2205dbf8b70a2f3c34633d5a4bad481f5cd6c288)), closes [#16](https://github.com/Otard95/prun-palette/issues/16)
+
 # [0.4.0](https://github.com/Otard95/prun-palette/compare/v0.3.2...v0.4.0) (2023-06-27)
 
 
