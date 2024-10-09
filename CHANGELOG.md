@@ -1,3 +1,18 @@
+# [0.6.0](https://github.com/Otard95/prun-palette/compare/v0.5.0...v0.6.0) (2024-10-09)
+
+
+### Bug Fixes
+
+* **settings:** Remove info tooltip on buffer settings ([97c872e](https://github.com/Otard95/prun-palette/commit/97c872efabeab6f389a22405557416c575aad18a))
+
+
+### Features
+
+* **keybinds:** Allow for binding palette commands ([a5d482c](https://github.com/Otard95/prun-palette/commit/a5d482cf53c03346f947c95060c5990cbd269446))
+* **keybinds:** Redesign keybind handling and notation ([#16](https://github.com/Otard95/prun-palette/issues/16)) ([c0b24a6](https://github.com/Otard95/prun-palette/commit/c0b24a6cbb40d5edc6f91eada3e20b2f7b56e159))
+* **settings:** Export and import settings ([a2f29dd](https://github.com/Otard95/prun-palette/commit/a2f29dd77f2d043d0cbf2054352b0bc70ea858d3))
+* **site:** Update site ([72d678f](https://github.com/Otard95/prun-palette/commit/72d678f2eb64ed34f66701ad46a2f5a042c6a89b))
+
 # [0.5.0](https://github.com/Otard95/prun-palette/compare/v0.4.0...v0.5.0) (2024-08-12)
 
 
