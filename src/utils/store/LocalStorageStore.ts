@@ -36,6 +36,11 @@ export class LocalStorageStore<State extends Record<string, unknown>>
     this.saveToLocalStorage()
   }
 
+  merge(state: Partial<State>): void {
+    super.merge(state)
+    this.saveToLocalStorage()
+  }
+
   private loadFromLocalStorage(): Partial<State> {
     const json = localStorage.getItem(this.localStorageKey)
     return json ? JSON.parse(json) : {}

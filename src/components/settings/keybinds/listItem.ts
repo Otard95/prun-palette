@@ -29,23 +29,35 @@ export function keybind({ customKeybind, remove }: KeybindProps) {
   switch (customKeybind.action) {
     case KeybindAction.Buffer:
       return keybindBuffer({ customKeybind, remove })
+    case KeybindAction.Palette:
+      return keybindPaletteCommand({ customKeybind, remove })
     default:
       customKeybind.action as HasType<never, typeof customKeybind.action>
       return div('Unknown keybind action')
   }
 }
 
-interface CustomKeybindBuffer extends CustomKeybind {
-  action: KeybindAction.Buffer
-}
 interface KeybindBufferProps {
-  customKeybind: CustomKeybindBuffer
+  customKeybind: CustomKeybind
   remove: () => void
 }
 function keybindBuffer({ customKeybind, remove }: KeybindBufferProps) {
   return tr(
     td(customKeybind.keySequence),
-    td(`Open buffer with command: ${customKeybind.arg}`),
+    customKeybind.arg
+      ? td(`Open buffer with command: ${customKeybind.arg}`)
+      : td(`Open empty buffer`),
+    td(removeButton(remove))
+  )
+}
+interface KeybindPaletteProps {
+  customKeybind: CustomKeybind
+  remove: () => void
+}
+function keybindPaletteCommand({ customKeybind, remove }: KeybindPaletteProps) {
+  return tr(
+    td(customKeybind.keySequence),
+    td(`Run palette command: ${customKeybind.arg}`),
     td(removeButton(remove))
   )
 }

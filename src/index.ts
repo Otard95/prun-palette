@@ -41,7 +41,7 @@ async function init() {
   keybinds.addKeybind(
     '<esc>',
     preventDefault => {
-      if (palette.Open) preventDefault()
+      if (palette.isOpen) preventDefault()
       palette.close()
     },
     { preventDefault: false }
@@ -52,6 +52,9 @@ async function init() {
       switch (keybind.action) {
         case KeybindAction.Buffer:
           apex.createBuffer(keybind.arg)
+          break
+        case KeybindAction.Palette:
+          palette.executeSignature(keybind.arg.split(/\s*[:·]\s*/), '')
           break
         default:
           keybind.action as HasType<never, typeof keybind.action>

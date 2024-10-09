@@ -65,7 +65,7 @@ export default class Palette {
     if (paletteEl) paletteEl.remove()
   }
 
-  public get Open() {
+  public get isOpen() {
     return this.show
   }
 

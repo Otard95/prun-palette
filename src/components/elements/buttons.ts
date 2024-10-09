@@ -18,14 +18,22 @@
 */
 import { button } from '../../utils/dom'
 
+export enum ButtonType {
+  Primary = 'Button__primary____lObPiw Button__btn___UJGZ1b7',
+  Danger = 'Button__btn___UJGZ1b7 Button__danger___S2rSOES',
+}
+export function apexButton(
+  type: ButtonType,
+  text: string,
+  onClick: () => void
+) {
+  return button(text).att$('class', type).onClick$(onClick)
+}
+
 export function removeButton(remove: () => void) {
-  return button('REMOVE')
-    .att$('class', 'Button__btn___UJGZ1b7 Button__danger___S2rSOES')
-    .onClick$(remove)
+  return apexButton(ButtonType.Danger, 'REMOVE', remove)
 }
 
 export function addButton(add: () => void) {
-  return button('ADD')
-    .att$('class', 'Button__primary____lObPiw Button__btn___UJGZ1b7')
-    .onClick$(add)
+  return apexButton(ButtonType.Primary, 'ADD', add)
 }
