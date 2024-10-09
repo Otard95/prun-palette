@@ -1,3 +1,10 @@
+## [0.6.1](https://github.com/Otard95/prun-palette/compare/v0.6.0...v0.6.1) (2024-10-09)
+
+
+### Bug Fixes
+
+* Force release ([cd6abea](https://github.com/Otard95/prun-palette/commit/cd6abea9374bad34cacffdf6fe01f1b9e4759ea6))
+
 # [0.6.0](https://github.com/Otard95/prun-palette/compare/v0.5.0...v0.6.0) (2024-10-09)
 
 
